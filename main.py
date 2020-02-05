@@ -186,7 +186,7 @@ class FileTools(Share, file.File, txt.Txt):
 
 		
 
-	def	mainloop(self):
+	def mainloop(self):
 
 		self.MainDefault()
 
