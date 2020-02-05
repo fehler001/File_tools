@@ -8,8 +8,6 @@ import stat
 
 import lib.baselib
 
-import lib.baselib
-
 from natsort import natsort_keygen, ns
 
 
