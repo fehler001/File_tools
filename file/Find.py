@@ -163,7 +163,7 @@ class CreateFrameFind():
 				self.FindTextDownFiles.insert(INSERT, '\n')
 		#except: pass
 		self.FindCheckRepeat()
-		if len(self.FindTextDownFiles.get("1.0", "end") ) < 5:
+		if len(self.FindTextDownFiles.get("1.0", "end") ) < 4:
 			self.FindTextDownFiles.insert(INSERT, "Nothing detected")
 			self.FindTextDownFiles.insert(INSERT, '\n')
 
@@ -180,7 +180,7 @@ class CreateFrameFind():
 			self.FindTextDownFiles.insert(INSERT, file)
 			self.FindTextDownFiles.insert(INSERT, '\n')
 		self.FindCheckRepeat()
-		if len(self.FindTextDownFiles.get("1.0", "end") ) < 5:
+		if len(self.FindTextDownFiles.get("1.0", "end") ) < 4:
 			self.FindTextDownFiles.insert(INSERT, "Nothing detected")
 			self.FindTextDownFiles.insert(INSERT, '\n')
 		

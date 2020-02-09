@@ -116,7 +116,7 @@ class CreateFrameRefine():
 				self.RefineTextDownFolders.insert(INSERT, '\n')
 		except: pass
 		self.RefineCheckRepeat()
-		if len(self.RefineTextDownFolders.get("1.0", "end") ) < 5:
+		if len(self.RefineTextDownFolders.get("1.0", "end") ) < 4:
 			self.RefineTextDownFolders.insert(INSERT, "Nothing detected")
 			self.RefineTextDownFolders.insert(INSERT, '\n')
 		
@@ -157,7 +157,7 @@ class CreateFrameRefine():
 		self.RefineLableBlank = ttk.Label(self.RefineFrameUpLeft)
 		self.RefineLableBlank.pack(side = TOP, fill = X)
 
-		self.RefineLableDescription = ttk.Label(self.RefineFrameUpLeft, text = 'Description:\n\n\
+		self.RefineLableDescription = ttk.Label(self.RefineFrameUpLeft, text = 'Description:     "c:\\foo\\bar\\bar  ->  c:\\foo\\bar"\n\n\
 Walk through the root direction recursively, detect the folloing conditions and satisfying each of one in same time\n\n\
 1. Child folder in parent folder and the names of two are exactly same\n\n\
 2. Child is the solely folder with no other files in the parent\n\n\
@@ -170,7 +170,7 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		# end up left Frame
 		
 		# start down left Frame
-		self.RefineFrameDownLeft = ttk.LabelFrame(self.RefineRoot, text = r'Detected         "c:\foo\bar\bar  ->  c:\foo\bar"')
+		self.RefineFrameDownLeft = ttk.LabelFrame(self.RefineRoot, text = r'Detected     ( if multiple nested, it will process from inside to outside )')
 		self.RefineFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.51, relheight = 0.48)
 		
 		self.RefineScrollbarXDownFolders = ttk.Scrollbar(self.RefineFrameDownLeft, orient = HORIZONTAL)

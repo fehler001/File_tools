@@ -40,6 +40,8 @@ class CreateFrameFilter():
 			j['file_tools']['file']['filter'] = {}
 		if not 'path_filter' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['path_filter'] = '.'
+		if not 'check_extension' in j['file_tools']['file']['filter']:
+			j['file_tools']['file']['filter']['check_extension'] = 0
 		if not 'including_string' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['including_string'] = ''
 		if not 'excluding_string' in j['file_tools']['file']['filter']:
@@ -53,13 +55,13 @@ class CreateFrameFilter():
 		if not 'filename_length_min' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['filename_length_min'] = ''
 		if not 'check_files' in j['file_tools']['file']['filter']:
-			j['file_tools']['file']['filter']['check_files'] = '1'
+			j['file_tools']['file']['filter']['check_files'] = 1
 		if not 'check_folders' in j['file_tools']['file']['filter']:
-			j['file_tools']['file']['filter']['check_folders'] = '1'
+			j['file_tools']['file']['filter']['check_folders'] = 1
 		if not 'check_case' in j['file_tools']['file']['filter']:
-			j['file_tools']['file']['filter']['check_case'] = '0'
+			j['file_tools']['file']['filter']['check_case'] = 0
 		if not 'check_same_finename' in j['file_tools']['file']['filter']:
-			j['file_tools']['file']['filter']['check_same_finename'] = '0'
+			j['file_tools']['file']['filter']['check_same_finename'] = 0
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -72,16 +74,17 @@ class CreateFrameFilter():
 		j = json.load(f)
 		self.FilterPath = j['file_tools']['file']['filter']['path_filter']
 		self.FilterEntryPath.insert(0, self.FilterPath)
+		self.FilterCheckExtentionVar.set( j['file_tools']['file']['filter']['check_extension'])
 		self.FilterEntryIncluding.insert(0, j['file_tools']['file']['filter']['including_string'])
 		self.FilterEntryExcluding.insert(0, j['file_tools']['file']['filter']['excluding_string'])
 		self.FilterEntryMax.insert(0, j['file_tools']['file']['filter']['file_size_max'])
 		self.FilterEntryMin.insert(0, j['file_tools']['file']['filter']['file_size_min'])
 		self.FilterEntryNameMax.insert(0, j['file_tools']['file']['filter']['filename_length_max'])
 		self.FilterEntryNameMin.insert(0, j['file_tools']['file']['filter']['filename_length_min'])
-		self.FilterCheckFileVar.set( int(j['file_tools']['file']['filter']['check_files']) )
-		self.FilterCheckFolderVar.set( int(j['file_tools']['file']['filter']['check_folders']) )
-		self.FilterCheckCaseVar.set( int(j['file_tools']['file']['filter']['check_case']) )
-		self.FilterCheckSameVar.set( int(j['file_tools']['file']['filter']['check_same_finename']) )
+		self.FilterCheckFileVar.set( j['file_tools']['file']['filter']['check_files'])
+		self.FilterCheckFolderVar.set( j['file_tools']['file']['filter']['check_folders'])
+		self.FilterCheckCaseVar.set( j['file_tools']['file']['filter']['check_case'])
+		self.FilterCheckSameVar.set( j['file_tools']['file']['filter']['check_same_finename'])
 		f.close()
 
 	
@@ -99,16 +102,17 @@ class CreateFrameFilter():
 			j = json.load(f)
 			f.close()
 			j['file_tools']['file']['filter']['path_filter'] = self.FilterEntryPath.get()
+			j['file_tools']['file']['filter']['check_extension'] = self.FilterCheckExtentionVar.get()
 			j['file_tools']['file']['filter']['including_string'] = self.FilterEntryIncluding.get()
 			j['file_tools']['file']['filter']['excluding_string'] = self.FilterEntryExcluding.get()
 			j['file_tools']['file']['filter']['file_size_max'] = self.FilterEntryMax.get()
 			j['file_tools']['file']['filter']['file_size_min'] = self.FilterEntryMin.get()
 			j['file_tools']['file']['filter']['filename_length_max'] = self.FilterEntryNameMax.get()
 			j['file_tools']['file']['filter']['filename_length_min'] = self.FilterEntryNameMin.get()
-			j['file_tools']['file']['filter']['check_files'] = str( self.FilterCheckFileVar.get() )
-			j['file_tools']['file']['filter']['check_folders'] = str( self.FilterCheckFolderVar.get() )
-			j['file_tools']['file']['filter']['check_case'] = str(self.FilterCheckCaseVar.get() )
-			j['file_tools']['file']['filter']['check_same_finename'] = str( self.FilterCheckSameVar.get() )
+			j['file_tools']['file']['filter']['check_files'] = self.FilterCheckFileVar.get()
+			j['file_tools']['file']['filter']['check_folders'] = self.FilterCheckFolderVar.get()
+			j['file_tools']['file']['filter']['check_case'] = self.FilterCheckCaseVar.get()
+			j['file_tools']['file']['filter']['check_same_finename'] = self.FilterCheckSameVar.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
@@ -161,6 +165,7 @@ class CreateFrameFilter():
 		including_folder = self.FilterCheckFolderVar.get()
 		case = self.FilterCheckCaseVar.get()
 		is_exactly_same = self.FilterCheckSameVar.get()
+		is_extention = self.FilterCheckExtentionVar.get()
 		try:
 			if self.FilterEntryMax.get() != '':
 				max = int(self.FilterEntryMax.get().replace(',', '') )
@@ -185,12 +190,12 @@ class CreateFrameFilter():
 		except:
 			messagebox.showerror ("ERROR", "Filename Length:\n\nPlease fill a number")
 			return
-		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min)
+		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min, is_extention)
 		for file in files:
 			self.FilterTextDownFiles.insert(INSERT, file)
 			self.FilterTextDownFiles.insert(INSERT, '\n')
 		self.FilterCheckRepeat()
-		if len(self.FilterTextDownFiles.get("1.0", "end") ) < 5:
+		if len(self.FilterTextDownFiles.get("1.0", "end") ) < 4:
 			self.FilterTextDownFiles.insert(INSERT, "Nothing detected")
 			self.FilterTextDownFiles.insert(INSERT, '\n')
 		
@@ -271,10 +276,16 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight)
 		self.FilterLableBlank.pack(side = TOP, fill = X)
+				
+		self.FilterCheckExtentionVar = IntVar()
+		self.FilterCheckExtention = ttk.Checkbutton(self.FilterFrameRight, text = 'Extention Mode ( fill like ".exe" )', \
+											variable = self.FilterCheckExtentionVar, onvalue = 1, offvalue = 0) 
+		self.FilterCheckExtention.pack(fill = X, side = TOP)
+		self.FilterCheckExtentionVar.set(0)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Including String (like ".py" "asd")')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
-				
+
 		self.FilterEntryIncluding = ttk.Entry(self.FilterFrameRight)
 		self.FilterEntryIncluding.pack(fill = X)
 

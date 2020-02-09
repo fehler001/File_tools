@@ -109,7 +109,7 @@ class CreateFrameRemove():
 				self.RemoveTextDownFolders.insert(INSERT, '\n')
 		except: pass
 		self.RemoveCheckRepeat()
-		if len(self.RemoveTextDownFolders.get("1.0", "end") ) < 5:
+		if len(self.RemoveTextDownFolders.get("1.0", "end") ) < 4:
 			self.RemoveTextDownFolders.insert(INSERT, "Nothing detected")
 			self.RemoveTextDownFolders.insert(INSERT, '\n')
 		

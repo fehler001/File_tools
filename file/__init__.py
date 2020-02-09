@@ -36,7 +36,6 @@ class File( file.Rename.CreateFrameRename,
 
 	def FileDefault(self):
 		
-		self.FileDefaultLog()
 		self.CreateWidgetsFrameFile()
 
 		self.RenameRoot = self.FrameRename
@@ -52,16 +51,6 @@ class File( file.Rename.CreateFrameRename,
 		self.MoveRoot = self.FrameMove
 		self.MoveDefault()
 
-
-	def FileDefaultLog(self):
-		f = open(self.LogPath, 'r', encoding='utf-8')
-		j = json.load(f)
-		f.close()
-		if not 'file' in j['file_tools']:
-			j['file_tools']['file'] = {}
-			f = open(self.LogPath, 'w', encoding='utf-8')
-			json.dump(j, f, ensure_ascii=False)
-			f.close()
 
 
 

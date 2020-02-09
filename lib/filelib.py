@@ -1,5 +1,6 @@
 #coding=utf-8
 #File_tools/lib/filelib.py
+
 import os
 from tkinter import messagebox
 import random
@@ -66,17 +67,30 @@ class FileLib():
 
 
 
-	def collect_files_and_folders(self, path, is_add_file = 1, is_add_folder = 0):
+	def collect_files_and_folders(self, path, is_add_file = 1, is_add_folder = 0, is_recur = 0):
 		all = []
-		files = os.listdir(path) 
 		if path[-1:] == r'/':
 			path = path[ :-1]
-		for file in files:
-			file1 = path + '/' + file
-			if os.path.isfile(file1) and is_add_file == 1:
-				all.append(file1)
-			if os.path.isdir(file1) and is_add_folder == 1:
-				all.append(file1)
+		if is_recur == 1:
+			if is_add_folder == 1:
+				for root, subfolders, files in os.walk(path):
+					for subfolder in subfolders:
+						folder1 = root.replace('\\', '/') + '/' + subfolder
+						all.append(folder1)
+			if is_add_file == 1:
+				for root, subfolders, files in os.walk(path):
+					for file in files:
+						file1 = root.replace('\\', '/') + '/' + file
+						all.append(file1)
+			return all
+		if is_add_file == 1 or is_add_folder == 1:
+			files = os.listdir(path) 
+			for file in files:
+				file1 = path + '/' + file
+				if os.path.isfile(file1) and is_add_file == 1:
+					all.append(file1)
+				if os.path.isdir(file1) and is_add_folder == 1:
+					all.append(file1)
 		return all
 
 
@@ -94,6 +108,7 @@ class FileLib():
 		return total_size
 
 
+	# length = 5, digit = 3, outset = 1  =>  001,002,003,004,005
 	def generate_ordinal(self, length, digit = 1, outset = 0):
 		all = []
 		n = 0 + outset
@@ -106,6 +121,7 @@ class FileLib():
 		return all
 
 
+	# digit = 3, outset = 1, 'c:/foo/bar.txt', 'c:/foo/barbar.txt'  =>  'c:/foo/001.txt', 'c:/foo/002.txt'
 	def rename_by_ordinal(self, files, digit = 1, outset = 0):
 		all = []
 		length = 0
@@ -133,6 +149,9 @@ class FileLib():
 		return all
 
 
+	# 'c:/foo/bar.txt', 'c:/foo/barbar.txt'  
+	# is_ordinal = True, digit = 3, outset = 1   =>   'c:/foo/001bar.txt', 'c:/foo/002barbar.txt' 
+	# is_ordinal = False, pos = 0, cont = 'zz'   =>   'c:/foo/zzbar.txt', 'c:/foo/zzbarbar.txt' 
 	def insert(self, files, pos, cont, is_ordinal = False, digit = 1, outset = 0):
 		all = []
 		
@@ -177,6 +196,8 @@ class FileLib():
 		return all
 
 
+
+	# original = 'ar', substitute = 'zz', 'c:/foo/bar.txt'   =>   'c:/foo/bzz.txt'  
 	def replace_string(self, files, original, substitute):
 		all = []
 		for file in files:
@@ -191,6 +212,8 @@ class FileLib():
 		return all
 
 
+
+	# see 'Refine Enfold' description
 	def find_enfold(self, path):
 		all = []
 		for root, subfolders, files in os.walk(path):
@@ -206,6 +229,7 @@ class FileLib():
 		return all
 
 
+	# see 'Refine Enfold' description
 	def refine_enfold(self, folders):
 		for i in range(len(folders)):
 			if len(folders[i]) < 5:
@@ -221,6 +245,7 @@ class FileLib():
 			shutil.move(f2, dst)
 			os.rmdir(f[:i])
 			os.rename(dst + f[i: ] + r, dst + f[i: ] )
+
 
 
 	def find_empty_folder(self, path):
@@ -239,19 +264,21 @@ class FileLib():
 		return all
 
 
+
+
 	def filter(self, path, include = '', exclude = '', max = '', min = '', \
-				including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = ''):
+including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_extension = 0):
 		all = []
 		if case_insensitive == 1:
 			include = include.lower()
 			exclude = exclude.lower()
-		for root, subfolders, files in os.walk(path):
-			if including_folder == 1:
+		if including_folder == 1 and is_extension == 0:
+			for root, subfolders, files in os.walk(path):
 				for subfolder in subfolders:
-					root_f = root.replace('\\', '/')
+					root_f = root.replace('\\', '/')       # root_f = root path of subfolder
 					if root_f[-1] == '/':
 						root_f = root_f[ :-1]
-					f = root_f + '/' + subfolder
+					f = root_f + '/' + subfolder           # f = full path of subfolder
 					if case_insensitive == 1:
 						f = f.lower()
 					fs = self.get_folder_size(f)
@@ -282,13 +309,13 @@ class FileLib():
 							continue
 					all.append(f)
 
-		for root, subfolders, files in os.walk(path):
-			if including_file == 1:
+		if including_file == 1:
+			for root, subfolders, files in os.walk(path):
 				for file in files:
-					root_ff = root.replace('\\', '/')
+					root_ff = root.replace('\\', '/')          # root_ff = root path of file
 					if root_ff[-1] == '/':
 						root_ff = root_ff[ :-1]
-					ff = root_ff + '/' + file
+					ff = root_ff + '/' + file                  # ff = full path of file
 					if case_insensitive == 1:
 						ff = ff.lower()
 					size = os.path.getsize(ff)
@@ -296,6 +323,15 @@ class FileLib():
 					ffns = len( ff[i_ff : ] )
 					i2_ff = ff.rfind(include)
 					i3_ff = ff.rfind(exclude)
+					i4_ff = ff.rfind(r'.')
+					if is_extension == 1:
+						if i4_ff == -1 or i4_ff < i_ff or i4_ff != i2_ff:
+							continue
+						if include != ff[ i4_ff : ]:
+							continue
+						if case_insensitive == 1:
+							if include.lower() != ff[ i4_ff : ]:
+								continue
 					if i2_ff == -1:
 						continue
 					if i2_ff < i_ff:
@@ -321,6 +357,7 @@ class FileLib():
 		return all
 
 
+	# see 'Find' description
 	def find_same_folder_strctrue(self, src, dst, is_subfolder_with_same_name = 0):
 		all = []
 		source_collected = []
@@ -357,45 +394,48 @@ class FileLib():
 		return all
 
 
+	# see 'Move' description  
+	# 'c:/bar/a.txt' -> 'd:/bar/a.txt', 'd:/' is an enpty folder
+	# shutil.copytree('c:/bar', 'd:/bar')  or  shutil.copy2('c:/bar/a.txt', 'd:/bar/a.txt')
 	def move_or_copy(self, lines, path, is_creating_new_folder = 0, new_folder_name = '', is_interval = 0, interval = 100, skip = 0, is_move = 0 ):
 		if not os.path.isdir(path):
 			messagebox.showerror ("Warrning", "_____PATH ERROR_____")
 			return -1
-		if path[-1] == '/':
+		if path[-1] == '/':    
 			dir = path[ :-1]
 		else:
-			dir = path
+			dir = path           # things will be move here, like 'd:/'
 		if is_creating_new_folder == 1:
-			if self.bl.check_legit_string(new_folder_name) == -1:
+			if self.bl.check_legit_string(new_folder_name) == -1:       # new_folder_name,  like 'newfolder'
 				return -1
 		
-		old_folders = []
-		new_folders = []
-		old_files = []
-		new_files = []
+		old_folders = [] # things need to move,  like 'c:/bar'
+		new_folders = [] # new full dst of things (including filename),  like 'd:/bar'
+		old_files = []   # like  'c:/bar/a.txt'
+		new_files = []   # like  'd:/bar/a.txt'
 		for line in lines:
 			if os.path.isdir(line):
-				dst = dir + '/' + line[line.rfind('/') + 1: ]
+				dst = dir + '/' + line[line.rfind('/') + 1: ]    # like 'd:/bar'
 				if os.path.isdir(dst):
 					if skip == 1:
 						continue
 					messagebox.showerror ("Warrning", dst + "\n\nAlready exists")
 					return -1
 				else:
-					new_folders.append(dst)
-					old_folders.append(line)
-		n = 0
-		n2 = 0
-		n3 = -1
-		creating_new_folder_paths = []
-		for line in lines:
+					new_folders.append(dst)   # like 'd:/bar'
+					old_folders.append(line)  # like 'c:/bar'
+		n = 0      # numbers of files
+		n2 = 0     # count of interval went through
+		n3 = -1    # compare with n2, if n2 increased, create folder like  'd:/bar/newfolder011-020', then n3 = n3 + 1
+		creating_new_folder_paths = []       # like  'd:/bar/newfolder'  or  'd:/bar/newfolder001-010'
+		for line in lines:                     # line 'c:/bar/a.txt'
 			if os.path.isfile(line):
 				if is_creating_new_folder == 1:
-					dir2 = dir + '/' + new_folder_name
+					dir2 = dir + '/' + new_folder_name    #  ->  'd:/bar/newfolder'
 					if is_interval == 1:
 						if n % interval == 0 and n != 0:
 							n2 = n2 + 1
-						dir3 = dir2 + str(n2 * interval + 1) + '-' + str( (n2 + 1) * interval) 
+						dir3 = dir2 + str(n2 * interval + 1) + '-' + str( (n2 + 1) * interval)  # like  'd:/bar/newfolder001-010'
 					else:
 						dir3 = dir2
 					if n3 < n2:
@@ -404,11 +444,11 @@ class FileLib():
 								messagebox.showerror ("Warrning", dir3 + "\n\nAlready exists")
 								return -1
 						else:
-							creating_new_folder_paths.append(dir3)
+							creating_new_folder_paths.append(dir3)    #  like   'd:/bar/newfolder001-010'
 						n3 = n3 + 1
 				else:
 					dir3 = dir
-				dst = dir3 + '/' + line[ line.rfind('/') + 1 : ]
+				dst = dir3 + '/' + line[ line.rfind('/') + 1 : ]     #  like  'd:/bar/newfolder001-010/a.txt'
 				if os.path.isfile(dst):
 					if skip == 1:
 						n = n + 1
@@ -417,11 +457,11 @@ class FileLib():
 						messagebox.showerror ("Warrning", dst + "\n\nAlready exists")
 						return -1
 				else:
-					new_files.append(dst)
-					old_files.append(line)
+					new_files.append(dst)    # like  'd:/bar/newfolder001-010/a.txt'
+					old_files.append(line)   # like  'c:/bar/a.txt'
 				n = n + 1
 		if is_creating_new_folder == 1:
-			for path in creating_new_folder_paths:
+			for path in creating_new_folder_paths:      # like  'd:/bar/newfolder001-010'
 				os.mkdir(path)
 		if is_move == 0:
 			for i in range(len(old_folders)):
@@ -435,6 +475,8 @@ class FileLib():
 				shutil.move(old_files[i], new_files[i])
 
 
+
+
 	def find_files_with_same_name_by_list(self, src, dst, including_file = 1, including_folder = 1):
 		all = []
 		files_src = self.filter(src, including_file = including_file, including_folder = including_folder)
@@ -444,11 +486,13 @@ class FileLib():
 			for file2 in files_src:
 				name_file2 = file2[ file2.rfind('/') : ]
 				if name_file2 == name_file:
+					files_src.remove(file2)   # delete element once paired
 					if file not in all:
 						all.append(file)
 		return all
 
 
+	# delete one file or one folder(not empty)
 	def delete_single(self, path, including_read_only = 1):
 		if including_read_only == 1:
 			os.chmod(path, stat.S_IRWXU)
@@ -458,6 +502,8 @@ class FileLib():
 		if os.path.isdir(path):
 			shutil.rmtree(path)
 			return	
+
+
 
 	# return string 
 	def delete_list(self, list, including_read_only = 1, skip_error = 1):

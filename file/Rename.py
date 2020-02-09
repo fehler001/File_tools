@@ -48,9 +48,11 @@ class CreateFrameRename():
 		if not 'path_rename' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['path_rename'] = '.'
 		if not 'check_files' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['check_files'] = '1'
+			j['file_tools']['file']['rename']['check_files'] = 1
 		if not 'check_folders' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['check_folders'] = '0'
+			j['file_tools']['file']['rename']['check_folders'] = 0
+		if not 'check_recur' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['check_recur'] = 0
 		if not 'entry_digit' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['entry_digit'] = ''
 		if not 'entry_outset' in j['file_tools']['file']['rename']:
@@ -74,8 +76,9 @@ class CreateFrameRename():
 		f = open(self.LogPath, 'r', encoding='utf-8')
 		j = json.load(f)
 		self.RenamePath = j['file_tools']['file']['rename']['path_rename']
-		self.RenameCheckFileVar.set( int(j['file_tools']['file']['rename']['check_files']) )
-		self.RenameCheckFolderVar.set( int(j['file_tools']['file']['rename']['check_folders']) )
+		self.RenameCheckFileVar.set( j['file_tools']['file']['rename']['check_files'])
+		self.RenameCheckFolderVar.set( j['file_tools']['file']['rename']['check_folders'])
+		self.RenameCheckRecurVar.set( j['file_tools']['file']['rename']['check_recur'])
 		self.RenameEntryDigit.insert(0, j['file_tools']['file']['rename']['entry_digit'])
 		self.RenameEntryOutset.insert(0, j['file_tools']['file']['rename']['entry_outset'])
 		self.RenameEntryInsertPosition.insert(0, j['file_tools']['file']['rename']['insert_position'])
@@ -100,8 +103,9 @@ class CreateFrameRename():
 			j = json.load(f)
 			f.close()
 			j['file_tools']['file']['rename']['path_rename'] = self.RenamePath
-			j['file_tools']['file']['rename']['check_files'] = str( self.RenameCheckFileVar.get() )
-			j['file_tools']['file']['rename']['check_folders'] = str( self.RenameCheckFolderVar.get() )
+			j['file_tools']['file']['rename']['check_files'] = self.RenameCheckFileVar.get()
+			j['file_tools']['file']['rename']['check_folders'] = self.RenameCheckFolderVar.get()
+			j['file_tools']['file']['rename']['check_recur'] = self.RenameCheckRecurVar.get()
 			j['file_tools']['file']['rename']['entry_digit'] = self.RenameEntryDigit.get()
 			j['file_tools']['file']['rename']['entry_outset'] = self.RenameEntryOutset.get()
 			j['file_tools']['file']['rename']['insert_position'] = self.RenameEntryInsertPosition.get()
@@ -169,7 +173,8 @@ class CreateFrameRename():
 		try: 
 			self.RenamePath =  direction
 			self.RenameSaveEntry()
-			files = self.fl.collect_files_and_folders(direction, self.RenameCheckFileVar.get(), self.RenameCheckFolderVar.get() )
+			files = self.fl.collect_files_and_folders(direction, \
+				self.RenameCheckFileVar.get(), self.RenameCheckFolderVar.get(), self.RenameCheckRecurVar.get() )
 			for file in files:
 				self.RenameTextUpFiles.insert(INSERT, file)
 				self.RenameTextUpFiles.insert(INSERT, '\n')
@@ -400,6 +405,8 @@ class CreateFrameRename():
 			
 		self.RenameButtonAddFiles = ttk.Button(self.RenameFrameRight, text = "Add Files", command = self.RenameAddFiles) 
 		self.RenameButtonAddFiles.pack(fill = X, side = TOP)
+
+		
 		
 		self.RenameCheckFileVar = IntVar() # StringVar()
 		self.RenameCheckFile = ttk.Checkbutton(self.RenameFrameRight, text = "Including Files", \
@@ -407,16 +414,25 @@ class CreateFrameRename():
 		self.RenameCheckFile.pack(fill = X, side = TOP)
 		self.RenameCheckFileVar.set(1)
 
+		# start RenameFrameRight_1
+		self.RenameFrameRight_1 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_1.pack(fill = X, side = TOP)
+
 		self.RenameCheckFolderVar = IntVar()
-		self.RenameCheckFolder = ttk.Checkbutton(self.RenameFrameRight, text = "Including Folders", \
+		self.RenameCheckFolder = ttk.Checkbutton(self.RenameFrameRight_1, text = "Including Folders       ", \
 											variable = self.RenameCheckFolderVar, onvalue = 1, offvalue = 0) 
-		self.RenameCheckFolder.pack(fill = X, side = TOP)
+		self.RenameCheckFolder.pack(fill = X, side = LEFT)
 		self.RenameCheckFolderVar.set(0)
+
+		self.RenameCheckRecurVar = IntVar()
+		self.RenameCheckRecur = ttk.Checkbutton(self.RenameFrameRight_1, text = "Recursively", \
+											variable = self.RenameCheckRecurVar, onvalue = 1, offvalue = 0) 
+		self.RenameCheckRecur.pack(fill = X, side = LEFT)
+		self.RenameCheckRecurVar.set(0)
+		# end RenameFrameRight_1
 
 		self.RenameButtonAddDirection = ttk.Button(self.RenameFrameRight, text = "Add Direction", command = self.RenameAddDirection) 
 		self.RenameButtonAddDirection.pack(fill = X, side = TOP)
-
-		
 		
 		self.RenameLableDigit = ttk.Label(self.RenameFrameRight, text = "Digit", anchor = W)
 		self.RenameLableDigit.pack(side = TOP, fill = X)
@@ -451,7 +467,7 @@ class CreateFrameRename():
 		self.RenameButtonInsertOrdinal = ttk.Button(self.RenameFrameRight, text = "Insert Ordinal", command = self.InsertOrdinal)
 		self.RenameButtonInsertOrdinal.pack(side = TOP, fill = X)
 		
-		self.RenameLableReplaceOriginal = ttk.Label(self.RenameFrameRight, text = "Replce: Original ", anchor = W)
+		self.RenameLableReplaceOriginal = ttk.Label(self.RenameFrameRight, text = "Replce: Original", anchor = W)
 		self.RenameLableReplaceOriginal.pack(side = TOP, fill = X)
 		
 		self.RenameEntryReplaceOriginal = ttk.Entry(self.RenameFrameRight)
