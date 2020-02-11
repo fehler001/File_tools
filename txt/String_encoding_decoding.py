@@ -50,7 +50,7 @@ class CreateFrameStr():
 		if not 'combo_to' in j['file_tools']['txt']['string']:
 			j['file_tools']['txt']['string']['combo_to'] = 0
 		if not 'check_binary' in j['file_tools']['txt']['string']:
-			j['file_tools']['txt']['string']['check_binary'] = 0
+			j['file_tools']['txt']['string']['check_binary'] = 1
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -66,8 +66,8 @@ class CreateFrameStr():
 		self.StrSavePath = j['file_tools']['txt']['string']['path_save']
 		self.StrEntryTxtSource.insert(0, self.StrTxtPath)
 		self.StrEntryTxtDestination.insert(0, self.StrSavePath )
-		self.StrComboFrom.current(j['file_tools']['txt']['string']['combo_from'])
-		self.StrComboTo.current(j['file_tools']['txt']['string']['combo_to'])
+		self.StrComboFrom.set(j['file_tools']['txt']['string']['combo_from'])
+		self.StrComboTo.set(j['file_tools']['txt']['string']['combo_to'])
 		self.StrCheckBinaryVar.set( j['file_tools']['txt']['string']['check_binary'] )
 		f.close()
 
@@ -90,8 +90,8 @@ class CreateFrameStr():
 			f.close()
 			j['file_tools']['txt']['string']['path_txt'] = self.StrEntryTxtSource.get()
 			j['file_tools']['txt']['string']['path_save'] = self.StrEntryTxtDestination.get()
-			j['file_tools']['txt']['string']['combo_from'] = self.StrComboFrom.current()
-			j['file_tools']['txt']['string']['combo_to'] = self.StrComboTo.current()
+			j['file_tools']['txt']['string']['combo_from'] = self.StrComboFrom.get()
+			j['file_tools']['txt']['string']['combo_to'] = self.StrComboTo.get()
 			j['file_tools']['txt']['string']['check_binary'] = self.StrCheckBinaryVar.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -161,6 +161,22 @@ class CreateFrameStr():
 
 
 
+	def StrGuessTxt(self):
+		self.StrSaveEntry()
+		self.ReadStrPath()
+		self.StrTextDown.delete("1.0", "end")
+		src = self.StrTxtPath
+		if not os.path.isfile(src):
+			messagebox.showerror ("Warrning", "_____TXT SOURCE ERROR_____")
+			return
+		f = open(src, 'rb')
+		str = f.read()
+		enc = self.bl.guess_encoding_binary(str)
+		self.StrTextDown.insert(INSERT, enc)
+		self.StrTextDown.insert(INSERT, '\n\n')
+		self.StrTextDown.insert(INSERT, "If encoding doesn't in \"To\", you can just type in it\n")
+
+
 	def StrEncoding(self):
 		self.StrSaveEntry()
 		self.StrTextDown.delete("1.0", "end")
@@ -219,13 +235,13 @@ class CreateFrameStr():
 			self.StrTextDown.delete("1.0", "end")
 			if is_b == 1:
 				f = open(src, 'rb')
-				cont = f.read(200)
+				cont = f.read(2000)
 				f.close()
 				new_cont = self.bl.bytes_decode(cont, enc_to)
 				self.StrTextDown.insert(INSERT, new_cont)
 			else:
 				f = open(src, 'r', encoding = enc_from, errors = 'backslashreplace')
-				cont = f.read(200)
+				cont = f.read(2000)
 				f.close()
 				new_cont = self.bl.str_transcode(cont, enc_from, enc_to)
 				self.StrTextDown.insert(INSERT, new_cont)
@@ -240,14 +256,14 @@ class CreateFrameStr():
 			cont = f.read()
 			f.close()
 			new_cont = self.bl.bytes_decode(cont, enc = enc_to)
-			f = open(new_txt, 'w', encoding = enc_to)
+			f = open(new_txt, 'w', encoding = 'utf-8')
 			f.write(new_cont)
 		else:
 			f = open(src, 'r', encoding = enc_from, errors = 'backslashreplace')
 			cont = f.read()
 			f.close()
 			new_cont = self.bl.str_transcode(cont, enc_from = enc_from, enc_to = enc_to)
-			f = open(new_txt, 'w', encoding = enc_to)
+			f = open(new_txt, 'w', encoding = 'utf-8')
 			f.write(new_cont)
 		
 		
@@ -348,13 +364,16 @@ class CreateFrameStr():
 		self.StrLableBlank = ttk.Label(self.StrFrameRight)
 		self.StrLableBlank.pack(side = TOP, fill = X)
 
+		self.StrButtonGuessTxt = ttk.Button(self.StrFrameRight, text = "Guess Encoding", command = self.StrGuessTxt)
+		self.StrButtonGuessTxt.pack(side = TOP, fill = X)
+
 		self.StrCheckBinaryVar = IntVar()
 		self.StrCheckBinary = ttk.Checkbutton(self.StrFrameRight, text = 'Binary Mode ( results only affected by "To" )', \
 											variable = self.StrCheckBinaryVar, onvalue = 1, offvalue = 0) 
 		self.StrCheckBinary.pack(fill = X, side = TOP)
 		self.StrCheckBinaryVar.set(0)
 		
-		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Get Preview", command = self.StrTranscodingTxtPreview)
+		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Get Preview ( show 2000 characters )", command = self.StrTranscodingTxtPreview)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
 
 		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Transcode txt", command = self.StrTranscodingTxt)
@@ -363,11 +382,12 @@ class CreateFrameStr():
 		self.StrLableBlank = ttk.Label(self.StrFrameRight)
 		self.StrLableBlank.pack(side = TOP, fill = X)
 
+
 		self.StrLableBlank = ttk.Label(self.StrFrameRight, text = "From")
 		self.StrLableBlank.pack(side = TOP, fill = X)
 
 		values = ('utf-8', 'utf-16', 'utf_16_be', 'utf-32', 'raw_unicode_escape', 'unicode_escape',  'base64', 'html',  
-			'gb2312', 'big5', 'gbk', 'gb18030', 'shift-jis', 'shift_jis_2004', 'shift_jisx0213')
+			'gb2312', 'big5', 'gbk', 'gb18030', 'cp936', 'cp932', 'shift-jis', 'shift_jis_2004', 'shift_jisx0213')
 
 		self.StrComboFromVar = StringVar()
 		self.StrComboFrom = ttk.Combobox(self.StrFrameRight, textvariable = self.StrComboFromVar)

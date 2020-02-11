@@ -9,6 +9,9 @@ import stat
 import codecs
 import base64
 import html
+import chardet
+from encodings.aliases import aliases
+import pprint
 
 
 class BaseLib():
@@ -49,8 +52,8 @@ class BaseLib():
 		return rst
 
 
-	def bytes_decode(self, bytes, enc = 'utf-8'):
-		rst = codecs.decode(bytes, encoding = enc, errors = 'backslashreplace')
+	def bytes_decode(self, binary, enc = 'utf-8'):
+		rst = codecs.decode(binary, encoding = enc, errors = 'backslashreplace')
 		return rst
 
 
@@ -79,14 +82,18 @@ class BaseLib():
 
 
 
+	def guess_encoding_binary(self, binary):
+		return chardet.detect(binary)
+
+
+
+
 if __name__ == '__main__':
 	import txtlib
 	p = r'd:\a.txt'
 	tl = txtlib.TxtLib()
+	bl = BaseLib()
 	b = b"example"
 	print(b)
 	s = "ああ有難う士兵出?"
-	print(str(bytes(s, encoding = "shift-jis")))
-	print(str(b, encoding = "utf-8"))
-	tl.write_txt(p, s, mode = 'wb', encoding = None)
 
