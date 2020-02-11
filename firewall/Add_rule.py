@@ -39,7 +39,7 @@ class CreateFrameARule():
 		if not 'addrule' in j['file_tools']['firewall']:
 			j['file_tools']['firewall']['addrule'] = {}
 		if not 'path_addrule' in j['file_tools']['firewall']['addrule']:
-			j['file_tools']['firewall']['addrule']['path_addrule'] = '.'
+			j['file_tools']['firewall']['addrule']['path_addrule'] = ''
 		if not 'extension' in j['file_tools']['firewall']['addrule']:
 			j['file_tools']['firewall']['addrule']['extension'] = '.exe'
 		if not 'check_inbound' in j['file_tools']['firewall']['addrule']:

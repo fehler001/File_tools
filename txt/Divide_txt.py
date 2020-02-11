@@ -42,9 +42,9 @@ class CreateFrameDivide():
 		if not 'divide_txt' in j['file_tools']['txt']:
 			j['file_tools']['txt']['divide_txt'] = {}
 		if not 'path_txt' in j['file_tools']['txt']['divide_txt']:
-			j['file_tools']['txt']['divide_txt']['path_txt'] = '.'
+			j['file_tools']['txt']['divide_txt']['path_txt'] = ''
 		if not 'path_save' in j['file_tools']['txt']['divide_txt']:
-			j['file_tools']['txt']['divide_txt']['path_save'] = '.'
+			j['file_tools']['txt']['divide_txt']['path_save'] = ''
 		if not 'entry_digit' in j['file_tools']['txt']['divide_txt']:
 			j['file_tools']['txt']['divide_txt']['entry_digit'] = ''
 		if not 'entry_limit' in j['file_tools']['txt']['divide_txt']:
@@ -113,7 +113,7 @@ class CreateFrameDivide():
 			self.DivideTextDownFiles.insert(INSERT, '\n')
 	'''
 
-	def AddSource(self):
+	def DivideAddSource(self):
 		self.ReadDividePath()
 		p = self.DivideTxtPath
 		if os.path.isdir(p):
@@ -130,7 +130,7 @@ class CreateFrameDivide():
 		except:pass
 	
 
-	def AddDirection(self):
+	def DivideAddDirection(self):
 		self.ReadDividePath()
 		p = self.DivideSavePath
 		if os.path.isdir(p):
@@ -248,13 +248,13 @@ dst: 000001.txt( line1, line2.....line500 ), ...... 000010.txt( line4501, line45
 		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
 		self.DivideLableBlank.pack(side = TOP, fill = X)
 
-		self.DivideButtonSetSource = ttk.Button(self.DivideFrameRight, text = "Add txt", command = self.AddSource) 
+		self.DivideButtonSetSource = ttk.Button(self.DivideFrameRight, text = "Add txt", command = self.DivideAddSource) 
 		self.DivideButtonSetSource.pack(fill = X, side = TOP)
 		
 		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
 		self.DivideLableBlank.pack(side = TOP, fill = X)
 
-		self.DivideButtonSetDestination = ttk.Button(self.DivideFrameRight, text = "Set Save Path", command = self.AddDirection) 
+		self.DivideButtonSetDestination = ttk.Button(self.DivideFrameRight, text = "Set Save Path", command = self.DivideAddDirection) 
 		self.DivideButtonSetDestination.pack(fill = X, side = TOP)
 
 		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)

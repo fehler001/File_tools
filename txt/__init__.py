@@ -15,9 +15,12 @@ import json
 
 
 import txt.Divide_txt
+import txt.String_encoding_decoding
 
 
-class Txt(txt.Divide_txt.CreateFrameDivide):
+class Txt(txt.Divide_txt.CreateFrameDivide,
+		  txt.String_encoding_decoding.CreateFrameStr,
+		  ):
 
 	def __init__(self):
 		super().__init__()
@@ -31,6 +34,8 @@ class Txt(txt.Divide_txt.CreateFrameDivide):
 
 		self.DivideRoot = self.FrameDivide
 		self.DivideDefault()
+		self.StrRoot = self.FrameStr
+		self.StrDefault()
 
 
 
@@ -39,3 +44,6 @@ class Txt(txt.Divide_txt.CreateFrameDivide):
 		self.FrameDivide = Frame(self.TxtRoot)
 		self.FrameDivide.pack(fill = BOTH)
 		self.TxtRoot.add(self.FrameDivide, text='txt Divide')
+		self.FrameStr = Frame(self.TxtRoot)
+		self.FrameStr.pack(fill = BOTH)
+		self.TxtRoot.add(self.FrameStr, text='Transcode')

@@ -41,21 +41,21 @@ class CreateFrameMove():
 		if not 'move' in j['file_tools']['file']:
 			j['file_tools']['file']['move'] = {}
 		if not 'path_move' in j['file_tools']['file']['move']:
-			j['file_tools']['file']['move']['path_move'] = '.'
+			j['file_tools']['file']['move']['path_move'] = ''
 		if not 'check_new_folder' in j['file_tools']['file']['move']:
-			j['file_tools']['file']['move']['check_new_folder'] = '0'
+			j['file_tools']['file']['move']['check_new_folder'] = 0
 		if not 'name_new_folder' in j['file_tools']['file']['move']:
 			j['file_tools']['file']['move']['name_new_folder'] = ''
 		if not 'check_seperate' in j['file_tools']['file']['move']:
-			j['file_tools']['file']['move']['check_seperate'] = '0'
+			j['file_tools']['file']['move']['check_seperate'] = 0
 		if not 'interval' in j['file_tools']['file']['move']:
 			j['file_tools']['file']['move']['interval'] = ''
 		if not 'check_skip_exist' in j['file_tools']['file']['move']:
-			j['file_tools']['file']['move']['check_skip_exist'] = '0'
+			j['file_tools']['file']['move']['check_skip_exist'] = 0
 		if not 'check_delete_including_readonly' in j['file_tools']['file']['move']:
-			j['file_tools']['file']['move']['check_delete_including_readonly'] = '1'
+			j['file_tools']['file']['move']['check_delete_including_readonly'] = 1
 		if not 'check_delete_skip_error' in j['file_tools']['file']['move']:
-			j['file_tools']['file']['move']['check_delete_skip_error'] = '0'
+			j['file_tools']['file']['move']['check_delete_skip_error'] = 0
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -68,13 +68,13 @@ class CreateFrameMove():
 		j = json.load(f)
 		self.MovePath = j['file_tools']['file']['move']['path_move']
 		self.MoveEntryPath.insert(0, self.MovePath)
-		self.MoveCheckCreatingVar.set( int(j['file_tools']['file']['move']['check_new_folder']) )
+		self.MoveCheckCreatingVar.set( j['file_tools']['file']['move']['check_new_folder'])
 		self.MoveEntryCreating.insert(0, j['file_tools']['file']['move']['name_new_folder'])
-		self.MoveCheckIntervalVar.set( int(j['file_tools']['file']['move']['check_seperate']) )
+		self.MoveCheckIntervalVar.set( j['file_tools']['file']['move']['check_seperate'])
 		self.MoveEntryInterval.insert(0, j['file_tools']['file']['move']['interval'])
-		self.MoveCheckSkipVar.set( int(j['file_tools']['file']['move']['check_skip_exist']) )
-		self.MoveCheckReadOnlyVar.set( int(j['file_tools']['file']['move']['check_delete_including_readonly']) )
-		self.MoveCheckSkipDeleteVar.set( int(j['file_tools']['file']['move']['check_delete_skip_error']) )
+		self.MoveCheckSkipVar.set( j['file_tools']['file']['move']['check_skip_exist'])
+		self.MoveCheckReadOnlyVar.set( j['file_tools']['file']['move']['check_delete_including_readonly'])
+		self.MoveCheckSkipDeleteVar.set( j['file_tools']['file']['move']['check_delete_skip_error'])
 		f.close()
 
 	
@@ -92,13 +92,13 @@ class CreateFrameMove():
 			j = json.load(f)
 			f.close()
 			j['file_tools']['file']['move']['path_move'] = self.MoveEntryPath.get()
-			j['file_tools']['file']['move']['check_new_folder'] = str( self.MoveCheckCreatingVar.get() )
+			j['file_tools']['file']['move']['check_new_folder'] = self.MoveCheckCreatingVar.get()
 			j['file_tools']['file']['move']['name_new_folder'] = self.MoveEntryCreating.get()
-			j['file_tools']['file']['move']['check_seperate'] = str( self.MoveCheckIntervalVar.get() )
+			j['file_tools']['file']['move']['check_seperate'] = self.MoveCheckIntervalVar.get()
 			j['file_tools']['file']['move']['interval'] = self.MoveEntryInterval.get()
-			j['file_tools']['file']['move']['check_skip_exist'] = str( self.MoveCheckSkipVar.get() )
-			j['file_tools']['file']['move']['check_delete_including_readonly'] = str( self.MoveCheckReadOnlyVar.get() )
-			j['file_tools']['file']['move']['check_delete_skip_error'] = str( self.MoveCheckSkipDeleteVar.get() )
+			j['file_tools']['file']['move']['check_skip_exist'] = self.MoveCheckSkipVar.get()
+			j['file_tools']['file']['move']['check_delete_including_readonly'] = self.MoveCheckReadOnlyVar.get()
+			j['file_tools']['file']['move']['check_delete_skip_error'] = self.MoveCheckSkipDeleteVar.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()

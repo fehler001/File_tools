@@ -39,7 +39,7 @@ class CreateFrameFilter():
 		if not 'filter' in j['file_tools']['file']:
 			j['file_tools']['file']['filter'] = {}
 		if not 'path_filter' in j['file_tools']['file']['filter']:
-			j['file_tools']['file']['filter']['path_filter'] = '.'
+			j['file_tools']['file']['filter']['path_filter'] = ''
 		if not 'check_extension' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['check_extension'] = 0
 		if not 'including_string' in j['file_tools']['file']['filter']:

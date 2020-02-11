@@ -40,7 +40,7 @@ class CreateFrameRefine():
 		if not 'refine' in j['file_tools']['file']:
 			j['file_tools']['file']['refine'] = {}
 		if not 'path_refine' in j['file_tools']['file']['refine']:
-			j['file_tools']['file']['refine']['path_refine'] = '.'
+			j['file_tools']['file']['refine']['path_refine'] = ''
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)

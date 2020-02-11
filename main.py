@@ -194,9 +194,9 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 			self.MoveSaveEntry()
 			
 			self.DivideSaveEntry()
+			self.StrSaveEntry()
 
 			self.ARuleSaveEntry()
-			print('a')
 			if exit == 0:
 				return
 		finally:

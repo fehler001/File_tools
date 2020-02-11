@@ -62,10 +62,10 @@ C:\Windows\SolidWorks      # DO NOT CHANGE THIS!!
 
 
 # winrar
-#C:\Program Files\WinRA
+#C:\Program Files\WinRAR
 
 # winrar default
-#C:\Users\Administrator\AppData\Roaming\WinRA      # DO NOT CHANGE THIS!!
+#C:\Users\Administrator\AppData\Roaming\WinRAR      # DO NOT CHANGE THIS!!
 
 
 

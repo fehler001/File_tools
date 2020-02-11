@@ -37,15 +37,15 @@ class CreateFrameFind():
 		if not 'find' in j['file_tools']['file']:
 			j['file_tools']['file']['find'] = {}
 		if not 'path_find_src' in j['file_tools']['file']['find']:
-			j['file_tools']['file']['find']['path_find_src'] = '.'
+			j['file_tools']['file']['find']['path_find_src'] = ''
 		if not 'path_find_dst' in j['file_tools']['file']['find']:
-			j['file_tools']['file']['find']['path_find_dst'] = '.'
+			j['file_tools']['file']['find']['path_find_dst'] = ''
 		if not 'check_sub' in j['file_tools']['file']['find']:
-			j['file_tools']['file']['find']['check_sub'] = '0'
+			j['file_tools']['file']['find']['check_sub'] = 0
 		if not 'check_files' in j['file_tools']['file']['find']:
-			j['file_tools']['file']['find']['check_files'] = '1'
+			j['file_tools']['file']['find']['check_files'] = 1
 		if not 'check_folders' in j['file_tools']['file']['find']:
-			j['file_tools']['file']['find']['check_folders'] = '0'
+			j['file_tools']['file']['find']['check_folders'] = 0
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -60,9 +60,9 @@ class CreateFrameFind():
 		self.FindEntrySource.insert(0, self.FindSource)
 		self.Destination = j['file_tools']['file']['find']['path_find_dst']
 		self.FindEntryDestination.insert(0, self.Destination)
-		self.FindCheckSubfolderVar.set( int(j['file_tools']['file']['find']['check_sub']) )
-		self.FindCheckFileVar.set( int(j['file_tools']['file']['find']['check_files']) )
-		self.FindCheckFolderVar.set( int(j['file_tools']['file']['find']['check_folders']) )
+		self.FindCheckSubfolderVar.set( j['file_tools']['file']['find']['check_sub'])
+		self.FindCheckFileVar.set( j['file_tools']['file']['find']['check_files'])
+		self.FindCheckFolderVar.set( j['file_tools']['file']['find']['check_folders'])
 		f.close()
 
 
@@ -83,9 +83,9 @@ class CreateFrameFind():
 			f.close()
 			j['file_tools']['file']['find']['path_find_src'] = self.FindEntrySource.get()
 			j['file_tools']['file']['find']['path_find_dst'] = self.FindEntryDestination.get()
-			j['file_tools']['file']['find']['check_sub'] = str( self.FindCheckSubfolderVar.get() )
-			j['file_tools']['file']['find']['check_files'] = str( self.FindCheckFileVar.get() )
-			j['file_tools']['file']['find']['check_folders'] = str( self.FindCheckFolderVar.get() )
+			j['file_tools']['file']['find']['check_sub'] = self.FindCheckSubfolderVar.get()
+			j['file_tools']['file']['find']['check_files'] = self.FindCheckFileVar.get()
+			j['file_tools']['file']['find']['check_folders'] = self.FindCheckFolderVar.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()

@@ -1,11 +1,14 @@
 #coding=utf-8
 #File_tools/lib/baselib.py
+
 import os
 from tkinter import messagebox
 import random
 import shutil
 import stat
-
+import codecs
+import base64
+import html
 
 
 class BaseLib():
@@ -30,4 +33,60 @@ class BaseLib():
 				messagebox.showerror ("STRING ERROR", "['/', '\\', ':', '*', '\"', '<', '>', '|', '?'] are not allowed")
 				return -1
 
+
+
+	def str_encode(self, string, enc = 'utf-8'):
+		if enc == 'html':
+			rst = html.escape(string)
+			return rst
+		if enc == 'base64':
+			rst_b = base64.b64encode(string.encode("utf-8"))
+			rst = str(rst_b, "utf-8")
+			#rst_b = base64.urlsafe_b64encode(string.encode("utf-8"))   # safe encode in base64
+			#rst = str(rst_b, "utf-8")
+			return rst
+		rst = codecs.encode(string, encoding = enc, errors = 'backslashreplace')
+		return rst
+
+
+	def bytes_decode(self, bytes, enc = 'utf-8'):
+		rst = codecs.decode(bytes, encoding = enc, errors = 'backslashreplace')
+		return rst
+
+
+	def str_decode(self, string, enc = 'utf-8'):
+		if string[0:2] == "b'" and string[-1] == "'":
+			str = string[2:-1]
+		else:
+			str = string
+		if enc == 'html':
+			rst = html.unescape(str)
+			return rst
+		if enc == 'base64':
+			b = base64.b64decode(str)
+			rst = codecs.decode(b, encoding = 'utf-8', errors = 'backslashreplace')
+			return rst
+		else:
+			b = eval('b' + "'" + str + "'")		
+		rst = codecs.decode(b, encoding = enc, errors = 'backslashreplace')
+		return rst
+
+
+	def str_transcode(self, string, enc_from = 'utf-8', enc_to = 'utf-8'):
+		b = self.str_encode(string, enc = enc_from)
+		rst = self.bytes_decode(b, enc = enc_to)
+		return rst
+
+
+
+if __name__ == '__main__':
+	import txtlib
+	p = r'd:\a.txt'
+	tl = txtlib.TxtLib()
+	b = b"example"
+	print(b)
+	s = "ああ有難う士兵出?"
+	print(str(bytes(s, encoding = "shift-jis")))
+	print(str(b, encoding = "utf-8"))
+	tl.write_txt(p, s, mode = 'wb', encoding = None)
 

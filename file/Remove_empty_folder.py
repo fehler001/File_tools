@@ -36,7 +36,7 @@ class CreateFrameRemove():
 		if not 'remove_empty_folder' in j['file_tools']['file']:
 			j['file_tools']['file']['remove_empty_folder'] = {}
 		if not 'path_remove' in j['file_tools']['file']['remove_empty_folder']:
-			j['file_tools']['file']['remove_empty_folder']['path_remove'] = '.'
+			j['file_tools']['file']['remove_empty_folder']['path_remove'] = ''
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)

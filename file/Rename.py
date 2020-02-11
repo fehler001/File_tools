@@ -46,7 +46,7 @@ class CreateFrameRename():
 		if not 'rename' in j['file_tools']['file']:
 			j['file_tools']['file']['rename'] = {}
 		if not 'path_rename' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['path_rename'] = '.'
+			j['file_tools']['file']['rename']['path_rename'] = ''
 		if not 'check_files' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['check_files'] = 1
 		if not 'check_folders' in j['file_tools']['file']['rename']:
