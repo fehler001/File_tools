@@ -46,9 +46,9 @@ class CreateFrameStr():
 		if not 'path_save' in j['file_tools']['txt']['string']:
 			j['file_tools']['txt']['string']['path_save'] = ''
 		if not 'combo_from' in j['file_tools']['txt']['string']:
-			j['file_tools']['txt']['string']['combo_from'] = 0
+			j['file_tools']['txt']['string']['combo_from'] = 'utf-8'
 		if not 'combo_to' in j['file_tools']['txt']['string']:
-			j['file_tools']['txt']['string']['combo_to'] = 0
+			j['file_tools']['txt']['string']['combo_to'] = 'utf-8'
 		if not 'check_binary' in j['file_tools']['txt']['string']:
 			j['file_tools']['txt']['string']['check_binary'] = 1
 		if j != j2:

@@ -22,6 +22,9 @@ import lib.filelib
 import lib.txtlib
 import lib.firewalllib
 
+# third party package must also be import in main if using pyinstaller
+import chardet
+import natsort
 from natsort import natsort_keygen, ns
 
 
@@ -32,7 +35,7 @@ class Share():
 		super().__init__()
 
 		self.RootWidth = 1000
-		self.RootHeight = 600
+		self.RootHeight = 630
 		self.LogPath = r"C:\temp\File_tools.json"
 		self.firewall_add_rules_savefile = r'firewall_add_rules_savefile.txt'
 		self.EnableLog = 1
@@ -67,6 +70,8 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 
 	def FileToolsDefaultLog(self, recur = 0):
 		if not os.path.exists(self.LogPath):
+			if not os.path.exists( os.path.dirname(self.LogPath) ):
+				os.makedirs( os.path.dirname(self.LogPath) )
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			j = {'file_tools':{} }
 			json.dump(j, f, ensure_ascii=False)
@@ -81,9 +86,9 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 			if not 'window' in j['file_tools']:
 				j['file_tools']['window'] = {}
 			if not 'width' in j['file_tools']['window']:
-				j['file_tools']['window']['width'] = 1000
+				j['file_tools']['window']['width'] = self.RootWidth
 			if not 'height' in j['file_tools']['window']:
-				j['file_tools']['window']['height'] = 600
+				j['file_tools']['window']['height'] = self.RootHeight
 			if not 'menu' in j['file_tools']:
 				j['file_tools']['menu'] = {}
 			if not 'log' in j['file_tools']['menu']:

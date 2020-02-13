@@ -61,10 +61,18 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['insert_string'] = ''
 		if not 'insert_position' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['insert_position'] = ''
+		if not 'check_old' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['check_old'] = 0
 		if not 'replace_original' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['replace_original'] = ''
 		if not 'replace_substitute' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['replace_substitute'] = ''
+		if not 'positon_left' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['positon_left'] = ''
+		if not 'positon_right' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['positon_right'] = ''
+		if not 'text_up' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['text_up'] = ''
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -83,8 +91,13 @@ class CreateFrameRename():
 		self.RenameEntryOutset.insert(0, j['file_tools']['file']['rename']['entry_outset'])
 		self.RenameEntryInsertPosition.insert(0, j['file_tools']['file']['rename']['insert_position'])
 		self.RenameEntryInsertString.insert(0, j['file_tools']['file']['rename']['insert_string'])
+		self.RenameCheckDeleteOldVar.set( j['file_tools']['file']['rename']['check_old'] )
 		self.RenameEntryReplaceOriginal.insert(0, j['file_tools']['file']['rename']['replace_original'])
 		self.RenameEntryReplaceSubstitute.insert(0, j['file_tools']['file']['rename']['replace_substitute'])
+		self.RenameEntryP1.insert(0, j['file_tools']['file']['rename']['positon_left'])
+		self.RenameEntryP2.insert(0, j['file_tools']['file']['rename']['positon_right'])
+		self.RenameTextUpFiles.delete('1.0', 'end')
+		self.RenameTextUpFiles.insert(INSERT, j['file_tools']['file']['rename']['text_up'])
 		f.close()
 
 	
@@ -110,8 +123,14 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['entry_outset'] = self.RenameEntryOutset.get()
 			j['file_tools']['file']['rename']['insert_position'] = self.RenameEntryInsertPosition.get()
 			j['file_tools']['file']['rename']['insert_string'] = self.RenameEntryInsertString.get()
+			j['file_tools']['file']['rename']['check_old'] = self.RenameCheckDeleteOldVar.get()
 			j['file_tools']['file']['rename']['replace_original'] = self.RenameEntryReplaceOriginal.get()
 			j['file_tools']['file']['rename']['replace_substitute'] = self.RenameEntryReplaceSubstitute.get()
+			j['file_tools']['file']['rename']['positon_left'] = self.RenameEntryP1.get()
+			j['file_tools']['file']['rename']['positon_right'] = self.RenameEntryP2.get()
+			tmp = self.RenameTextUpFiles.get('1.0', 'end')
+			if tmp[-1] == '\n': tmp = tmp[ :-1]
+			j['file_tools']['file']['rename']['text_up'] = tmp 
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
@@ -137,7 +156,7 @@ class CreateFrameRename():
 	
 
 	def RenameEliminateNullDown(self):
-		files = self.RenameTextDownFiles.get("1.0", "end")  #"end-1c" till second last charactor
+		files = self.RenameTextDownFiles.get("1.0", "end")  
 		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
 		for file in files:
@@ -228,7 +247,7 @@ class CreateFrameRename():
 		if len(str(self.RenameEntryDigit.get() )) > 2:
 			messagebox.showerror ("ERROR", "Rename By Ordinal: Digit\n\n" + 'Under 100, please')
 			return
-		files = self.RenameTextUpFiles.get("1.0", "end")  #"end-1c" till second last charactor
+		files = self.RenameTextUpFiles.get("1.0", "end") 
 		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
 		
@@ -242,7 +261,7 @@ class CreateFrameRename():
 	def InsertString(self):
 		self.RenameInitializeEntry()
 		self.RenameSaveEntry()
-		files = self.RenameTextUpFiles.get("1.0", "end")  #"end-1c" till second last charactor
+		files = self.RenameTextUpFiles.get("1.0", "end") 
 		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
 		cont = self.RenameEntryInsertString.get()
@@ -260,11 +279,20 @@ class CreateFrameRename():
 	def InsertOrdinal(self):
 		self.RenameInitializeEntry()
 		self.RenameSaveEntry()
-		files = self.RenameTextUpFiles.get("1.0", "end")  #"end-1c" till second last charactor
+		files = self.RenameTextUpFiles.get("1.0", "end") 
 		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
-		files = self.fl.insert(files, pos = self.RenamePosition, cont = '', is_ordinal = True, digit = self.RenameDigit, outset = self.RenameOutset)
-		for file in files:
+		new_files = []
+		if self.RenameCheckDeleteOldVar.get() == 1:
+			for file in files:
+				if file == '' or file == '\n':
+					continue
+				file = self.fl.delete_front_ordinal(file)
+				new_files.append(file)
+		else:
+			new_files = files
+		rst = self.fl.insert(new_files, pos = self.RenamePosition, cont = '', is_ordinal = True, digit = self.RenameDigit, outset = self.RenameOutset)
+		for file in rst:
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
 		self.RenameEliminateNullDown()
@@ -272,7 +300,7 @@ class CreateFrameRename():
 
 	def Replace(self):
 		self.RenameSaveEntry()
-		files = self.RenameTextUpFiles.get("1.0", "end")  #"end-1c" till second last charactor
+		files = self.RenameTextUpFiles.get("1.0", "end")
 		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
 		original = self.RenameEntryReplaceOriginal.get()
@@ -286,11 +314,49 @@ class CreateFrameRename():
 		self.RenameEliminateNullDown()
 	
 
+
+	def GetMiddle(self, get_middle = 1):
+		self.RenameSaveEntry()
+		p1 = self.RenameEntryP1.get()
+		p2 = self.RenameEntryP2.get()
+		c1 = self.bl.check_legit_int(p1)
+		if c1 == -1:
+			return
+		c2 = self.bl.check_legit_int(p2)
+		if c2 == -1:
+			return
+		p1 = int(p1)
+		p2 = int(p2)
+		if p1 >= 0 and p2 >=0:
+			if p1 >= p2:
+				messagebox.showerror ("ERROR", '"Left Position" MUST < "Right position" !')
+				return
+		if p1 < 0 and p2 < 0:
+			if p1 >= p2:
+				messagebox.showerror ("ERROR", '"Left Position" MUST < "Right position" !')
+				return
+		files = self.RenameTextUpFiles.get("1.0", "end") 
+		self.RenameTextDownFiles.delete("1.0", "end")
+		files = files.split('\n')
+		files = self.fl.get_or_delete_middle_filename(files, p1, p2, get_middle = get_middle)
+		if self.bl.check_has_repeat(files) == -1:
+			return
+		for file in files:
+			self.RenameTextDownFiles.insert(INSERT, file)
+			self.RenameTextDownFiles.insert(INSERT, '\n')
+		self.RenameEliminateNullDown()
+
+
+	def DeleteMiddle(self):
+		self.GetMiddle(get_middle = 0)
+
+
+
 	def Rename(self, SwitchRevoke = False):
 		self.RenameSaveEntry()
 		self.RenameCheckRepeatUp()
 		self.RenameEliminateNullDown()
-		UpFiles = self.RenameTextUpFiles.get("1.0", "end")  #"end-1c" till second last charactor
+		UpFiles = self.RenameTextUpFiles.get("1.0", "end") 
 		DownFiles = self.RenameTextDownFiles.get("1.0", "end")
 		if (len(UpFiles) < 5 or len(DownFiles) < 5):
 			messagebox.showerror ("Warrning", "_____EMPTY BOX_____")
@@ -349,7 +415,7 @@ class CreateFrameRename():
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
 		self.Rename(SwitchRevoke = True)
-		self.RenameVarNameUp.pop()        # or del VarNameUp[-1]
+		self.RenameVarNameUp.pop()        # or del VarNameUp[-1]  ( doesn't support str )
 		self.RenameVarNameDown.pop()
 		self.NRenameTimes = self.NRenameTimes - 1
 		self.RenameCheckRepeatUp()
@@ -360,7 +426,7 @@ class CreateFrameRename():
 		
 
 		# start up left Frame
-		self.RenameFrameUpLeft = ttk.LabelFrame(self.RenameRoot, text = "Files")
+		self.RenameFrameUpLeft = ttk.LabelFrame(self.RenameRoot, text = "Files       ( Note: Rename in flash drive could cause filename 'chaos' )")
 		self.RenameFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 		
 		self.RenameScrollbarXUpfiles = ttk.Scrollbar(self.RenameFrameUpLeft, orient = HORIZONTAL)
@@ -377,7 +443,7 @@ class CreateFrameRename():
 		# end up left Frame
 		
 		# start down left Frame
-		self.RenameFrameDownLeft = ttk.LabelFrame(self.RenameRoot, text = "Results    ( Revoke files and folders at same time could cause your filename 'CAHOS' )")
+		self.RenameFrameDownLeft = ttk.LabelFrame(self.RenameRoot, text = "Results    ( Revoke files and folders at same time could cause your filename 'chaos' )")
 		self.RenameFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.51, relheight = 0.48)
 		
 		self.RenameScrollbarXDownfiles = ttk.Scrollbar(self.RenameFrameDownLeft, orient = HORIZONTAL)
@@ -400,14 +466,17 @@ class CreateFrameRename():
 		self.RenameButtonReset = ttk.Button(self.RenameFrameRight, text = "Reset", command = self.RenameReset) 
 		self.RenameButtonReset.pack(fill = X, side = TOP)
 
-		self.RenameButtonAddOneFolder = ttk.Button(self.RenameFrameRight, text = "Add One Folder", command = self.RenameAddOneFolder) 
-		self.RenameButtonAddOneFolder.pack(fill = X, side = TOP)
-			
-		self.RenameButtonAddFiles = ttk.Button(self.RenameFrameRight, text = "Add Files", command = self.RenameAddFiles) 
-		self.RenameButtonAddFiles.pack(fill = X, side = TOP)
+		# start RenameFrameRight_0
+		self.RenameFrameRight_0 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_0.pack(fill = X, side = TOP)
 
-		
-		
+		self.RenameButtonAddFiles = ttk.Button(self.RenameFrameRight_0, text = "       Add Files      ", command = self.RenameAddFiles) 
+		self.RenameButtonAddFiles.pack(fill = X, side = LEFT, expand = True)
+
+		self.RenameButtonAddOneFolder = ttk.Button(self.RenameFrameRight_0, text = "Add One Folder", command = self.RenameAddOneFolder) 
+		self.RenameButtonAddOneFolder.pack(fill = X, side = LEFT, expand = True)
+		# end RenameFrameRight_0
+				
 		self.RenameCheckFileVar = IntVar() # StringVar()
 		self.RenameCheckFile = ttk.Checkbutton(self.RenameFrameRight, text = "Including Files", \
 											variable = self.RenameCheckFileVar, onvalue = 1, offvalue = 0) 
@@ -455,20 +524,36 @@ class CreateFrameRename():
 		self.RenameEntryInsertString = ttk.Entry(self.RenameFrameRight)
 		self.RenameEntryInsertString.pack(side = TOP, fill = X)
 
-		self.RenameLableInsertPosition = ttk.Label(self.RenameFrameRight, text = "Insert: Postion ('-1' = end)", anchor = W)
+		self.RenameLableInsertPosition = ttk.Label(self.RenameFrameRight, text = "Insert: Postion ('-1' = end )", anchor = W)
 		self.RenameLableInsertPosition.pack(side = TOP, fill = X)
 		
 		self.RenameEntryInsertPosition = ttk.Entry(self.RenameFrameRight)
 		self.RenameEntryInsertPosition.pack(side = TOP, fill = X)
+
+		# start RenameFrameRight_2
+		self.RenameFrameRight_2 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_2.pack(fill = X, side = TOP)
 		
-		self.RenameButtonInsertString = ttk.Button(self.RenameFrameRight, text = "Insert String", command = self.InsertString)
-		self.RenameButtonInsertString.pack(side = TOP, fill = X)
+		self.RenameButtonInsertString = ttk.Button(self.RenameFrameRight_2, text = "Insert String", command = self.InsertString)
+		self.RenameButtonInsertString.pack(fill = X, side = LEFT, expand = True)
 		
-		self.RenameButtonInsertOrdinal = ttk.Button(self.RenameFrameRight, text = "Insert Ordinal", command = self.InsertOrdinal)
-		self.RenameButtonInsertOrdinal.pack(side = TOP, fill = X)
+		self.RenameButtonInsertOrdinal = ttk.Button(self.RenameFrameRight_2, text = "Insert Ordinal", command = self.InsertOrdinal)
+		self.RenameButtonInsertOrdinal.pack(fill = X, side = LEFT, expand = True)
+		# end RenameFrameRight_2
 		
-		self.RenameLableReplaceOriginal = ttk.Label(self.RenameFrameRight, text = "Replce: Original", anchor = W)
-		self.RenameLableReplaceOriginal.pack(side = TOP, fill = X)
+		# start RenameFrameRight_3
+		self.RenameFrameRight_3 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_3.pack(fill = X, side = TOP)
+
+		self.RenameLableReplaceOriginal = ttk.Label(self.RenameFrameRight_3, text = "Replce: Original", anchor = W)
+		self.RenameLableReplaceOriginal.pack(side = LEFT, fill = X)
+
+		self.RenameCheckDeleteOldVar = IntVar()
+		self.RenameCheckDeleteOld = ttk.Checkbutton(self.RenameFrameRight_3, text = "delete old ordinal", \
+											variable = self.RenameCheckDeleteOldVar, onvalue = 1, offvalue = 0) 
+		self.RenameCheckDeleteOld.pack(fill = X, side = RIGHT)
+		self.RenameCheckDeleteOldVar.set(0)
+		# end RenameFrameRight_3
 		
 		self.RenameEntryReplaceOriginal = ttk.Entry(self.RenameFrameRight)
 		self.RenameEntryReplaceOriginal.pack(side = TOP, fill = X)
@@ -481,10 +566,37 @@ class CreateFrameRename():
 		
 		self.RenameButtonInsertEnd = ttk.Button(self.RenameFrameRight, text = "Replace", command = self.Replace)
 		self.RenameButtonInsertEnd.pack(side = TOP, fill = X)
+
+		self.RenameLableP1 = ttk.Label(self.RenameFrameRight, text = "Left Position ( start from last '/' )", anchor = W)
+		self.RenameLableP1.pack(side = TOP, fill = X)
+
+		self.RenameEntryP1 = ttk.Entry(self.RenameFrameRight)
+		self.RenameEntryP1.pack(side = TOP, fill = X)
+
+		self.RenameLableP2 = ttk.Label(self.RenameFrameRight, text = "Right Position ( '-1' = end, ext not count )", anchor = W)
+		self.RenameLableP2.pack(side = TOP, fill = X)
+
+		self.RenameEntryP2 = ttk.Entry(self.RenameFrameRight)
+		self.RenameEntryP2.pack(side = TOP, fill = X)
+
+		# start RenameFrameRight_4
+		self.RenameFrameRight_4 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_4.pack(fill = X, side = TOP)
+
+		self.RenameButtonGetMiddle = ttk.Button(self.RenameFrameRight_4, text = "   Get Middle  ", command = self.GetMiddle)
+		self.RenameButtonGetMiddle.pack(fill = X, side = LEFT, expand = True)
+
+		self.RenameButtonDeleteMiddle = ttk.Button(self.RenameFrameRight_4, text = "Delete Middle", command = self.DeleteMiddle)
+		self.RenameButtonDeleteMiddle.pack(fill = X, side = LEFT, expand = True)
+		# end RenameFrameRight_4
 		
-		self.RenameButtonRevoke = ttk.Button(self.RenameFrameRight, text = "Revoke", command = self.Revoke) #bg = "#e1e1e1"
-		self.RenameButtonRevoke.pack(fill = X, side = BOTTOM)
-		
-		self.RenameButtonRename = ttk.Button(self.RenameFrameRight, text = "Rename", command = self.Rename) #bg = "#e1e1e1"
-		self.RenameButtonRename.pack(fill = X, side = BOTTOM)
+		# start RenameFrameRight_5
+		self.RenameFrameRight_5 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_5.pack(fill = X, side = BOTTOM)
+
+		self.RenameButtonRename = ttk.Button(self.RenameFrameRight_5, text = "Rename", command = self.Rename)
+		self.RenameButtonRename.pack(fill = X, side = LEFT, expand = True)
+
+		self.RenameButtonRevoke = ttk.Button(self.RenameFrameRight_5, text = "Revoke", command = self.Revoke)
+		self.RenameButtonRevoke.pack(fill = X, side = LEFT, expand = True)
 		# end right frame

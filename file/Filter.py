@@ -42,6 +42,8 @@ class CreateFrameFilter():
 			j['file_tools']['file']['filter']['path_filter'] = ''
 		if not 'check_extension' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['check_extension'] = 0
+		if not 'check_recursive' in j['file_tools']['file']['filter']:
+			j['file_tools']['file']['filter']['check_recursive'] = 1
 		if not 'including_string' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['including_string'] = ''
 		if not 'excluding_string' in j['file_tools']['file']['filter']:
@@ -74,7 +76,8 @@ class CreateFrameFilter():
 		j = json.load(f)
 		self.FilterPath = j['file_tools']['file']['filter']['path_filter']
 		self.FilterEntryPath.insert(0, self.FilterPath)
-		self.FilterCheckExtentionVar.set( j['file_tools']['file']['filter']['check_extension'])
+		self.FilterCheckExtensionVar.set( j['file_tools']['file']['filter']['check_extension'])
+		self.FilterCheckRecursiveVar.set( j['file_tools']['file']['filter']['check_recursive'])
 		self.FilterEntryIncluding.insert(0, j['file_tools']['file']['filter']['including_string'])
 		self.FilterEntryExcluding.insert(0, j['file_tools']['file']['filter']['excluding_string'])
 		self.FilterEntryMax.insert(0, j['file_tools']['file']['filter']['file_size_max'])
@@ -102,7 +105,8 @@ class CreateFrameFilter():
 			j = json.load(f)
 			f.close()
 			j['file_tools']['file']['filter']['path_filter'] = self.FilterEntryPath.get()
-			j['file_tools']['file']['filter']['check_extension'] = self.FilterCheckExtentionVar.get()
+			j['file_tools']['file']['filter']['check_extension'] = self.FilterCheckExtensionVar.get()
+			j['file_tools']['file']['filter']['check_recursive'] = self.FilterCheckRecursiveVar.get()
 			j['file_tools']['file']['filter']['including_string'] = self.FilterEntryIncluding.get()
 			j['file_tools']['file']['filter']['excluding_string'] = self.FilterEntryExcluding.get()
 			j['file_tools']['file']['filter']['file_size_max'] = self.FilterEntryMax.get()
@@ -165,7 +169,8 @@ class CreateFrameFilter():
 		including_folder = self.FilterCheckFolderVar.get()
 		case = self.FilterCheckCaseVar.get()
 		is_exactly_same = self.FilterCheckSameVar.get()
-		is_extention = self.FilterCheckExtentionVar.get()
+		is_extention = self.FilterCheckExtensionVar.get()
+		is_recur = self.FilterCheckRecursiveVar.get()
 		try:
 			if self.FilterEntryMax.get() != '':
 				max = int(self.FilterEntryMax.get().replace(',', '') )
@@ -190,7 +195,7 @@ class CreateFrameFilter():
 		except:
 			messagebox.showerror ("ERROR", "Filename Length:\n\nPlease fill a number")
 			return
-		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min, is_extention)
+		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min, is_extention, is_recur)
 		for file in files:
 			self.FilterTextDownFiles.insert(INSERT, file)
 			self.FilterTextDownFiles.insert(INSERT, '\n')
@@ -277,11 +282,17 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight)
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
-		self.FilterCheckExtentionVar = IntVar()
-		self.FilterCheckExtention = ttk.Checkbutton(self.FilterFrameRight, text = 'Extention Mode ( fill like ".exe" )', \
-											variable = self.FilterCheckExtentionVar, onvalue = 1, offvalue = 0) 
-		self.FilterCheckExtention.pack(fill = X, side = TOP)
-		self.FilterCheckExtentionVar.set(0)
+		self.FilterCheckExtensionVar = IntVar()
+		self.FilterCheckExtension = ttk.Checkbutton(self.FilterFrameRight, text = 'Extention Mode ( fill like ".exe" )', \
+											variable = self.FilterCheckExtensionVar, onvalue = 1, offvalue = 0) 
+		self.FilterCheckExtension.pack(fill = X, side = TOP)
+		self.FilterCheckExtensionVar.set(0)
+
+		self.FilterCheckRecursiveVar = IntVar()
+		self.FilterCheckRecursive = ttk.Checkbutton(self.FilterFrameRight, text = 'Including Subfolder', \
+											variable = self.FilterCheckRecursiveVar, onvalue = 1, offvalue = 0) 
+		self.FilterCheckRecursive.pack(fill = X, side = TOP)
+		self.FilterCheckRecursiveVar.set(1)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Including String (like ".py" "asd")')
 		self.FilterLableBlank.pack(side = TOP, fill = X)

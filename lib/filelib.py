@@ -6,8 +6,12 @@ from tkinter import messagebox
 import random
 import shutil
 import stat
+import pprint
 
-import lib.baselib
+try:
+	import lib.baselib
+except:
+	import baselib
 
 from natsort import natsort_keygen, ns
 
@@ -63,8 +67,48 @@ class FileLib():
 		self.natsort_key1 = natsort_keygen(key=lambda y: y.lower())   # l1.sort(key=self.natsort_key1)  # lower means lowerCase -> upperCase
 		self.natsort_key2 = natsort_keygen(alg=ns.IGNORECASE)         # l2.sort(key=self.natsort_key2)
 
-		self.bl = lib.baselib.BaseLib()
+		try:
+			self.bl = lib.baselib.BaseLib()
+		except:
+			self.bl = baselib.BaseLib()
 
+
+
+	def clean_list(self, list, is_repeat = 0, is_sort = 0):
+		all = []
+		if is_repeat == 1:
+			list = set(list)
+		if is_sort == 1:
+			list = sorted(list, key = self.natsort_key2)
+		for item in list:
+			if item == '' or item == '\n':
+				continue
+			all.append(item)
+		return all
+
+
+
+	# path must use '/'
+	# 'c:/a.txt'  i1 = index '/', i2 = index '.', filename = 'a.txt', name = 'a', ext = '.txt'
+	def get_path_info(self, path):
+		if os.path.isfile(path):
+			i = path.rfind(r'/')
+			i2 = path.rfind('.')
+			parent = path[ :i]
+			filename = path[i+1: ]
+			if i2 != -1 and i2 > i:
+				name = path[i+1 : i2]
+				ext = path[i2: ]
+				return {'/':i, '.':i2, 'parent':parent, 'filename':filename, 'name':name, 'ext':ext, 'isfile':1, 'isdir':0}
+			if i2 == -1 or i2 < i:
+				name = path[i+1: ]
+				return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0}
+		if os.path.isdir(path):
+			i = path.rfind(r'/')
+			parent = path[ :i]
+			filename = path[i+1: ]
+			return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1}
+		return None
 
 
 	def collect_files_and_folders(self, path, is_add_file = 1, is_add_folder = 0, is_recur = 0):
@@ -106,6 +150,26 @@ class FileLib():
 				size = os.path.getsize(f)
 				total_size = total_size + size
 		return total_size
+
+
+
+	# 'c:/1.0-_asd.txt'  =>  'c:/asd.txt'
+	def delete_front_ordinal(self, path, is_under = 0):
+		d = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.']
+		if is_under == 1:
+			d.append('_')
+		try:
+			pinfo = self.get_path_info(path)
+			for i in range( len(pinfo['filename']) ):
+				if pinfo['filename'][0] in d:
+					pinfo['filename'] = pinfo['filename'][1: ]
+					continue
+				break
+			rst = pinfo['parent'] + '/' + pinfo['filename']
+			return rst
+		except:
+			return path
+
 
 
 	# length = 5, digit = 3, outset = 1  =>  001,002,003,004,005
@@ -163,8 +227,8 @@ class FileLib():
 				else:
 					length = length + 1
 			ordinal = self.generate_ordinal(length, digit = digit, outset = outset)
-			n = 0
-
+			
+		n = 0
 		for file in files:
 			if file == '\n' or file == '':
 				continue
@@ -209,6 +273,53 @@ class FileLib():
 				all.append(new_file)
 			else:
 				all.append(file)
+		return all
+
+
+
+	# p1 = 0, p2 = -1, 'c:/foo/bar.txt'
+	# get -> 'c:/foo/b.txt'  
+	# delete -> 'c:/foo/ar.txt'
+	def get_or_delete_middle_filename(self, files, p1 = 0, p2 = -1, get_middle = 1):
+		all = []
+		for file in files:
+			if file == '\n' or file == '':
+				continue
+			pinfo = self.get_path_info(file)
+			if pinfo is None:
+				continue
+			i = pinfo['/']
+			i2 = pinfo['.']
+			l = len(file)
+			if p1 >= 0 and p1 >= len(pinfo['name']):
+				all.append(file)
+				continue
+			if p1 < 0 and abs(p1) - 1 >= len(pinfo['name']):
+				all.append(file)
+				continue
+			if p2 >= 0 and p2 >= len(pinfo['name']):
+				all.append(file)
+				continue
+			if p2 < 0 and abs(p2) - 1 >= len(pinfo['name']):
+				all.append(file)
+				continue
+			if p1 < 0:
+				ap1 = l - len(pinfo['ext']) - abs(p1) + 1    # "-1 + 1" means end 
+			else:
+				ap1 = i + 1 + p1
+			if p2 < 0:
+				ap2 = l - len(pinfo['ext']) - abs(p2) + 1
+			else:
+				ap2 = i + 1 + p2
+
+			if get_middle == 1:
+				new_file = file[ :i+1] + file[ap1 : ap2] + pinfo['ext']
+			else:
+				new_file = file[ :ap1]  + file[ap2: ]
+
+			all.append(new_file)
+			#except:
+				#all.append(file)
 		return all
 
 
@@ -266,8 +377,8 @@ class FileLib():
 
 
 
-	def filter(self, path, include = '', exclude = '', max = '', min = '', \
-including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_extension = 0):
+	def filter(self, path, include = '', exclude = '', max = '', min = '', including_file = 1, including_folder = 0, \
+case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_extension = 0, is_recur = 1):
 		all = []
 		if case_insensitive == 1:
 			include = include.lower()
@@ -275,6 +386,9 @@ including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same 
 		if including_folder == 1 and is_extension == 0:
 			for root, subfolders, files in os.walk(path):
 				for subfolder in subfolders:
+					if is_recur == 0:
+						if root != path:
+							break
 					root_f = root.replace('\\', '/')       # root_f = root path of subfolder
 					if root_f[-1] == '/':
 						root_f = root_f[ :-1]
@@ -312,6 +426,9 @@ including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same 
 		if including_file == 1:
 			for root, subfolders, files in os.walk(path):
 				for file in files:
+					if is_recur == 0:
+						if root != path:
+							break
 					root_ff = root.replace('\\', '/')          # root_ff = root path of file
 					if root_ff[-1] == '/':
 						root_ff = root_ff[ :-1]
@@ -394,8 +511,9 @@ including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same 
 		return all
 
 
+
 	# see 'Move' description  
-	# 'c:/bar/a.txt' -> 'd:/bar/a.txt', 'd:/' is an enpty folder
+	# to achieve 'c:/bar/a.txt' -> 'd:/bar/a.txt',  'd:/' is an enpty folder
 	# shutil.copytree('c:/bar', 'd:/bar')  or  shutil.copy2('c:/bar/a.txt', 'd:/bar/a.txt')
 	def move_or_copy(self, lines, path, is_creating_new_folder = 0, new_folder_name = '', is_interval = 0, interval = 100, skip = 0, is_move = 0 ):
 		if not os.path.isdir(path):
@@ -426,7 +544,7 @@ including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same 
 					old_folders.append(line)  # like 'c:/bar'
 		n = 0      # numbers of files
 		n2 = 0     # count of interval went through
-		n3 = -1    # compare with n2, if n2 increased, create folder like  'd:/bar/newfolder011-020', then n3 = n3 + 1
+		n3 = -1    # compare with n2, if n2 increased, create folder like  'd:/bar/newfolder011-020', then n3 = n2
 		creating_new_folder_paths = []       # like  'd:/bar/newfolder'  or  'd:/bar/newfolder001-010'
 		for line in lines:                     # line 'c:/bar/a.txt'
 			if os.path.isfile(line):
@@ -476,11 +594,25 @@ including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same 
 
 
 
-
-	def find_files_with_same_name_by_list(self, src, dst, including_file = 1, including_folder = 1):
+	# is_list = 0 means src = one dir   ->   collect all names in src, find all same file in dst
+	# is_list = 1 means src = one list (files or dirs included) -> collect all names in each item, find all same file in dst
+	def find_files_with_same_name_by_list(self, src, dst, including_file = 1, including_folder = 1, \
+		is_recur_src = 1, is_recur_dst = 1, is_list = 0):
 		all = []
-		files_src = self.filter(src, including_file = including_file, including_folder = including_folder)
-		files_dst = self.filter(dst, including_file = including_file, including_folder = including_folder)
+		files_src = []
+		if is_list == 0:
+			files_src = self.filter(src, including_file = including_file, including_folder = including_folder, is_recur = is_recur_src)
+		else:
+			src = self.clean_list(src)
+			for item in src:
+				try:
+					if os.path.isfile(item):
+						files_src.append(item)
+					if os.path.isdir(item):
+						files_src.extend( self.filter(item, including_file = including_file, including_folder = including_folder, is_recur = is_recur_src))
+				except:
+					pass
+		files_dst = self.filter(dst, including_file = including_file, including_folder = including_folder, is_recur = is_recur_dst)
 		for file in files_dst:
 			name_file = file[ file.rfind('/') : ]
 			for file2 in files_src:
@@ -534,3 +666,11 @@ including_file = 1, including_folder = 0, case_insensitive = 0, is_exactly_same 
 					else:
 						messagebox.showerror ("Warrning", line + "\n\nWent Wrong")
 						return -1
+
+
+
+if __name__ == '__main__':
+	fl = FileLib()
+	a='c:/1.0-_asd.txt'
+	b=fl.delete_front_ordinal(a, is_under =1)
+	print(b)

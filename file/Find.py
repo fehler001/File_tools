@@ -46,6 +46,10 @@ class CreateFrameFind():
 			j['file_tools']['file']['find']['check_files'] = 1
 		if not 'check_folders' in j['file_tools']['file']['find']:
 			j['file_tools']['file']['find']['check_folders'] = 0
+		if not 'check_recur_src' in j['file_tools']['file']['find']:
+			j['file_tools']['file']['find']['check_recur_src'] = 1
+		if not 'check_recur_dst' in j['file_tools']['file']['find']:
+			j['file_tools']['file']['find']['check_recur_dst'] = 1
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -63,6 +67,8 @@ class CreateFrameFind():
 		self.FindCheckSubfolderVar.set( j['file_tools']['file']['find']['check_sub'])
 		self.FindCheckFileVar.set( j['file_tools']['file']['find']['check_files'])
 		self.FindCheckFolderVar.set( j['file_tools']['file']['find']['check_folders'])
+		self.FindCheckSourceVar.set( j['file_tools']['file']['find']['check_recur_src'])
+		self.FindCheckDestinationVar.set( j['file_tools']['file']['find']['check_recur_dst'])
 		f.close()
 
 
@@ -86,6 +92,8 @@ class CreateFrameFind():
 			j['file_tools']['file']['find']['check_sub'] = self.FindCheckSubfolderVar.get()
 			j['file_tools']['file']['find']['check_files'] = self.FindCheckFileVar.get()
 			j['file_tools']['file']['find']['check_folders'] = self.FindCheckFolderVar.get()
+			j['file_tools']['file']['find']['check_recur_src'] = self.FindCheckSourceVar.get()
+			j['file_tools']['file']['find']['check_recur_dst'] = self.FindCheckDestinationVar.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
@@ -149,13 +157,25 @@ class CreateFrameFind():
 		except:pass
 
 
-	def Find(self):
+	def Find(self, mode = 1):
 		self.FindSaveEntry()
 		self.FindTextDownFiles.delete("1.0", "end")
 		src = self.FindEntrySource.get()
 		dst = self.FindEntryDestination.get()
+		including_file = self.FindCheckFileVar.get()
+		including_folder = self.FindCheckFolderVar.get()
 		is_subfolder_with_same_name = self.FindCheckSubfolderVar.get()
-		files = self.fl.find_same_folder_strctrue(src, dst, is_subfolder_with_same_name)
+		is_recur_src = self.FindCheckSourceVar.get()
+		is_recur_dst = self.FindCheckDestinationVar.get()
+		is_rename = self.FindCheckRenameVar.get()
+		if mode == 1:
+			files = self.fl.find_same_folder_strctrue(src, dst, is_subfolder_with_same_name)
+		if mode == 2:
+			if is_rename == 1:
+				src = self.RenameTextUpFiles.get('1.0', 'end')
+				src = src.split('\n')
+			files = self.fl.find_files_with_same_name_by_list(src, dst, including_file, including_folder, \
+				is_recur_src = is_recur_src, is_recur_dst = is_recur_dst, is_list = is_rename)
 		#try:
 		if 1:
 			for file in files:
@@ -169,21 +189,9 @@ class CreateFrameFind():
 
 
 	def Find2(self):
-		self.FindSaveEntry()
-		self.FindTextDownFiles.delete("1.0", "end")
-		src = self.FindEntrySource.get()
-		dst = self.FindEntryDestination.get()
-		including_file = self.FindCheckFileVar.get()
-		including_folder = self.FindCheckFolderVar.get()
-		files = self.fl.find_files_with_same_name_by_list(src, dst, including_file, including_folder)
-		for file in files:
-			self.FindTextDownFiles.insert(INSERT, file)
-			self.FindTextDownFiles.insert(INSERT, '\n')
-		self.FindCheckRepeat()
-		if len(self.FindTextDownFiles.get("1.0", "end") ) < 4:
-			self.FindTextDownFiles.insert(INSERT, "Nothing detected")
-			self.FindTextDownFiles.insert(INSERT, '\n')
-		
+		self.Find(mode = 2)
+
+
 
 	def CreateWidgetsFrameFind(self):
 
@@ -301,6 +309,25 @@ Found:  All the files or folders in dst with exactly same name in "a.txt, b.txt,
 		self.FindCheckFolder.pack(fill = X, side = TOP)
 		self.FindCheckFolderVar.set(0)
 
-		self.FindButtonFind2 = ttk.Button(self.FindFrameRight, text = "Find All Files in Same Name", command = self.Find2) #bg = "#e1e1e1"
+		self.FindCheckSourceVar = IntVar()
+		self.FindCheckSource = ttk.Checkbutton(self.FindFrameRight, text = "Including Subfolder in Source", \
+											variable = self.FindCheckSourceVar, onvalue = 1, offvalue = 0) 
+		self.FindCheckSource.pack(fill = X, side = TOP)
+		self.FindCheckSourceVar.set(1)
+
+		self.FindCheckDestinationVar = IntVar()
+		self.FindCheckDestination = ttk.Checkbutton(self.FindFrameRight, text = "Including Subfolder in Destination", \
+											variable = self.FindCheckDestinationVar, onvalue = 1, offvalue = 0) 
+		self.FindCheckDestination.pack(fill = X, side = TOP)
+		self.FindCheckDestinationVar.set(1)
+
+		self.FindCheckRenameVar = IntVar()
+		self.FindCheckRename = ttk.Checkbutton(self.FindFrameRight, text = 'Taking "Rename" Upbox as Source', \
+											variable = self.FindCheckRenameVar, onvalue = 1, offvalue = 0) 
+		self.FindCheckRename.pack(fill = X, side = TOP)
+		self.FindCheckRenameVar.set(0)
+
+		self.FindButtonFind2 = ttk.Button(self.FindFrameRight, text = "Find All Files in Same Name", command = self.Find2)
 		self.FindButtonFind2.pack(side = TOP, fill = X)
+
 		# end right frame

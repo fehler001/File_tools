@@ -37,6 +37,15 @@ class BaseLib():
 				return -1
 
 
+	def check_has_repeat(self, list):
+		l2 = []
+		for item in list:
+			if item in l2:
+				messagebox.showerror ("REPEAT ERROR", "Got same name file !\n\n" + '"' + item + '"')
+				return -1
+			l2.append(item)
+
+
 
 	def str_encode(self, string, enc = 'utf-8'):
 		if enc == 'html':
