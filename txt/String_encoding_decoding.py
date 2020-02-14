@@ -376,6 +376,9 @@ class CreateFrameStr():
 		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Get Preview ( show 2000 characters )", command = self.StrTranscodingTxtPreview)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
 
+		self.StrLableBlank = ttk.Label(self.StrFrameRight)
+		self.StrLableBlank.pack(side = TOP, fill = X)
+
 		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Transcode txt", command = self.StrTranscodingTxt)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
 

@@ -19,8 +19,8 @@ class CreateFrameRename():
 	def __init__(self):
 		super().__init__()
 		self.NRenameTimes = 0
-		self.RenameVarNameUp = []
-		self.RenameVarNameDown = []
+		self.TextUp = {}
+		self.TextDown = {}
 
 		self.RenameRoot = None
 		self.RenamePath = ''
@@ -248,10 +248,14 @@ class CreateFrameRename():
 			messagebox.showerror ("ERROR", "Rename By Ordinal: Digit\n\n" + 'Under 100, please')
 			return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
-		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
+
+		if self.CheckPathExist == 1:
+			if self.fl.check_path_exist(files) == -1:
+				return
 		
 		files = self.fl.rename_by_ordinal(files, self.RenameDigit, self.RenameOutset)
+		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
@@ -262,12 +266,17 @@ class CreateFrameRename():
 		self.RenameInitializeEntry()
 		self.RenameSaveEntry()
 		files = self.RenameTextUpFiles.get("1.0", "end") 
-		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
+
+		if self.CheckPathExist == 1:
+			if self.fl.check_path_exist(files) == -1:
+				return
+
 		cont = self.RenameEntryInsertString.get()
 		if self.bl.check_legit_string(cont) == -1:
 			return
 		files = self.fl.insert(files, self.RenamePosition, cont)
+		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
@@ -280,8 +289,12 @@ class CreateFrameRename():
 		self.RenameInitializeEntry()
 		self.RenameSaveEntry()
 		files = self.RenameTextUpFiles.get("1.0", "end") 
-		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
+
+		if self.CheckPathExist == 1:
+			if self.fl.check_path_exist(files) == -1:
+				return
+
 		new_files = []
 		if self.RenameCheckDeleteOldVar.get() == 1:
 			for file in files:
@@ -292,6 +305,7 @@ class CreateFrameRename():
 		else:
 			new_files = files
 		rst = self.fl.insert(new_files, pos = self.RenamePosition, cont = '', is_ordinal = True, digit = self.RenameDigit, outset = self.RenameOutset)
+		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in rst:
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
@@ -301,13 +315,18 @@ class CreateFrameRename():
 	def Replace(self):
 		self.RenameSaveEntry()
 		files = self.RenameTextUpFiles.get("1.0", "end")
-		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
+
+		if self.CheckPathExist == 1:
+			if self.fl.check_path_exist(files) == -1:
+				return
+
 		original = self.RenameEntryReplaceOriginal.get()
 		substitute = self.RenameEntryReplaceSubstitute.get()
 		if self.bl.check_legit_string(substitute) == -1:
 			return
 		files = self.fl.replace_string(files, original, substitute)
+		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
@@ -336,12 +355,27 @@ class CreateFrameRename():
 				messagebox.showerror ("ERROR", '"Left Position" MUST < "Right position" !')
 				return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
-		self.RenameTextDownFiles.delete("1.0", "end")
 		files = files.split('\n')
-		files = self.fl.get_or_delete_middle_filename(files, p1, p2, get_middle = get_middle)
-		if self.bl.check_has_repeat(files) == -1:
-			return
+
+		if self.CheckPathExist == 1:
+			if self.fl.check_path_exist(files) == -1:
+				return
+
+		
+		new_files = []
 		for file in files:
+			if file == '' or file == '\n':
+				continue
+			new_file = self.fl.get_or_delete_middle_filename(file, p1, p2, get_middle = get_middle)
+			if file == -1:
+				new_files.append(file)
+			else:
+				new_files.append(new_file)
+		if self.bl.check_has_repeat(new_files) == -1:
+			return
+
+		self.RenameTextDownFiles.delete("1.0", "end")
+		for file in new_files:
 			self.RenameTextDownFiles.insert(INSERT, file)
 			self.RenameTextDownFiles.insert(INSERT, '\n')
 		self.RenameEliminateNullDown()
@@ -354,15 +388,19 @@ class CreateFrameRename():
 
 	def Rename(self, SwitchRevoke = False):
 		self.RenameSaveEntry()
-		self.RenameCheckRepeatUp()
 		self.RenameEliminateNullDown()
-		UpFiles = self.RenameTextUpFiles.get("1.0", "end") 
-		DownFiles = self.RenameTextDownFiles.get("1.0", "end")
-		if (len(UpFiles) < 5 or len(DownFiles) < 5):
+		raw_UpFiles = self.RenameTextUpFiles.get("1.0", "end") 
+		raw_DownFiles = self.RenameTextDownFiles.get("1.0", "end")
+		if (len(raw_UpFiles) < 4 or len(raw_DownFiles) < 4):
 			messagebox.showerror ("Warrning", "_____EMPTY BOX_____")
 			return
-		UpFiles = UpFiles.split('\n')
-		DownFiles = DownFiles.split('\n')
+		UpFiles = raw_UpFiles.split('\n')
+
+		if self.CheckPathExist == 1:
+			if self.fl.check_path_exist(UpFiles) == -1:
+				return
+
+		DownFiles = raw_DownFiles.split('\n')
 		if len(UpFiles) != len(DownFiles):
 			messagebox.showerror ("Warrning", "The quantity of files in two boxes are not equal\n\nPlease check again\n\n( Maybe missing one 'enter' )")
 			return
@@ -386,14 +424,22 @@ class CreateFrameRename():
 		self.RenameTextUpFiles.delete("1.0", "end")
 		self.RenameTextUpFiles.insert(INSERT, self.RenameTextDownFiles.get("1.0", "end"))
 		self.RenameTextDownFiles.delete("1.0", "end")
+
+		self.RenameCheckRepeatUp()
 		
 		if SwitchRevoke is False:
-			self.RenameVarNameUp.append('TextUp' + str(self.NRenameTimes))
-			globals()[self.RenameVarNameUp[self.NRenameTimes]] = UpFiles     # local var declare: exec(VarNameUp[NRenameTimes] + " = UpFiles")
-			self.RenameVarNameDown.append('TextDown' + str(self.NRenameTimes))
-			globals()[self.RenameVarNameDown[self.NRenameTimes]] = DownFiles
+			if raw_UpFiles[-1] == '\n':
+				self.TextUp[self.NRenameTimes] = raw_UpFiles[0:-1]     # local var declare: exec(VarNameUp[NRenameTimes] + " = UpFiles")
+			else:
+				self.TextUp[self.NRenameTimes] = raw_UpFiles
+
+			if raw_DownFiles[-1] == '\n':
+				self.TextDown[self.NRenameTimes] = raw_DownFiles[0:-1]
+			else:
+				self.TextDown[self.NRenameTimes] = raw_DownFiles
+
 			self.NRenameTimes = self.NRenameTimes + 1
-		self.RenameCheckRepeatUp()
+		
 
 	
 
@@ -404,20 +450,20 @@ class CreateFrameRename():
 		tmp = messagebox.askquestion("Excute Revoke", "Are you really sure?")
 		if tmp == 'no':
 			return
+
 		self.RenameTextUpFiles.delete("1.0", "end")
-		files = globals()[self.RenameVarNameDown[self.NRenameTimes - 1]]
-		for file in files:
-			self.RenameTextUpFiles.insert(INSERT, file)
-			self.RenameTextUpFiles.insert(INSERT, '\n')
+		files = self.TextDown[self.NRenameTimes - 1]
+		self.RenameTextUpFiles.insert(INSERT, files)
+
 		self.RenameTextDownFiles.delete("1.0", "end")
-		files = globals()[self.RenameVarNameUp[self.NRenameTimes - 1]]
-		for file in files:
-			self.RenameTextDownFiles.insert(INSERT, file)
-			self.RenameTextDownFiles.insert(INSERT, '\n')
+		files = self.TextUp[self.NRenameTimes - 1]
+		self.RenameTextDownFiles.insert(INSERT, files)
+
 		self.Rename(SwitchRevoke = True)
-		self.RenameVarNameUp.pop()        # or del VarNameUp[-1]  ( doesn't support str )
-		self.RenameVarNameDown.pop()
+		del self.TextDown[self.NRenameTimes - 1]
+		del self.TextUp[self.NRenameTimes - 1]
 		self.NRenameTimes = self.NRenameTimes - 1
+
 		self.RenameCheckRepeatUp()
 
 
@@ -426,7 +472,7 @@ class CreateFrameRename():
 		
 
 		# start up left Frame
-		self.RenameFrameUpLeft = ttk.LabelFrame(self.RenameRoot, text = "Files       ( Note: Rename in flash drive could cause filename 'chaos' )")
+		self.RenameFrameUpLeft = ttk.LabelFrame(self.RenameRoot, text = "Files")
 		self.RenameFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 		
 		self.RenameScrollbarXUpfiles = ttk.Scrollbar(self.RenameFrameUpLeft, orient = HORIZONTAL)
@@ -443,7 +489,7 @@ class CreateFrameRename():
 		# end up left Frame
 		
 		# start down left Frame
-		self.RenameFrameDownLeft = ttk.LabelFrame(self.RenameRoot, text = "Results    ( Revoke files and folders at same time could cause your filename 'chaos' )")
+		self.RenameFrameDownLeft = ttk.LabelFrame(self.RenameRoot, text = "Results")
 		self.RenameFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.51, relheight = 0.48)
 		
 		self.RenameScrollbarXDownfiles = ttk.Scrollbar(self.RenameFrameDownLeft, orient = HORIZONTAL)

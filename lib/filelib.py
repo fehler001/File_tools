@@ -99,16 +99,28 @@ class FileLib():
 			if i2 != -1 and i2 > i:
 				name = path[i+1 : i2]
 				ext = path[i2: ]
-				return {'/':i, '.':i2, 'parent':parent, 'filename':filename, 'name':name, 'ext':ext, 'isfile':1, 'isdir':0}
+				return {'/':i, '.':i2, 'parent':parent, 'filename':filename, 'name':name, 'ext':ext, 'isfile':1, 'isdir':0, 'is_exist':1}
 			if i2 == -1 or i2 < i:
 				name = path[i+1: ]
-				return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0}
+				return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0, 'is_exist':1}
 		if os.path.isdir(path):
 			i = path.rfind(r'/')
 			parent = path[ :i]
 			filename = path[i+1: ]
-			return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1}
-		return None
+			return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1, 'is_exist':1}
+		return {'/':-1, '.':-1, 'filename':path, 'parent':-1, 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0}
+
+
+
+	def check_path_exist(self, list):
+		for path in list:
+			if path == '' or path == '\n':
+				continue
+			if self.get_path_info(path)['is_exist'] == 0:
+				messagebox.showerror ("ERROR", '"' + path + '"' + '\n\nDoes not exist !')
+				return -1
+
+
 
 
 	def collect_files_and_folders(self, path, is_add_file = 1, is_add_folder = 0, is_recur = 0):
@@ -160,6 +172,8 @@ class FileLib():
 			d.append('_')
 		try:
 			pinfo = self.get_path_info(path)
+			if pinfo['is_exist'] == 0:
+				return path
 			for i in range( len(pinfo['filename']) ):
 				if pinfo['filename'][0] in d:
 					pinfo['filename'] = pinfo['filename'][1: ]
@@ -280,47 +294,36 @@ class FileLib():
 	# p1 = 0, p2 = -1, 'c:/foo/bar.txt'
 	# get -> 'c:/foo/b.txt'  
 	# delete -> 'c:/foo/ar.txt'
-	def get_or_delete_middle_filename(self, files, p1 = 0, p2 = -1, get_middle = 1):
-		all = []
-		for file in files:
-			if file == '\n' or file == '':
-				continue
-			pinfo = self.get_path_info(file)
-			if pinfo is None:
-				continue
-			i = pinfo['/']
-			i2 = pinfo['.']
-			l = len(file)
-			if p1 >= 0 and p1 >= len(pinfo['name']):
-				all.append(file)
-				continue
-			if p1 < 0 and abs(p1) - 1 >= len(pinfo['name']):
-				all.append(file)
-				continue
-			if p2 >= 0 and p2 >= len(pinfo['name']):
-				all.append(file)
-				continue
-			if p2 < 0 and abs(p2) - 1 >= len(pinfo['name']):
-				all.append(file)
-				continue
-			if p1 < 0:
-				ap1 = l - len(pinfo['ext']) - abs(p1) + 1    # "-1 + 1" means end 
-			else:
-				ap1 = i + 1 + p1
-			if p2 < 0:
-				ap2 = l - len(pinfo['ext']) - abs(p2) + 1
-			else:
-				ap2 = i + 1 + p2
+	def get_or_delete_middle_filename(self, file, p1 = 0, p2 = -1, get_middle = 1):
+		pinfo = self.get_path_info(file)
+		if pinfo['is_exist'] == 0:
+			return file
+		i = pinfo['/']
+		i2 = pinfo['.']
+		l = len(file)
+		if p1 >= 0 and p1 >= len(pinfo['name']):
+			return -1
+		if p1 < 0 and abs(p1) - 1 >= len(pinfo['name']):
+			return -1
+		if p2 >= 0 and p2 >= len(pinfo['name']):
+			return -1
+		if p2 < 0 and abs(p2) - 1 >= len(pinfo['name']):
+			return -1
+		if p1 < 0:
+			ap1 = l - len(pinfo['ext']) - abs(p1) + 1    # "-1 + 1" means end 
+		else:
+			ap1 = i + 1 + p1
+		if p2 < 0:
+			ap2 = l - len(pinfo['ext']) - abs(p2) + 1
+		else:
+			ap2 = i + 1 + p2
 
-			if get_middle == 1:
-				new_file = file[ :i+1] + file[ap1 : ap2] + pinfo['ext']
-			else:
-				new_file = file[ :ap1]  + file[ap2: ]
+		if get_middle == 1:
+			new_file = file[ :i+1] + file[ap1 : ap2] + pinfo['ext']
+		else:
+			new_file = file[ :ap1]  + file[ap2: ]
 
-			all.append(new_file)
-			#except:
-				#all.append(file)
-		return all
+		return new_file
 
 
 

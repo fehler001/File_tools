@@ -39,6 +39,7 @@ class Share():
 		self.LogPath = r"C:\temp\File_tools.json"
 		self.firewall_add_rules_savefile = r'firewall_add_rules_savefile.txt'
 		self.EnableLog = 1
+		self.CheckPathExist = 1
 
 		self.bl = lib.baselib.BaseLib()
 		self.fl = lib.filelib.FileLib()
@@ -91,6 +92,10 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 				j['file_tools']['window']['height'] = self.RootHeight
 			if not 'menu' in j['file_tools']:
 				j['file_tools']['menu'] = {}
+			if not 'rename' in j['file_tools']['menu']:
+				j['file_tools']['menu']['rename'] = {}
+			if not 'check_path' in j['file_tools']['menu']['rename']:
+				j['file_tools']['menu']['rename']['check_path'] = 1
 			if not 'log' in j['file_tools']['menu']:
 				j['file_tools']['menu']['log'] = {}
 			if not 'enable_log' in j['file_tools']['menu']['log']:
@@ -129,6 +134,8 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 		self.RootHeight = j['file_tools']['window']['height']
 		self.EnableLog = j['file_tools']['menu']['log']['enable_log']
 		self.EnableLogVar.set(self.EnableLog)
+		self.CheckPathExist = j['file_tools']['menu']['rename']['check_path']
+		self.CheckPathExistVar.set(self.CheckPathExist)
 
 	def MainRestoreState2(self):
 		f = open(self.LogPath, 'r', encoding='utf-8')
@@ -146,12 +153,18 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 		j = json.load(f)
 		f.close()
 		j['file_tools']['menu']['log']['enable_log'] = self.EnableLogVar.get()
+		j['file_tools']['menu']['rename']['check_path'] = self.CheckPathExistVar.get()
 		j['file_tools']['window']['width'] = self.root.winfo_width()
 		j['file_tools']['window']['height'] = self.root.winfo_height()
 		j['file_tools']['notebook']['notebook01']['current_index'] = self.NoteBook01.index(self.NoteBook01.select())
 		f = open(self.LogPath, 'w', encoding='utf-8')
 		json.dump(j, f, ensure_ascii=False)
 		f.close()
+
+
+	def toggle_check_path_exist(self):
+		self.CheckPathExist = self.CheckPathExistVar.get()
+		self.SaveAll(exit = 0)
 
 
 	def toggle_log(self):
@@ -202,10 +215,12 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 			self.StrSaveEntry()
 
 			self.ARuleSaveEntry()
-			if exit == 0:
-				return
-		finally:
-			sys.exit()
+		except:
+			pass
+
+		if exit == 0:
+			return
+		sys.exit()
 
 
 	def CreateWidgetsFileTools(self):
@@ -224,6 +239,12 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 		#filemenu.add_separator()
 		self.filemenu.add_command ( label = "Exit", command = self.SaveAll )
 		self.menubar.add_cascade(label = "File", menu = self.filemenu)
+
+		self.renamemenu = Menu(self.menubar, tearoff = 0)
+		self.CheckPathExistVar = IntVar()
+		self.renamemenu.add_checkbutton( label = "Check Path Exist", \
+			variable = self.CheckPathExistVar, onvalue = 1, offvalue = 0, command = self.toggle_check_path_exist )
+		self.menubar.add_cascade( label = "Rename", menu = self.renamemenu)
 
 		self.logmenu = Menu(self.menubar, tearoff = 0)
 		self.EnableLogVar = IntVar()
