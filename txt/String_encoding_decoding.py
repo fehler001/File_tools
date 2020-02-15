@@ -285,7 +285,7 @@ class CreateFrameStr():
 		self.StrLableTxtSource = ttk.Label(self.StrFrame1, text = "Txt Source Path", anchor = W)
 		self.StrLableTxtSource.pack(side = TOP, fill = X)
 		
-		self.StrEntryTxtSource = ttk.Entry(self.StrFrame1, xscrollcommand = self.StrScrollbarXTxtSource.set)
+		self.StrEntryTxtSource = ttk.Entry(self.StrFrame1, font = self.ft, xscrollcommand = self.StrScrollbarXTxtSource.set)
 		self.StrEntryTxtSource.pack(fill = X)
 
 		self.StrScrollbarXTxtSource.config( command = self.StrEntryTxtSource.xview )
@@ -301,7 +301,7 @@ class CreateFrameStr():
 		self.StrLableTxtDestination = ttk.Label(self.StrFrame2, text = "Txt Save Path", anchor = W)
 		self.StrLableTxtDestination.pack(side = TOP, fill = X)
 		
-		self.StrEntryTxtDestination = ttk.Entry(self.StrFrame2, xscrollcommand = self.StrScrollbarXTxtDestination.set)
+		self.StrEntryTxtDestination = ttk.Entry(self.StrFrame2, font = self.ft, xscrollcommand = self.StrScrollbarXTxtDestination.set)
 		self.StrEntryTxtDestination.pack(fill = X)
 
 		self.StrScrollbarXTxtDestination.config( command = self.StrEntryTxtDestination.xview )
@@ -322,7 +322,7 @@ class CreateFrameStr():
 		self.StrScrollbarYUpText = ttk.Scrollbar(self.StrFrameDownLeft_1, orient = VERTICAL)
 		self.StrScrollbarYUpText.pack( side = RIGHT, fill = Y )
 		
-		self.StrTextUp = Text(self.StrFrameDownLeft_1, xscrollcommand = self.StrScrollbarXUpText.set, yscrollcommand = self.StrScrollbarYUpText.set, wrap = 'none')
+		self.StrTextUp = Text(self.StrFrameDownLeft_1, font = self.ft, xscrollcommand = self.StrScrollbarXUpText.set, yscrollcommand = self.StrScrollbarYUpText.set, wrap = 'none')
 		self.StrTextUp.pack(fill = BOTH)
 		
 		self.StrScrollbarXUpText.config( command = self.StrTextUp.xview )
@@ -339,7 +339,7 @@ class CreateFrameStr():
 		self.StrScrollbarYDownText = ttk.Scrollbar(self.StrFrameDownLeft_2, orient = VERTICAL)
 		self.StrScrollbarYDownText.pack( side = RIGHT, fill = Y )
 		
-		self.StrTextDown = Text(self.StrFrameDownLeft_2, xscrollcommand = self.StrScrollbarXDownText.set, yscrollcommand = self.StrScrollbarYDownText.set, wrap = 'none')
+		self.StrTextDown = Text(self.StrFrameDownLeft_2, font = self.ft, xscrollcommand = self.StrScrollbarXDownText.set, yscrollcommand = self.StrScrollbarYDownText.set, wrap = 'none')
 		self.StrTextDown.pack(fill = BOTH)
 		
 		self.StrScrollbarXDownText.config( command = self.StrTextDown.xview )

@@ -209,7 +209,7 @@ class CreateFrameFind():
 		self.FindLableSource = ttk.Label(self.FindFrame1, text = "Find Same File Strcture: Source Path", anchor = W)
 		self.FindLableSource.pack(side = TOP, fill = X)
 		
-		self.FindEntrySource = ttk.Entry(self.FindFrame1, xscrollcommand = self.FindScrollbarXSource.set)
+		self.FindEntrySource = ttk.Entry(self.FindFrame1, font = self.ft, xscrollcommand = self.FindScrollbarXSource.set)
 		self.FindEntrySource.pack(fill = X)
 
 		self.FindScrollbarXSource.config( command = self.FindEntrySource.xview )
@@ -225,7 +225,7 @@ class CreateFrameFind():
 		self.FindLableDestination = ttk.Label(self.FindFrame2, text = "Find Same File Strcture: Destination Path", anchor = W)
 		self.FindLableDestination.pack(side = TOP, fill = X)
 		
-		self.FindEntryDestination = ttk.Entry(self.FindFrame2, xscrollcommand = self.FindScrollbarXDestination.set)
+		self.FindEntryDestination = ttk.Entry(self.FindFrame2, font = self.ft, xscrollcommand = self.FindScrollbarXDestination.set)
 		self.FindEntryDestination.pack(fill = X)
 
 		self.FindScrollbarXDestination.config( command = self.FindEntryDestination.xview )
@@ -253,7 +253,7 @@ Found:  All the files or folders in dst with exactly same name in "a.txt, b.txt,
 		self.FindScrollbarYDownFiles = ttk.Scrollbar(self.FindFrameDownLeft, orient = VERTICAL)
 		self.FindScrollbarYDownFiles.pack( side = RIGHT, fill = Y )
 		
-		self.FindTextDownFiles = Text(self.FindFrameDownLeft, xscrollcommand = self.FindScrollbarXDownFiles.set, yscrollcommand = self.FindScrollbarYDownFiles.set, wrap = 'none')
+		self.FindTextDownFiles = Text(self.FindFrameDownLeft, font = self.ft, xscrollcommand = self.FindScrollbarXDownFiles.set, yscrollcommand = self.FindScrollbarYDownFiles.set, wrap = 'none')
 		self.FindTextDownFiles.pack(fill = BOTH)
 		
 		self.FindScrollbarXDownFiles.config( command = self.FindTextDownFiles.xview )

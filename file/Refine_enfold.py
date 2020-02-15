@@ -151,7 +151,7 @@ class CreateFrameRefine():
 		self.RefineScrollbarXPath = ttk.Scrollbar(self.RefineFrameUpLeft, orient = HORIZONTAL)
 		self.RefineScrollbarXPath.pack( side = BOTTOM, fill = X )
 		
-		self.RefineEntryPath = ttk.Entry(self.RefineFrameUpLeft, xscrollcommand = self.RefineScrollbarXPath.set)
+		self.RefineEntryPath = ttk.Entry(self.RefineFrameUpLeft, font = self.ft, xscrollcommand = self.RefineScrollbarXPath.set)
 		self.RefineEntryPath.pack(fill = X)
 
 		self.RefineLableBlank = ttk.Label(self.RefineFrameUpLeft)
@@ -179,7 +179,7 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		self.RefineScrollbarYDownFolders = ttk.Scrollbar(self.RefineFrameDownLeft, orient = VERTICAL)
 		self.RefineScrollbarYDownFolders.pack( side = RIGHT, fill = Y )
 		
-		self.RefineTextDownFolders = Text(self.RefineFrameDownLeft, xscrollcommand = self.RefineScrollbarXDownFolders.set, yscrollcommand = self.RefineScrollbarYDownFolders.set, wrap = 'none')
+		self.RefineTextDownFolders = Text(self.RefineFrameDownLeft, font = self.ft, xscrollcommand = self.RefineScrollbarXDownFolders.set, yscrollcommand = self.RefineScrollbarYDownFolders.set, wrap = 'none')
 		self.RefineTextDownFolders.pack(fill = BOTH)
 		
 		self.RefineScrollbarXDownFolders.config( command = self.RefineTextDownFolders.xview )

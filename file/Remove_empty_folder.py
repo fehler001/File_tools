@@ -149,7 +149,7 @@ class CreateFrameRemove():
 		self.RemoveScrollbarXPath = ttk.Scrollbar(self.RemoveFrameUpLeft, orient = HORIZONTAL)
 		self.RemoveScrollbarXPath.pack( side = BOTTOM, fill = X )
 		
-		self.RemoveEntryPath = ttk.Entry(self.RemoveFrameUpLeft, xscrollcommand = self.RemoveScrollbarXPath.set)
+		self.RemoveEntryPath = ttk.Entry(self.RemoveFrameUpLeft, font = self.ft, xscrollcommand = self.RemoveScrollbarXPath.set)
 		self.RemoveEntryPath.pack(fill = X)
 
 		self.RemoveLableBlank = ttk.Label(self.RemoveFrameUpLeft)
@@ -174,7 +174,7 @@ class CreateFrameRemove():
 		self.RemoveScrollbarYDownFolders = ttk.Scrollbar(self.RemoveFrameDownLeft, orient = VERTICAL)
 		self.RemoveScrollbarYDownFolders.pack( side = RIGHT, fill = Y )
 		
-		self.RemoveTextDownFolders = Text(self.RemoveFrameDownLeft, \
+		self.RemoveTextDownFolders = Text(self.RemoveFrameDownLeft, font = self.ft, \
 xscrollcommand = self.RemoveScrollbarXDownFolders.set, yscrollcommand = self.RemoveScrollbarYDownFolders.set, wrap = 'none')
 		self.RemoveTextDownFolders.pack(fill = BOTH)
 		

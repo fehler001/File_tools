@@ -191,7 +191,7 @@ class CreateFrameDivide():
 		self.DivideLableTxtSource = ttk.Label(self.DivideFrame1, text = "Txt Source Path", anchor = W)
 		self.DivideLableTxtSource.pack(side = TOP, fill = X)
 		
-		self.DivideEntryTxtSource = ttk.Entry(self.DivideFrame1, xscrollcommand = self.DivideScrollbarXTxtSource.set)
+		self.DivideEntryTxtSource = ttk.Entry(self.DivideFrame1, font = self.ft, xscrollcommand = self.DivideScrollbarXTxtSource.set)
 		self.DivideEntryTxtSource.pack(fill = X)
 
 		self.DivideScrollbarXTxtSource.config( command = self.DivideEntryTxtSource.xview )
@@ -207,7 +207,7 @@ class CreateFrameDivide():
 		self.DivideLableTxtDestination = ttk.Label(self.DivideFrame2, text = "Path where you want to put your new multiple txts", anchor = W)
 		self.DivideLableTxtDestination.pack(side = TOP, fill = X)
 		
-		self.DivideEntryTxtDestination = ttk.Entry(self.DivideFrame2, xscrollcommand = self.DivideScrollbarXTxtDestination.set)
+		self.DivideEntryTxtDestination = ttk.Entry(self.DivideFrame2, font = self.ft, xscrollcommand = self.DivideScrollbarXTxtDestination.set)
 		self.DivideEntryTxtDestination.pack(fill = X)
 
 		self.DivideScrollbarXTxtDestination.config( command = self.DivideEntryTxtDestination.xview )
@@ -263,13 +263,13 @@ dst: 000001.txt( line1, line2.....line500 ), ...... 000010.txt( line4501, line45
 		self.DivideLableBlank = ttk.Label(self.DivideFrameRight, text = "txt Name Digit")
 		self.DivideLableBlank.pack(side = TOP, fill = X)
 
-		self.DivideEntryDigit = ttk.Entry(self.DivideFrameRight)
+		self.DivideEntryDigit = ttk.Entry(self.DivideFrameRight, font = self.ft)
 		self.DivideEntryDigit.pack(fill = X)
 
 		self.DivideLableBlank = ttk.Label(self.DivideFrameRight, text = "Set Limit Lines in Each txt")
 		self.DivideLableBlank.pack(side = TOP, fill = X)
 
-		self.DivideEntryLimit = ttk.Entry(self.DivideFrameRight)
+		self.DivideEntryLimit = ttk.Entry(self.DivideFrameRight, font = self.ft)
 		self.DivideEntryLimit.pack(fill = X)
 
 		self.DivideButtonDivide = ttk.Button(self.DivideFrameRight, text = "Divide txt", command = self.Divide) #bg = "#e1e1e1"

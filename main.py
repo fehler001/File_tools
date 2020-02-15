@@ -6,6 +6,8 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import filedialog 
+from tkinter.font import Font, nametofont
+
 import os
 import sys
 import stat
@@ -225,8 +227,17 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 
 	def CreateWidgetsFileTools(self):
 		
-		self.root = Tk()
 		
+		
+		
+		self.root = Tk()
+		#default_font = nametofont("TkDefaultFont") # must under self.root = Tk() # change default font
+		#default_font.configure(family='Microsoft YaHei', size = 20)
+		#self.root.option_add(ft, default_font)
+		if os.name == 'nt':
+			self.ft = Font(family = 'Microsoft YaHei', size = 10)
+		else:
+			self.ft = Font(family = 'Arial', size = 10)
 		self.root.title("File Tools")
 		
 		#self.root.geometry(str(self.RootWidth) + 'x' + str(self.RootHeight))
@@ -240,18 +251,18 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 		self.filemenu.add_command ( label = "Exit", command = self.SaveAll )
 		self.menubar.add_cascade(label = "File", menu = self.filemenu)
 
-		self.renamemenu = Menu(self.menubar, tearoff = 0)
-		self.CheckPathExistVar = IntVar()
-		self.renamemenu.add_checkbutton( label = "Check Path Exist", \
-			variable = self.CheckPathExistVar, onvalue = 1, offvalue = 0, command = self.toggle_check_path_exist )
-		self.menubar.add_cascade( label = "Rename", menu = self.renamemenu)
-
 		self.logmenu = Menu(self.menubar, tearoff = 0)
 		self.EnableLogVar = IntVar()
 		self.logmenu.add_checkbutton( label = "Enable Log", \
 			variable = self.EnableLogVar, onvalue = 1, offvalue = 0, command = self.toggle_log )
 		self.logmenu.add_command ( label = "Initialize Log and Restart", command = self.init_log )
 		self.menubar.add_cascade( label = "Log", menu = self.logmenu)
+
+		self.renamemenu = Menu(self.menubar, tearoff = 0)
+		self.CheckPathExistVar = IntVar()
+		self.renamemenu.add_checkbutton( label = "Check Path Exist", \
+			variable = self.CheckPathExistVar, onvalue = 1, offvalue = 0, command = self.toggle_check_path_exist )
+		self.menubar.add_cascade( label = "Rename", menu = self.renamemenu)
 		
 		self.helpmenu = Menu(self.menubar, tearoff = 0)
 		self.helpmenu.add_command ( label = "Help", command = self.help )

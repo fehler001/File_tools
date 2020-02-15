@@ -259,7 +259,7 @@ class CreateFrameMove():
 		self.MoveScrollbarXPath = ttk.Scrollbar(self.MoveFrameUpLeft, orient = HORIZONTAL)
 		self.MoveScrollbarXPath.pack( side = BOTTOM, fill = X )
 		
-		self.MoveEntryPath = ttk.Entry(self.MoveFrameUpLeft, xscrollcommand = self.MoveScrollbarXPath.set)
+		self.MoveEntryPath = ttk.Entry(self.MoveFrameUpLeft, font = self.ft, xscrollcommand = self.MoveScrollbarXPath.set)
 		self.MoveEntryPath.pack(fill = X)
 
 		self.MoveLableBlank = ttk.Label(self.MoveFrameUpLeft)
@@ -288,7 +288,7 @@ class CreateFrameMove():
 		self.MoveScrollbarYDownFolders = ttk.Scrollbar(self.MoveFrameDownLeft, orient = VERTICAL)
 		self.MoveScrollbarYDownFolders.pack( side = RIGHT, fill = Y )
 		
-		self.MoveTextDownFiles = Text(self.MoveFrameDownLeft, xscrollcommand = self.MoveScrollbarXDownFolders.set, yscrollcommand = self.MoveScrollbarYDownFolders.set, wrap = 'none')
+		self.MoveTextDownFiles = Text(self.MoveFrameDownLeft, font = self.ft, xscrollcommand = self.MoveScrollbarXDownFolders.set, yscrollcommand = self.MoveScrollbarYDownFolders.set, wrap = 'none')
 		self.MoveTextDownFiles.pack(fill = BOTH)
 		
 		self.MoveScrollbarXDownFolders.config( command = self.MoveTextDownFiles.xview )
@@ -314,7 +314,7 @@ variable = self.MoveCheckCreatingVar, onvalue = 1, offvalue = 0, command = self.
 		self.MoveCheckCreating.pack(fill = X, side = TOP)
 		self.MoveCheckCreatingVar.set(0)
 				
-		self.MoveEntryCreating = ttk.Entry(self.MoveFrameRight)
+		self.MoveEntryCreating = ttk.Entry(self.MoveFrameRight, font = self.ft)
 		self.MoveEntryCreating.pack(fill = X)
 
 		self.MoveCheckIntervalVar = IntVar() # StringVar()
@@ -323,7 +323,7 @@ variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambd
 		self.MoveCheckInterval.pack(fill = X, side = TOP)
 		self.MoveCheckIntervalVar.set(0)
 				
-		self.MoveEntryInterval = ttk.Entry(self.MoveFrameRight)
+		self.MoveEntryInterval = ttk.Entry(self.MoveFrameRight, font = self.ft)
 		self.MoveEntryInterval.pack(fill = X)
 
 		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)

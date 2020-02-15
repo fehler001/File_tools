@@ -183,13 +183,16 @@ class CreateFrameARule():
 		if is_inbound == 0 and is_outbound == 0:
 			messagebox.showerror ("ERROR", '"Add Inbound" and "Add Outbound" are both unchecked')
 			return
+		files = self.ARuleTextDownFiles.get("1.0", "end")
+		if len(files) < 4:
+			messagebox.showerror ("Warrning", "_____EMPTY BOX_____")
+			return
 		tmp = messagebox.askquestion("Adding Files into Firewall rules !", "Are you sure?")
 		if tmp == 'no':
 			return
-		files = self.ARuleTextDownFiles.get("1.0", "end")
 		files = files.split('\n')
-		self.fwl.add_rules(files, is_in = is_inbound, is_out = is_outbound)
-		self.ARuleTextDownFiles.delete("1.0", "end")
+		if self.fwl.add_rules(files, is_in = is_inbound, is_out = is_outbound) == -1:
+			return
 
 
 
@@ -206,7 +209,7 @@ class CreateFrameARule():
 		self.ARuleScrollbarXPath = ttk.Scrollbar(self.ARuleFrameUpLeft, orient = HORIZONTAL)
 		self.ARuleScrollbarXPath.pack( side = BOTTOM, fill = X )
 		
-		self.ARuleEntryPath = ttk.Entry(self.ARuleFrameUpLeft, xscrollcommand = self.ARuleScrollbarXPath.set)
+		self.ARuleEntryPath = ttk.Entry(self.ARuleFrameUpLeft, font = self.ft, xscrollcommand = self.ARuleScrollbarXPath.set)
 		self.ARuleEntryPath.pack(fill = X)
 
 		self.ARuleButtonOpen = ttk.Button(self.ARuleFrameUpLeft, text = "  Open  ", \
@@ -239,7 +242,7 @@ class CreateFrameARule():
 		self.ARuleScrollbarYDownFolders = ttk.Scrollbar(self.ARuleFrameDownLeft, orient = VERTICAL)
 		self.ARuleScrollbarYDownFolders.pack( side = RIGHT, fill = Y )
 		
-		self.ARuleTextDownFiles = Text(self.ARuleFrameDownLeft, \
+		self.ARuleTextDownFiles = Text(self.ARuleFrameDownLeft, font = self.ft, \
 xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARuleScrollbarYDownFolders.set, wrap = 'none')
 		self.ARuleTextDownFiles.pack(fill = BOTH)
 		
@@ -272,7 +275,7 @@ xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARul
 		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight, text = 'Extension ( fill like ".exe" )')
 		self.ARuleLableBlank.pack(side = TOP, fill = X)
 				
-		self.ARuleEntryExtension = ttk.Entry(self.ARuleFrameRight)
+		self.ARuleEntryExtension = ttk.Entry(self.ARuleFrameRight, font = self.ft)
 		self.ARuleEntryExtension.pack(fill = X, side = TOP)
 
 		self.ARuleButtonSearch = ttk.Button(self.ARuleFrameRight, text = "Search Files", command = self.ARuleSearchFiles) #bg = "#e1e1e1"

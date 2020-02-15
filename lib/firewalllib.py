@@ -10,10 +10,11 @@ import shutil
 import stat
 import subprocess
 	
-#import lib.baselib
-
 from natsort import natsort_keygen, ns
-
+try:
+	import lib.baselib, lib.filelib
+except:
+	import baselib, filelib
 
 
 # this lib only support windows
@@ -21,6 +22,13 @@ class FirewallLib():
 
 	def __init__(self):
 		super().__init__()
+
+		try:
+			self.bl = lib.baselib.BaseLib()
+			self.fl = lib.filelib.FileLib()
+		except:
+			self.bl = baselib.BaseLib()
+			self.fl = filelib.FileLib()
 
 		self.firewall_rule_log_in = r'c:\temp\you_can_delete_me_in.txt'
 		self.firewall_rule_log_out = r'c:\temp\you_can_delete_me_out.txt'
@@ -106,7 +114,11 @@ class FirewallLib():
 		for file in files:
 			if file == '' or file == '\n':
 				continue
-			fs.append( file.strip() )
+			file = file.strip()
+			if self.fl.get_path_info(file)['isfile'] == 0:
+				messagebox.showerror ("ERROR", '"' + file + '"' + '\n\nIs not a file ! ')
+				return -1
+			fs.append(file)
 		if is_out == 1:
 			self.create_log_current_rules_out()
 			log_out = self.read_log_file_out()

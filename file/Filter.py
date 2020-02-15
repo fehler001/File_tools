@@ -169,7 +169,7 @@ class CreateFrameFilter():
 		including_folder = self.FilterCheckFolderVar.get()
 		case = self.FilterCheckCaseVar.get()
 		is_exactly_same = self.FilterCheckSameVar.get()
-		is_extention = self.FilterCheckExtensionVar.get()
+		is_extension = self.FilterCheckExtensionVar.get()
 		is_recur = self.FilterCheckRecursiveVar.get()
 		try:
 			if self.FilterEntryMax.get() != '':
@@ -195,7 +195,7 @@ class CreateFrameFilter():
 		except:
 			messagebox.showerror ("ERROR", "Filename Length:\n\nPlease fill a number")
 			return
-		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min, is_extention, is_recur)
+		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min, is_extension, is_recur)
 		for file in files:
 			self.FilterTextDownFiles.insert(INSERT, file)
 			self.FilterTextDownFiles.insert(INSERT, '\n')
@@ -229,7 +229,7 @@ class CreateFrameFilter():
 		self.FilterScrollbarXPath = ttk.Scrollbar(self.FilterFrameUpLeft, orient = HORIZONTAL)
 		self.FilterScrollbarXPath.pack( side = BOTTOM, fill = X )
 		
-		self.FilterEntryPath = ttk.Entry(self.FilterFrameUpLeft, xscrollcommand = self.FilterScrollbarXPath.set)
+		self.FilterEntryPath = ttk.Entry(self.FilterFrameUpLeft, font = self.ft, xscrollcommand = self.FilterScrollbarXPath.set)
 		self.FilterEntryPath.pack(fill = X)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameUpLeft)
@@ -258,7 +258,7 @@ class CreateFrameFilter():
 		self.FilterScrollbarYDownFolders = ttk.Scrollbar(self.FilterFrameDownLeft, orient = VERTICAL)
 		self.FilterScrollbarYDownFolders.pack( side = RIGHT, fill = Y )
 		
-		self.FilterTextDownFiles = Text(self.FilterFrameDownLeft, \
+		self.FilterTextDownFiles = Text(self.FilterFrameDownLeft, font = self.ft, \
 xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.FilterScrollbarYDownFolders.set, wrap = 'none')
 		self.FilterTextDownFiles.pack(fill = BOTH)
 		
@@ -283,7 +283,7 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
 		self.FilterCheckExtensionVar = IntVar()
-		self.FilterCheckExtension = ttk.Checkbutton(self.FilterFrameRight, text = 'Extention Mode ( fill like ".exe" )', \
+		self.FilterCheckExtension = ttk.Checkbutton(self.FilterFrameRight, text = 'Extension Mode ( fill like ".exe" )', \
 											variable = self.FilterCheckExtensionVar, onvalue = 1, offvalue = 0) 
 		self.FilterCheckExtension.pack(fill = X, side = TOP)
 		self.FilterCheckExtensionVar.set(0)
@@ -297,37 +297,37 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Including String (like ".py" "asd")')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 
-		self.FilterEntryIncluding = ttk.Entry(self.FilterFrameRight)
+		self.FilterEntryIncluding = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryIncluding.pack(fill = X)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Excluding String (like ".pyc" "asdf")')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
-		self.FilterEntryExcluding = ttk.Entry(self.FilterFrameRight)
+		self.FilterEntryExcluding = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryExcluding.pack(fill = X)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Max (Unit: Byte, 10240 = 10m)')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
-		self.FilterEntryMax = ttk.Entry(self.FilterFrameRight)
+		self.FilterEntryMax = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryMax.pack(fill = X)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Min (Unit: Byte)')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
-		self.FilterEntryMin = ttk.Entry(self.FilterFrameRight)
+		self.FilterEntryMin = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryMin.pack(fill = X)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Filename Length: Max')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
-		self.FilterEntryNameMax = ttk.Entry(self.FilterFrameRight)
+		self.FilterEntryNameMax = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryNameMax.pack(fill = X)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Filename Length: Min')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
-		self.FilterEntryNameMin = ttk.Entry(self.FilterFrameRight)
+		self.FilterEntryNameMin = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryNameMin.pack(fill = X)
 
 		self.FilterCheckFileVar = IntVar()

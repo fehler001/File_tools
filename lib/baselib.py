@@ -2,7 +2,9 @@
 #File_tools/lib/baselib.py
 
 import os
+from tkinter import *
 from tkinter import messagebox
+from tkinter.font import Font, nametofont
 import random
 import shutil
 import stat
@@ -14,11 +16,12 @@ from encodings.aliases import aliases
 import pprint
 
 
+
+
 class BaseLib():
 
 	def __init__(self):
 		super().__init__()
-
 
 
 	def check_legit_int(self, cont):
@@ -44,6 +47,20 @@ class BaseLib():
 				messagebox.showerror ("REPEAT ERROR", "Got same name file !\n\n" + '"' + item + '"')
 				return -1
 			l2.append(item)
+
+
+
+	def clean_list(self, list, is_repeat = 0, is_sort = 0):
+		all = []
+		if is_repeat == 1:
+			list = set(list)
+		if is_sort == 1:
+			list = sorted(list, key = self.natsort_key2)
+		for item in list:
+			if item == '' or item == '\n':
+				continue
+			all.append(item)
+		return all
 
 
 

@@ -74,19 +74,6 @@ class FileLib():
 
 
 
-	def clean_list(self, list, is_repeat = 0, is_sort = 0):
-		all = []
-		if is_repeat == 1:
-			list = set(list)
-		if is_sort == 1:
-			list = sorted(list, key = self.natsort_key2)
-		for item in list:
-			if item == '' or item == '\n':
-				continue
-			all.append(item)
-		return all
-
-
 
 	# path must use '/'
 	# 'c:/a.txt'  i1 = index '/', i2 = index '.', filename = 'a.txt', name = 'a', ext = '.txt'
@@ -214,6 +201,7 @@ class FileLib():
 		for file in files:
 			if file == '\n' or file == '':
 				continue
+			file = file.replace('\\', '/')
 			i = file.rfind(r'/')
 			if i == -1:
 				all.append(file)
@@ -246,6 +234,7 @@ class FileLib():
 		for file in files:
 			if file == '\n' or file == '':
 				continue
+			file = file.replace('\\', '/')
 			i = file.rfind('/')
 			if i == -1:
 				all.append(file)
@@ -281,6 +270,7 @@ class FileLib():
 		for file in files:
 			if file == '\n' or file == '':
 				continue
+			file = file.replace('\\', '/')
 			i = file.rfind(original)
 			if i != -1 and i > file.rfind(r'/'):
 				new_file = file[0:i] + substitute + file[i + len(original) : ]
@@ -295,6 +285,7 @@ class FileLib():
 	# get -> 'c:/foo/b.txt'  
 	# delete -> 'c:/foo/ar.txt'
 	def get_or_delete_middle_filename(self, file, p1 = 0, p2 = -1, get_middle = 1):
+		file = file.replace('\\', '/')
 		pinfo = self.get_path_info(file)
 		if pinfo['is_exist'] == 0:
 			return file
@@ -606,7 +597,7 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 		if is_list == 0:
 			files_src = self.filter(src, including_file = including_file, including_folder = including_folder, is_recur = is_recur_src)
 		else:
-			src = self.clean_list(src)
+			src = self.bl.clean_list(src)
 			for item in src:
 				try:
 					if os.path.isfile(item):
