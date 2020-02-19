@@ -15,6 +15,7 @@ import shutil
 import json
 import copy
 
+
 import file
 import txt
 import firewall
@@ -28,6 +29,7 @@ import lib.firewalllib
 import chardet
 import natsort
 from natsort import natsort_keygen, ns
+import crcmod
 
 
 
@@ -198,7 +200,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 		self.about = Toplevel(self.root)
 		self.about.geometry('300x200')
 		self.about.title("")
-		self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.22\n\n    Author tgbxs", anchor = CENTER)
+		self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.30\n\n    Author tgbxs", anchor = CENTER)
 		self.LabelAbout.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 
 
@@ -212,6 +214,8 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall):
 			self.FilterSaveEntry()
 			self.FindSaveEntry()
 			self.MoveSaveEntry()
+			self.DateSaveEntry()
+			self.CsumSaveEntry()
 			
 			self.DivideSaveEntry()
 			self.StrSaveEntry()

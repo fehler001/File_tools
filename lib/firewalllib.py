@@ -115,7 +115,7 @@ class FirewallLib():
 			if file == '' or file == '\n':
 				continue
 			file = file.strip()
-			if self.fl.get_path_info(file)['isfile'] == 0:
+			if self.bl.get_path_info(file)['isfile'] == 0:
 				messagebox.showerror ("ERROR", '"' + file + '"' + '\n\nIs not a file ! ')
 				return -1
 			fs.append(file)

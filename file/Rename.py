@@ -251,9 +251,10 @@ class CreateFrameRename():
 			return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
 		files = files.split('\n')
+		files = self.bl.clean_list(files)
 
 		if self.CheckPathExist == 1:
-			if self.fl.check_path_exist(files) == -1:
+			if self.bl.check_path_exist(files) == -1:
 				return
 		
 		files = self.fl.rename_by_ordinal(files, self.RenameDigit, self.RenameOutset)
@@ -270,15 +271,16 @@ class CreateFrameRename():
 			return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
 		files = files.split('\n')
+		files = self.bl.clean_list(files)
 
 		if self.CheckPathExist == 1:
-			if self.fl.check_path_exist(files) == -1:
+			if self.bl.check_path_exist(files) == -1:
 				return
 
 		cont = self.RenameEntryInsertString.get()
 		if self.bl.check_legit_string(cont) == -1:
 			return
-		files = self.fl.insert(files, self.RenamePosition, cont)
+		files = self.fl.insert(files, pos = self.RenamePosition, cont = cont)
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
@@ -294,21 +296,21 @@ class CreateFrameRename():
 			return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
 		files = files.split('\n')
+		files = self.bl.clean_list(files)
 
 		if self.CheckPathExist == 1:
-			if self.fl.check_path_exist(files) == -1:
+			if self.bl.check_path_exist(files) == -1:
 				return
 
 		new_files = []
 		if self.RenameCheckDeleteOldVar.get() == 1:
 			for file in files:
-				if file == '' or file == '\n':
-					continue
 				file = self.fl.delete_front_ordinal(file)
 				new_files.append(file)
 		else:
 			new_files = files
-		rst = self.fl.insert(new_files, pos = self.RenamePosition, cont = '', is_ordinal = True, digit = self.RenameDigit, outset = self.RenameOutset)
+		ordinal = self.bl.generate_ordinal(length = len(new_files), digit = self.RenameDigit, outset = self.RenameOutset)
+		rst = self.fl.insert(new_files, pos = self.RenamePosition, cont = '', ordinal = ordinal)
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in rst:
 			self.RenameTextDownFiles.insert(INSERT, file)
@@ -320,9 +322,10 @@ class CreateFrameRename():
 		self.RenameSaveEntry()
 		files = self.RenameTextUpFiles.get("1.0", "end")
 		files = files.split('\n')
+		files = self.bl.clean_list(files)
 
 		if self.CheckPathExist == 1:
-			if self.fl.check_path_exist(files) == -1:
+			if self.bl.check_path_exist(files) == -1:
 				return
 
 		original = self.RenameEntryReplaceOriginal.get()
@@ -362,15 +365,14 @@ class CreateFrameRename():
 				return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
 		files = files.split('\n')
+		files = self.bl.clean_list(files)
 
 		if self.CheckPathExist == 1:
-			if self.fl.check_path_exist(files) == -1:
+			if self.bl.check_path_exist(files) == -1:
 				return
 		
 		new_files = []
 		for file in files:
-			if file == '' or file == '\n':
-				continue
 			new_file = self.fl.get_or_delete_middle_filename(file, p1, p2, get_middle = get_middle)
 			if new_file == -1:
 				new_files.append(file)
@@ -402,7 +404,7 @@ class CreateFrameRename():
 		UpFiles = raw_UpFiles.split('\n')
 
 		if self.CheckPathExist == 1:
-			if self.fl.check_path_exist(UpFiles) == -1:
+			if self.bl.check_path_exist(UpFiles) == -1:
 				return
 
 		DownFiles = raw_DownFiles.split('\n')

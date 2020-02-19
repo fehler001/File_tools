@@ -51,6 +51,8 @@ class CreateFrameStr():
 			j['file_tools']['txt']['string']['combo_to'] = 'utf-8'
 		if not 'check_binary' in j['file_tools']['txt']['string']:
 			j['file_tools']['txt']['string']['check_binary'] = 1
+		if not 'text_up' in j['file_tools']['txt']['string']:
+			j['file_tools']['txt']['string']['text_up'] = ''
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -69,6 +71,7 @@ class CreateFrameStr():
 		self.StrComboFrom.set(j['file_tools']['txt']['string']['combo_from'])
 		self.StrComboTo.set(j['file_tools']['txt']['string']['combo_to'])
 		self.StrCheckBinaryVar.set( j['file_tools']['txt']['string']['check_binary'] )
+		self.StrTextUp.insert(INSERT, j['file_tools']['txt']['string']['text_up'] )
 		f.close()
 
 
@@ -93,6 +96,11 @@ class CreateFrameStr():
 			j['file_tools']['txt']['string']['combo_from'] = self.StrComboFrom.get()
 			j['file_tools']['txt']['string']['combo_to'] = self.StrComboTo.get()
 			j['file_tools']['txt']['string']['check_binary'] = self.StrCheckBinaryVar.get()
+			tu = self.StrTextUp.get('1.0', 'end')
+			if tu[-1] == '\n':
+				j['file_tools']['txt']['string']['text_up'] = tu[0:-1]
+			else:
+				j['file_tools']['txt']['string']['text_up'] = tu
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
@@ -389,12 +397,15 @@ class CreateFrameStr():
 		self.StrLableBlank = ttk.Label(self.StrFrameRight, text = "From")
 		self.StrLableBlank.pack(side = TOP, fill = X)
 
-		values = ('utf-8', 'utf-16', 'utf_16_be', 'utf-32', 'raw_unicode_escape', 'unicode_escape',  'base64', 'html',  
-			'gb2312', 'big5', 'gbk', 'gb18030', 'cp936', 'cp932', 'shift-jis', 'shift_jis_2004', 'shift_jisx0213')
+		values = ('utf-8', 'utf-16', 'utf-32', 'raw_unicode_escape', 'unicode_escape', 'ascii', 
+			'gb2312', 'big5', 'gbk', 'gb18030', 'shift-jis', 'shift_jis_2004', 'shift_jisx0213', 
+			'', "transcode not supported below here", 'base64', 'html')
+		enc = values + ('hex', 'binary', 'ascii-hex')
+		dec = values + ('int', 'ascii-unhex')
 
 		self.StrComboFromVar = StringVar()
 		self.StrComboFrom = ttk.Combobox(self.StrFrameRight, textvariable = self.StrComboFromVar)
-		self.StrComboFrom["values"] = values
+		self.StrComboFrom["values"] = enc
 		self.StrComboFrom.current(0) 
 		self.StrComboFrom.pack(fill = X)
 		#comboxlist.bind("<<ComboboxSelected>>", fun)   # when one item selected, fun()
@@ -404,7 +415,7 @@ class CreateFrameStr():
 
 		self.StrComboToVar = StringVar()
 		self.StrComboTo = ttk.Combobox(self.StrFrameRight, textvariable = self.StrComboToVar)
-		self.StrComboTo["values"] = values
+		self.StrComboTo["values"] = dec
 		self.StrComboTo.current(0) 
 		self.StrComboTo.pack(fill = X)
 
