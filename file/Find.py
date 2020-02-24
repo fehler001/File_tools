@@ -9,6 +9,10 @@ import json
 import copy
 
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
+
 
 class CreateFrameFind():
 
@@ -114,12 +118,11 @@ class CreateFrameFind():
 		files = files.split('\n')
 		files = set(files)
 		files = sorted(files, key=self.natsort_key2)
+		files = self.bl.clean_list(files)
 		for file in files:
-			if file == '\n' or file == '':
-				continue
 			self.FindTextDownFiles.insert(INSERT, file)
 			self.FindTextDownFiles.insert(INSERT, '\n')
-	
+			
 
 	def FindAddSource(self):
 		self.FindReadPath()
@@ -176,16 +179,18 @@ class CreateFrameFind():
 				src = src.split('\n')
 			files = self.fl.find_files_with_same_name_by_list(src, dst, including_file, including_folder, \
 				is_recur_src = is_recur_src, is_recur_dst = is_recur_dst, is_list = is_rename)
-		#try:
-		if 1:
-			for file in files:
-				self.FindTextDownFiles.insert(INSERT, file)
-				self.FindTextDownFiles.insert(INSERT, '\n')
-		#except: pass
+		n = 0
+		for file in files:
+			self.FindTextDownFiles.insert(INSERT, file)
+			self.FindTextDownFiles.insert(INSERT, '\n')
+			n = n + 1
+		self.FindFrameDownLeft.config(text = r'Found  ' + str(n))
+
 		self.FindCheckRepeat()
 		if len(self.FindTextDownFiles.get("1.0", "end") ) < 4:
 			self.FindTextDownFiles.insert(INSERT, "Nothing detected")
 			self.FindTextDownFiles.insert(INSERT, '\n')
+
 
 
 	def Find2(self):
@@ -212,6 +217,9 @@ class CreateFrameFind():
 		self.FindEntrySource = ttk.Entry(self.FindFrame1, font = self.ft, xscrollcommand = self.FindScrollbarXSource.set)
 		self.FindEntrySource.pack(fill = X)
 
+		self.FindEntrySource.drop_target_register(DND_FILES, DND_TEXT)
+		self.FindEntrySource.dnd_bind('<<Drop>>', self.drop_in_entry)
+
 		self.FindScrollbarXSource.config( command = self.FindEntrySource.xview )
 		# end Frame1
 
@@ -227,6 +235,9 @@ class CreateFrameFind():
 		
 		self.FindEntryDestination = ttk.Entry(self.FindFrame2, font = self.ft, xscrollcommand = self.FindScrollbarXDestination.set)
 		self.FindEntryDestination.pack(fill = X)
+
+		self.FindEntryDestination.drop_target_register(DND_FILES, DND_TEXT)
+		self.FindEntryDestination.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.FindScrollbarXDestination.config( command = self.FindEntryDestination.xview )
 		# end Frame2

@@ -13,6 +13,9 @@ import random
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
 
 
 class CreateFrameDivide():
@@ -194,6 +197,9 @@ class CreateFrameDivide():
 		self.DivideEntryTxtSource = ttk.Entry(self.DivideFrame1, font = self.ft, xscrollcommand = self.DivideScrollbarXTxtSource.set)
 		self.DivideEntryTxtSource.pack(fill = X)
 
+		self.DivideEntryTxtSource.drop_target_register(DND_FILES, DND_TEXT)
+		self.DivideEntryTxtSource.dnd_bind('<<Drop>>', self.drop_in_entry)
+
 		self.DivideScrollbarXTxtSource.config( command = self.DivideEntryTxtSource.xview )
 		# end Frame1
 
@@ -209,6 +215,9 @@ class CreateFrameDivide():
 		
 		self.DivideEntryTxtDestination = ttk.Entry(self.DivideFrame2, font = self.ft, xscrollcommand = self.DivideScrollbarXTxtDestination.set)
 		self.DivideEntryTxtDestination.pack(fill = X)
+
+		self.DivideEntryTxtDestination.drop_target_register(DND_FILES, DND_TEXT)
+		self.DivideEntryTxtDestination.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.DivideScrollbarXTxtDestination.config( command = self.DivideEntryTxtDestination.xview )
 		# end Frame2

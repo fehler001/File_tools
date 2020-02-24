@@ -13,6 +13,9 @@ import random
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
 
 
 class CreateFrameStr():
@@ -281,7 +284,7 @@ class CreateFrameStr():
 
 		# start up left Frame
 		self.StrFrameUpLeft = ttk.LabelFrame(self.StrRoot, text = "")
-		self.StrFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.23)
+		self.StrFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.28)
 
 		# start Frame1
 		self.StrFrame1 = ttk.Frame(self.StrFrameUpLeft)
@@ -295,6 +298,9 @@ class CreateFrameStr():
 		
 		self.StrEntryTxtSource = ttk.Entry(self.StrFrame1, font = self.ft, xscrollcommand = self.StrScrollbarXTxtSource.set)
 		self.StrEntryTxtSource.pack(fill = X)
+
+		self.StrEntryTxtSource.drop_target_register(DND_FILES, DND_TEXT)
+		self.StrEntryTxtSource.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.StrScrollbarXTxtSource.config( command = self.StrEntryTxtSource.xview )
 		# end Frame1
@@ -312,13 +318,16 @@ class CreateFrameStr():
 		self.StrEntryTxtDestination = ttk.Entry(self.StrFrame2, font = self.ft, xscrollcommand = self.StrScrollbarXTxtDestination.set)
 		self.StrEntryTxtDestination.pack(fill = X)
 
+		self.StrEntryTxtDestination.drop_target_register(DND_FILES, DND_TEXT)
+		self.StrEntryTxtDestination.dnd_bind('<<Drop>>', self.drop_in_entry)
+
 		self.StrScrollbarXTxtDestination.config( command = self.StrEntryTxtDestination.xview )
 		# end Frame2
 		# end up left Frame
 		
 		# start down left Frame
 		self.StrFrameDownLeft = ttk.Frame(self.StrRoot)
-		self.StrFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.25, relheight = 0.74)
+		self.StrFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.29, relheight = 0.70)
 		
 		# start down left frame 1
 		self.StrFrameDownLeft_1 = ttk.LabelFrame(self.StrFrameDownLeft, text = r'Paste text here')

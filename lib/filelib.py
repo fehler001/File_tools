@@ -8,6 +8,7 @@ import shutil
 import stat
 import pprint
 import time
+import re
 
 try:
 	import lib.baselib
@@ -128,9 +129,9 @@ class FileLib():
 
 
 	# digit = 3, outset = 1, 'c:/foo/bar.txt', 'c:/foo/barbar.txt'  =>  'c:/foo/001.txt', 'c:/foo/002.txt'
-	def rename_by_ordinal(self, files, digit = 1, outset = 0):
+	def rename_by_ordinal(self, files, digit = 1, outset = 0, interval = 1):
 		all = []
-		ordinal = self.bl.generate_ordinal( len(files), digit = digit, outset = outset)
+		ordinal = self.bl.generate_ordinal( len(files), digit = digit, outset = outset, interval = interval)
 
 		n = 0
 		for file in files:
@@ -185,18 +186,52 @@ class FileLib():
 
 
 	# original = 'ar', substitute = 'zz', 'c:/foo/bar.txt'   =>   'c:/foo/bzz.txt'  
-	def replace_string(self, files, original, substitute):
+	def replace_string(self, files, original, substitute, match_pos):
 		all = []
+		if type(files) == str:
+			files = [files]
+		original = re.escape(original)
+		original = original.replace(r'\?', '.')
+		original = original.replace(r'\*', '.*')
+		
 		for file in files:
-			if file == '\n' or file == '':
-				continue
-			file = file.replace('\\', '/')
-			i = file.rfind(original)
-			if i != -1 and i > file.rfind(r'/'):
-				new_file = file[0:i] + substitute + file[i + len(original) : ]
-				all.append(new_file)
-			else:
+			pinfo = self.bl.get_path_info(file)
+			matchs = re.findall(original, pinfo['filename'])			# , [re.MULTILINE]) search in all lines
+			if matchs == []:
 				all.append(file)
+				continue
+			
+			if match_pos == 'match all':
+				for m in matchs:
+					pinfo['filename'] = pinfo['filename'].replace(m, substitute)
+			else:
+				pos = None
+				if match_pos == 'match first': pos = 0
+				if match_pos == 'match second': pos = 1
+				if match_pos == 'match third': pos = 2
+				if match_pos == 'match fourth': pos = 3
+				if match_pos == 'match fifth': pos = 4
+				if match_pos == 'match last': pos = -1
+				if pos is None:
+					if self.bl.check_legit_int(match_pos) == -1:
+						return -1
+					else:
+						pos = int(match_pos)
+
+			if match_pos != 'match all':
+				s = []
+				for m in matchs:
+					for span in re.finditer(m, pinfo['filename']):
+						s.append(span.span())
+				s = sorted(s)
+				p = pos
+				if p > len(s) - 1: p = -1
+				if p < 0:
+					if abs(p) > len(s): p = 0
+				f = pinfo['filename']
+				pinfo['filename'] = f[ 0 : s[p][0] ] + substitute + f[ s[p][1] : ]
+
+			all.append(pinfo['parent'] + '/' + pinfo['filename'])
 		return all
 
 
@@ -239,17 +274,20 @@ class FileLib():
 
 
 	# see 'Refine Enfold' description
-	def find_enfold(self, path):
+	def find_enfold(self, path, is_samename = 1):
 		all = []
 		for root, subfolders, files in os.walk(path):
 				for subfolder in subfolders:
 					root = root.replace('\\', '/')
 					i = root.rfind('/')
 					s = root[i + 1 : ]
-					if subfolder == s:
-						L = os.listdir(root)
-						l = len(L)
-						if l == 1:
+					list = os.listdir(root)
+					l = len(list)
+					if l == 1:
+						if is_samename == 1:
+							if subfolder == s:
+								all.append(root + '/' + subfolder)
+						else:
 							all.append(root + '/' + subfolder)
 		return all
 
@@ -292,102 +330,86 @@ class FileLib():
 
 
 
-	def filter(self, path, include = '', exclude = '', max = '', min = '', including_file = 1, including_folder = 0, \
-case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_extension = 0, is_recur = 1):
+	def filter(self, path, include = '', excludes = '', max = '', min = '', including_file = 1, including_folder = 0, \
+case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_extension = 0, is_recur = 1, is_custom_list = 0):
 		all = []
+		if type(excludes) == str:
+			excludes = [excludes]
 		if case_insensitive == 1:
 			include = include.lower()
-			exclude = exclude.lower()
-		if including_folder == 1 and is_extension == 0:
-			for root, subfolders, files in os.walk(path):
-				for subfolder in subfolders:
-					if is_recur == 0:
-						if root != path:
-							break
-					root_f = root.replace('\\', '/')       # root_f = root path of subfolder
-					if root_f[-1] == '/':
-						root_f = root_f[ :-1]
-					f = root_f + '/' + subfolder           # f = full path of subfolder
-					if case_insensitive == 1:
-						f = f.lower()
-					fs = self.bl.check_path_exist(f)
-					fns = len(subfolder)
-					i_f = f.rfind('/')
-					i2_f = f.rfind(include)
-					i3_f = f.rfind(exclude)
-					if i2_f == -1:
-						continue
-					if i2_f < i_f:
-						continue
-					if i3_f > i_f and exclude != '':
-						continue
-					if max != '' :
-						if fs > max:
-							continue
-					if min != '':
-						if fs < min:
-							continue
-					if name_max != '' :
-						if fns > name_max:
-							continue
-					if name_min != '':
-						if fns < name_min:
-							continue
-					if is_exactly_same == 1:
-						if subfolder != include:
-							continue
-					all.append(f)
+			for i in range(len(excludes)):
+				excludes[i] = excludes[i].lower()
+		re_include = re.escape(include)
+		re_include = re_include.replace(r'\?', '.')
+		re_include = re_include.replace(r'\*', '.*')
 
-		if including_file == 1:
-			for root, subfolders, files in os.walk(path):
-				for file in files:
-					if is_recur == 0:
-						if root != path:
-							break
-					root_ff = root.replace('\\', '/')          # root_ff = root path of file
-					if root_ff[-1] == '/':
-						root_ff = root_ff[ :-1]
-					ff = root_ff + '/' + file                  # ff = full path of file
-					if case_insensitive == 1:
-						ff = ff.lower()
-					size = os.path.getsize(ff)
-					i_ff = ff.rfind('/')
-					ffns = len( ff[i_ff : ] )
-					i2_ff = ff.rfind(include)
-					i3_ff = ff.rfind(exclude)
-					i4_ff = ff.rfind(r'.')
-					if is_extension == 1:
-						if i4_ff == -1 or i4_ff < i_ff or i4_ff != i2_ff:
-							continue
-						if include != ff[ i4_ff : ]:
-							continue
-						if case_insensitive == 1:
-							if include.lower() != ff[ i4_ff : ]:
-								continue
-					if i2_ff == -1:
+		if is_custom_list == 0:
+			plist = self.collect_files_and_folders(path, is_add_file = including_file, is_add_folder = including_folder, is_recur = is_recur)
+		else:
+			plist = path
+
+		for p in plist:
+			exclude_switch = 0
+			p = p.replace('\\', '/') 
+			pinfo = self.bl.get_path_info(p)
+
+			if case_insensitive == 1:
+				pinfo['filename'] = pinfo['filename'].lower()
+
+			if is_exactly_same == 1:
+				if pinfo['filename'] != include:
+					continue
+
+			matchs = re.findall(re_include, pinfo['filename'])			# , [re.MULTILINE]) search in all lines
+			if matchs == []:
+				continue
+
+			if excludes != ['']:
+				for exclude in excludes:
+					re_exclude = re.escape(exclude)
+					re_exclude = re_exclude.replace(r'\?', '.')
+					re_exclude = re_exclude.replace(r'\*', '.*')
+					matchs = re.findall(re_exclude, pinfo['filename'])			# , [re.MULTILINE]) search in all lines
+					if matchs != []:
+						exclude_switch = 1
+						break
+				if exclude_switch == 1:
+					continue
+
+			if name_max != '' :
+				if len(pinfo['filename']) > name_max:
+					continue
+			if name_min != '':
+				if len(pinfo['filename']) < name_min:
+					continue
+
+			if pinfo['isdir'] == 1:
+				fs = self.bl.get_folder_size(p)
+			if pinfo['isfile'] == 1:
+				fs = os.path.getsize(p)				
+			if max != '' :
+				if fs > max:
+					continue
+			if min != '':
+				if fs < min:
+					continue
+
+			if is_extension == 1:
+				if pinfo['isfile'] == 1:
+					if inc == '' and pinfo['filename'] == pinfo['name']:
+						all.append(p)
 						continue
-					if i2_ff < i_ff:
+					if include == pinfo['ext']:
+						all.append(p)
 						continue
-					if i3_ff > i_ff and exclude != '':
-						continue
-					if max != '' :
-						if size > max:
-							continue
-					if min != '':
-						if size < min:
-							continue
-					if name_max != '' :
-						if ffns > name_max:
-							continue
-					if name_min != '':
-						if ffns < name_min:
-							continue
-					if is_exactly_same == 1:
-						if file != include:
-							continue
-					all.append(ff)
+				continue
+			
+			all.append(p)
+
 		return all
 
+
+	
 
 	# see 'Find' description
 	def find_same_folder_strctrue(self, src, dst, is_subfolder_with_same_name = 0):
@@ -587,8 +609,6 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 if __name__ == '__main__':
 	fl = FileLib()
 	a=r'g:\a'
-	o=fl.get_path_date(a)
-	print(o)
-	print(o['ctime'])
-	b=fl.generate_date_ordinal( 10, outset = o['sctime'], interval = 65451468)
-	pprint.pprint(b)
+	a=[(10, 15), (43, 1),(15, 2)]
+	a=sorted(a)
+	pprint.pprint(a)

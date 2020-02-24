@@ -14,6 +14,9 @@ import random
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
 
 
 class CreateFrameMove():
@@ -262,6 +265,9 @@ class CreateFrameMove():
 		self.MoveEntryPath = ttk.Entry(self.MoveFrameUpLeft, font = self.ft, xscrollcommand = self.MoveScrollbarXPath.set)
 		self.MoveEntryPath.pack(fill = X)
 
+		self.MoveEntryPath.drop_target_register(DND_FILES, DND_TEXT)
+		self.MoveEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
+
 		self.MoveLableBlank = ttk.Label(self.MoveFrameUpLeft)
 		self.MoveLableBlank.pack(side = TOP, fill = X)
 
@@ -309,7 +315,7 @@ class CreateFrameMove():
 		self.MoveButtonSetDestination.pack(fill = X, side = TOP)
 
 		self.MoveCheckCreatingVar = IntVar() # StringVar()
-		self.MoveCheckCreating = ttk.Checkbutton(self.MoveFrameRight, text = "Creating New Folder (in root direction)", \
+		self.MoveCheckCreating = ttk.Checkbutton(self.MoveFrameRight, text = "Creating New Folder ( in root direction )", \
 variable = self.MoveCheckCreatingVar, onvalue = 1, offvalue = 0, command = self.MoveSetInterval )
 		self.MoveCheckCreating.pack(fill = X, side = TOP)
 		self.MoveCheckCreatingVar.set(0)
@@ -318,7 +324,7 @@ variable = self.MoveCheckCreatingVar, onvalue = 1, offvalue = 0, command = self.
 		self.MoveEntryCreating.pack(fill = X)
 
 		self.MoveCheckIntervalVar = IntVar() # StringVar()
-		self.MoveCheckInterval = ttk.Checkbutton(self.MoveFrameRight, text = "Seperating Files (fill interval number)", \
+		self.MoveCheckInterval = ttk.Checkbutton(self.MoveFrameRight, text = "Seperating Files ( fill interval number )", \
 variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambda: self.MoveCheckCreatingVar.set(1) ) 
 		self.MoveCheckInterval.pack(fill = X, side = TOP)
 		self.MoveCheckIntervalVar.set(0)
@@ -330,7 +336,7 @@ variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambd
 		self.MoveLableBlank.pack(side = TOP, fill = X)
 
 		self.MoveCheckSkipVar = IntVar() # StringVar()
-		self.MoveCheckSkip = ttk.Checkbutton(self.MoveFrameRight, text = "Skip when file(or folder) exists", \
+		self.MoveCheckSkip = ttk.Checkbutton(self.MoveFrameRight, text = "Skip when file (or folder) exists", \
 											variable = self.MoveCheckSkipVar, onvalue = 1, offvalue = 0) 
 		self.MoveCheckSkip.pack(fill = X, side = TOP)
 		self.MoveCheckSkipVar.set(0)
@@ -365,7 +371,7 @@ variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambd
 		self.MoveCheckSkipDelete.pack(fill = X, side = TOP)
 		self.MoveCheckSkipDeleteVar.set(0)
 
-		self.MoveButtonMove = ttk.Button(self.MoveFrameRight, text = "DELETE ALL IN LEFT BOX", command = self.Delete) #bg = "#e1e1e1"
+		self.MoveButtonMove = ttk.Button(self.MoveFrameRight, text = "DELETE ALL FILES IN LEFT BOX", command = self.Delete) #bg = "#e1e1e1"
 		self.MoveButtonMove.pack(side = TOP, fill = X)
 
 		self.MoveButtonReadFilter = ttk.Button(self.MoveFrameRight, text = "Read Find", command = self.ReadFind) #bg = "#e1e1e1"

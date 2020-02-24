@@ -11,6 +11,10 @@ import sys
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
+
 
 class CreateFrameRemove():
 
@@ -46,7 +50,7 @@ class CreateFrameRemove():
 	def RemoveRestoreState(self):
 		f = open(self.LogPath, 'r', encoding='utf-8')
 		j = json.load(f)
-		self.RemovePath = j['file_tools']['file']['remove_empty_folder']['path_remove']
+		self.RemoveEntryPath.insert(0, j['file_tools']['file']['remove_empty_folder']['path_remove'] )
 		f.close()
 
 	
@@ -63,7 +67,7 @@ class CreateFrameRemove():
 			f = open(self.LogPath, 'r', encoding='utf-8')
 			j = json.load(f)
 			f.close()
-			j['file_tools']['file']['remove_empty_folder']['path_remove'] = self.RemovePath
+			j['file_tools']['file']['remove_empty_folder']['path_remove'] = self.RemoveEntryPath.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
@@ -95,19 +99,24 @@ class CreateFrameRemove():
 			dir = filedialog.askdirectory(initialdir = p) 
 		else:
 			dir = filedialog.askdirectory(initialdir = p[0 : p.rfind(r'/')] ) 
-		try: 
-			if dir == '':
-				return
-			self.RemoveTextDownFolders.delete("1.0", "end")
-			self.RemoveEntryPath.delete(0, "end")
-			self.RemoveEntryPath.insert(0, dir)
-			self.RemovePath = dir
-			self.RemoveSaveEntry()
-			folders = self.fl.find_empty_folder(dir)
-			for folder in folders:
-				self.RemoveTextDownFolders.insert(INSERT, folder)
-				self.RemoveTextDownFolders.insert(INSERT, '\n')
-		except: pass
+		self.RemoveEntryPath.delete(0, "end")
+		self.RemoveEntryPath.insert(0, dir)
+		self.RemovePath = dir
+		self.RemoveSaveEntry()
+
+
+
+	def RemoveDetect(self):
+		self.ReadRemovePath()
+		self.RemoveSaveEntry()
+		self.RemoveTextDownFolders.delete("1.0", "end")
+		dir = self.RemovePath
+		if dir == '':
+			return
+		folders = self.fl.find_empty_folder(dir)
+		for folder in folders:
+			self.RemoveTextDownFolders.insert(INSERT, folder)
+			self.RemoveTextDownFolders.insert(INSERT, '\n')
 		self.RemoveCheckRepeat()
 		if len(self.RemoveTextDownFolders.get("1.0", "end") ) < 4:
 			self.RemoveTextDownFolders.insert(INSERT, "Nothing detected")
@@ -131,8 +140,8 @@ class CreateFrameRemove():
 				os.rmdir(folders[i])
 			except:
 				pass
-		self.RemoveEntryPath.delete(0, "end")
 		self.RemoveTextDownFolders.delete("1.0", "end")
+		self.RemoveTextDownFolders.insert(INSERT, "Finished")
 
 
 
@@ -151,6 +160,9 @@ class CreateFrameRemove():
 		
 		self.RemoveEntryPath = ttk.Entry(self.RemoveFrameUpLeft, font = self.ft, xscrollcommand = self.RemoveScrollbarXPath.set)
 		self.RemoveEntryPath.pack(fill = X)
+
+		self.RemoveEntryPath.drop_target_register(DND_FILES, DND_TEXT)
+		self.RemoveEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.RemoveLableBlank = ttk.Label(self.RemoveFrameUpLeft)
 		self.RemoveLableBlank.pack(side = TOP, fill = X)
@@ -198,6 +210,9 @@ xscrollcommand = self.RemoveScrollbarXDownFolders.set, yscrollcommand = self.Rem
 		self.RemoveLableBlank = ttk.Label(self.RemoveFrameRight)
 		self.RemoveLableBlank.pack(side = TOP, fill = X)
 				
+		self.RemoveButtonDetect = ttk.Button(self.RemoveFrameRight, text = "Detect", command = self.RemoveDetect) 
+		self.RemoveButtonDetect.pack(fill = X, side = TOP)
+
 		self.RemoveLableBlank = ttk.Label(self.RemoveFrameRight)
 		self.RemoveLableBlank.pack(side = TOP, fill = X)
 

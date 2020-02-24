@@ -13,6 +13,9 @@ import random
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
 
 
 class CreateFrameRefine():
@@ -41,6 +44,8 @@ class CreateFrameRefine():
 			j['file_tools']['file']['refine'] = {}
 		if not 'path_refine' in j['file_tools']['file']['refine']:
 			j['file_tools']['file']['refine']['path_refine'] = ''
+		if not 'check_samename' in j['file_tools']['file']['refine']:
+			j['file_tools']['file']['refine']['check_samename'] = 1
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -50,7 +55,8 @@ class CreateFrameRefine():
 	def RefineRestoreState(self):
 		f = open(self.LogPath, 'r', encoding='utf-8')
 		j = json.load(f)
-		self.RefinePath = j['file_tools']['file']['refine']['path_refine']
+		self.RefineEntryPath.insert(0, j['file_tools']['file']['refine']['path_refine'])
+		self.RefineCheckSamenameVar.set( j['file_tools']['file']['refine']['check_samename'] )
 		f.close()
 
 
@@ -69,7 +75,8 @@ class CreateFrameRefine():
 			f = open(self.LogPath, 'r', encoding='utf-8')
 			j = json.load(f)
 			f.close()
-			j['file_tools']['file']['refine']['path_refine'] = self.RefinePath
+			j['file_tools']['file']['refine']['path_refine'] = self.RefineEntryPath.get()
+			j['file_tools']['file']['refine']['check_samename'] = self.RefineCheckSamenameVar.get()
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
@@ -102,15 +109,22 @@ class CreateFrameRefine():
 			dir = filedialog.askdirectory(initialdir = p) 
 		else:
 			dir = filedialog.askdirectory(initialdir = p[0 : p.rfind(r'/')] ) 
+		self.RefineEntryPath.delete(0, "end")
+		self.RefineEntryPath.insert(0, dir)
+		self.RefinePath = dir
+
+
+
+	def RefineDetect(self):
+		self.ReadRefinePath()
+		is_samename = self.RefineCheckSamenameVar.get()
+		dir = self.RefinePath
 		try: 
 			if dir == '':
 				return
 			self.RefineTextDownFolders.delete("1.0", "end")
-			self.RefineEntryPath.delete(0, "end")
-			self.RefineEntryPath.insert(0, dir)
-			self.RefinePath = dir
 			self.RefineSaveEntry()
-			enfolded = self.fl.find_enfold(dir)
+			enfolded = self.fl.find_enfold(dir, is_samename = is_samename)
 			for folder in enfolded:
 				self.RefineTextDownFolders.insert(INSERT, folder)
 				self.RefineTextDownFolders.insert(INSERT, '\n')
@@ -131,11 +145,9 @@ class CreateFrameRefine():
 		tmp = messagebox.askquestion("Excute Refine", "There is no going back !\n\n        Are you sure?")
 		if tmp != 'yes':
 			return
-		try:
-			self.fl.refine_enfold(folders)
-		except: pass
-		self.RefineEntryPath.delete(0, "end")
+		self.fl.refine_enfold(folders)
 		self.RefineTextDownFolders.delete("1.0", "end")
+		self.RefineTextDownFolders.insert(INSERT, "Finished")
 
 
 
@@ -153,6 +165,9 @@ class CreateFrameRefine():
 		
 		self.RefineEntryPath = ttk.Entry(self.RefineFrameUpLeft, font = self.ft, xscrollcommand = self.RefineScrollbarXPath.set)
 		self.RefineEntryPath.pack(fill = X)
+
+		self.RefineEntryPath.drop_target_register(DND_FILES, DND_TEXT)
+		self.RefineEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.RefineLableBlank = ttk.Label(self.RefineFrameUpLeft)
 		self.RefineLableBlank.pack(side = TOP, fill = X)
@@ -190,7 +205,7 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		self.RefineFrameRight = ttk.LabelFrame(self.RefineRoot, text = "")
 		self.RefineFrameRight.place(relx = 0.7, relwidth = 0.29, rely = 0.01, relheight = 0.98)
 		
-		self.RefineButtonReset = ttk.Button(self.RefineFrameRight, text = "RefineReset", command = self.RefineReset) 
+		self.RefineButtonReset = ttk.Button(self.RefineFrameRight, text = "Reset", command = self.RefineReset) 
 		self.RefineButtonReset.pack(fill = X, side = TOP)
 		
 		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
@@ -201,12 +216,20 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		
 		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
 		self.RefineLableBlank.pack(side = TOP, fill = X)
+
+		self.RefineCheckSamenameVar = IntVar()
+		self.RefineCheckSamename = ttk.Checkbutton(self.RefineFrameRight, text = "Exactly Samename ( condition 1 )", \
+											variable = self.RefineCheckSamenameVar, onvalue = 1, offvalue = 0) 
+		self.RefineCheckSamename.pack(fill = X, side = TOP)
+		self.RefineCheckSamenameVar.set(1)
 				
-		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
-		self.RefineLableBlank.pack(side = TOP, fill = X)
+		self.RefineButtonDetect = ttk.Button(self.RefineFrameRight, text = "Detect", command = self.RefineDetect) 
+		self.RefineButtonDetect.pack(fill = X, side = TOP)
 
 		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
 		self.RefineLableBlank.pack(side = TOP, fill = X)
+
+		
 
 		self.RefineButtonRefine = ttk.Button(self.RefineFrameRight, text = "Refine", command = self.Refine) #bg = "#e1e1e1"
 		self.RefineButtonRefine.pack(side = TOP, fill = X)

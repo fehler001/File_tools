@@ -3,6 +3,8 @@
 *.zip
 *.bat
 *.txt
+zz/
+
 
 
 # Byte-compiled / optimized / DLL files

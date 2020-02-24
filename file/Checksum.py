@@ -14,6 +14,9 @@ import json
 import copy
 
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
 
 class CreateFrameCsum():
 
@@ -163,7 +166,7 @@ class CreateFrameCsum():
 
 		# start up left Frame
 		self.CsumFrameUpLeft = ttk.LabelFrame(self.CsumRoot, text = "")
-		self.CsumFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
+		self.CsumFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.55)
 
 		# start Frame1
 		self.CsumFrame1 = ttk.Frame(self.CsumFrameUpLeft)
@@ -177,6 +180,9 @@ class CreateFrameCsum():
 		
 		self.CsumEntryPath = ttk.Entry(self.CsumFrame1, font = self.ft, xscrollcommand = self.CsumScrollbarXPath.set)
 		self.CsumEntryPath.pack(fill = X)
+
+		self.CsumEntryPath.drop_target_register(DND_FILES, DND_TEXT)
+		self.CsumEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.CsumScrollbarXPath.config( command = self.CsumEntryPath.xview )
 		# end Frame1
@@ -222,15 +228,23 @@ class CreateFrameCsum():
 		self.CsumScrollbarXSum2.config( command = self.CsumEntrySum2.xview )
 		# end Frame3
 
-		self.CsumButtonRead = ttk.Button(self.CsumFrameUpLeft, text = "    Read Clipboard    ", command = self.CsumReadClipboard) 
-		self.CsumButtonRead.pack(anchor = W, side = TOP)
+		# start Frame4
+		self.CsumFrame3 = ttk.Frame(self.CsumFrameUpLeft)
+		self.CsumFrame3.pack(side = TOP, fill = X)
+
+		self.CsumButtonCompare = ttk.Button(self.CsumFrame3, text = "         Compare          ", command = self.CsumCompare)
+		self.CsumButtonCompare.pack(side = LEFT, fill = X)
+
+		self.CsumButtonRead = ttk.Button(self.CsumFrame3, text = "    Read Clipboard    ", command = self.CsumReadClipboard) 
+		self.CsumButtonRead.pack(anchor = W, side = LEFT)
+		# end Frame4
 
 		# end up left Frame
 		
 
 		# start down left Frame
 		self.CsumFrameDownLeft = ttk.LabelFrame(self.CsumRoot, text = '')
-		self.CsumFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.51, relheight = 0.48)
+		self.CsumFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.56, relheight = 0.43)
 
 		self.CsumScrollbarXText = ttk.Scrollbar(self.CsumFrameDownLeft, orient = HORIZONTAL)
 		self.CsumScrollbarXText.pack( side = BOTTOM, fill = X )
@@ -267,7 +281,7 @@ class CreateFrameCsum():
 		values = ('MD5', 'SHA1', 'SHA256', 'SHA384', 'SHA512', 'CRC-8', 'CRC-16', 'CRC-32', 'CRC-64')
 
 		self.CsumComboModeVar = StringVar()
-		self.CsumComboMode = ttk.Combobox(self.CsumFrameRight, textvariable = self.CsumComboModeVar)
+		self.CsumComboMode = ttk.Combobox(self.CsumFrameRight, textvariable = self.CsumComboModeVar, state="readonly")
 		self.CsumComboMode["values"] = values
 		self.CsumComboMode.current(0) 
 		self.CsumComboMode.pack(fill = X)
@@ -279,7 +293,6 @@ class CreateFrameCsum():
 		self.CsumLableBlank = ttk.Label(self.CsumFrameRight)
 		self.CsumLableBlank.pack(side = TOP, fill = X)
 
-		self.CsumButtonCompare = ttk.Button(self.CsumFrameRight, text = "Compare", command = self.CsumCompare)
-		self.CsumButtonCompare.pack(side = TOP, fill = X)
+		
 
 		# end right frame

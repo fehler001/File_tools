@@ -1,7 +1,6 @@
 #coding=utf-8
 #File_tools/file/Date.py
 
-
 import tkinter
 from tkinter import *
 from tkinter import messagebox
@@ -13,6 +12,9 @@ import json
 import copy
 import time
 import stat
+
+import tkinterdnd2 
+from tkinterdnd2 import *
 
 
 
@@ -468,13 +470,13 @@ class CreateFrameDate():
 		self.DateCheckAccess.pack(fill = X, side = TOP)
 		self.DateCheckAccessVar.set(0)
 		
-		self.DateLableInsertPosition = ttk.Label(self.DateFrameRight, text = "Insert: Postion ('-1' = end )", anchor = W)
+		self.DateLableInsertPosition = ttk.Label(self.DateFrameRight, text = "Insert: Postion ( -1 = end )", anchor = W)
 		self.DateLableInsertPosition.pack(side = TOP, fill = X)
 		
 		self.DateEntryInsertPosition = ttk.Entry(self.DateFrameRight, font = self.ft)
 		self.DateEntryInsertPosition.pack(side = TOP, fill = X)
 
-		self.DateLableOutput = ttk.Label(self.DateFrameRight, text = 'Output Format: like "%Y-%m-%d_%H.%M.%S"', anchor = W)
+		self.DateLableOutput = ttk.Label(self.DateFrameRight, text = 'Output Format: ( like %Y-%m-%d_%H.%M.%S )', anchor = W)
 		self.DateLableOutput.pack(side = TOP, fill = X)
 		
 		self.DateEntryOutput = ttk.Entry(self.DateFrameRight, font = self.ft)
@@ -483,7 +485,7 @@ class CreateFrameDate():
 		self.DateButtonInsertSelf = ttk.Button(self.DateFrameRight, text = "Insert Self Date", command = self.InsertSelfDate) 
 		self.DateButtonInsertSelf.pack(fill = X, side = TOP)
 
-		self.DateLableOutset = ttk.Label(self.DateFrameRight, text = 'Date Start From: fill like "1970.01.01.12.00.00"', anchor = W)
+		self.DateLableOutset = ttk.Label(self.DateFrameRight, text = 'Date Start From: ( fill like: 2001.01.01.12.00.00 )', anchor = W)
 		self.DateLableOutset.pack(side = TOP, fill = X)
 		
 		self.DateEntryOutset = ttk.Entry(self.DateFrameRight, font = self.ft)

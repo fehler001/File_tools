@@ -11,6 +11,9 @@ import sys
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
+
 
 
 class CreateFrameARule():
@@ -151,12 +154,14 @@ class CreateFrameARule():
 		ext = self.ARuleEntryExtension.get()
 		if self.bl.check_legit_string(ext) == -1:
 			return
+		n = 0
 		if os.path.isdir(path):
 			files = self.fl.filter(path, include = ext, \
 					including_file = 1, including_folder = 0, case_insensitive = 1, is_extension = 1)
 			for file in files:
 				self.ARuleTextDownFiles.insert(INSERT, file)
 				self.ARuleTextDownFiles.insert(INSERT, '\n')
+				n = n + 1
 		if os.path.isfile(path):
 			dirs = self.tl.get_txt_content(path, '#')
 			if dirs == -1:
@@ -166,9 +171,13 @@ class CreateFrameARule():
 					continue
 				files = self.fl.filter(dir, include = ext, \
 						including_file = 1, including_folder = 0, case_insensitive = 1, is_extension = 1)
+				
 				for file in files:
 					self.ARuleTextDownFiles.insert(INSERT, file)
 					self.ARuleTextDownFiles.insert(INSERT, '\n')
+					n = n + 1
+		self.ARuleFrameDownLeft.config( text = str(n) + '  \
+Pending to add in firewall rules, repeat checking will be handled  ( NOTE: DO NOT ADD SYSTEM FILE )')
 		self.ARuleCheckRepeat()
 		if len(self.ARuleTextDownFiles.get("1.0", "end") ) < 4:
 			self.ARuleTextDownFiles.insert(INSERT, "Nothing detected")
@@ -211,6 +220,9 @@ class CreateFrameARule():
 		
 		self.ARuleEntryPath = ttk.Entry(self.ARuleFrameUpLeft, font = self.ft, xscrollcommand = self.ARuleScrollbarXPath.set)
 		self.ARuleEntryPath.pack(fill = X)
+
+		self.ARuleEntryPath.drop_target_register(DND_FILES, DND_TEXT)
+		self.ARuleEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.ARuleButtonOpen = ttk.Button(self.ARuleFrameUpLeft, text = "  Open  ", \
 													command = lambda: os.startfile( self.ARuleEntryPath.get() )  ) 
@@ -272,7 +284,7 @@ xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARul
 		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight)
 		self.ARuleLableBlank.pack(side = TOP, fill = X)
 
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight, text = 'Extension ( fill like ".exe" )')
+		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight, text = 'Extension ( fill like: .exe )')
 		self.ARuleLableBlank.pack(side = TOP, fill = X)
 				
 		self.ARuleEntryExtension = ttk.Entry(self.ARuleFrameRight, font = self.ft)

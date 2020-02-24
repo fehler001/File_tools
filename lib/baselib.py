@@ -184,6 +184,7 @@ class BaseLib():
 
 
 
+
 	def str_encode(self, string, enc = 'utf-8'):
 		str = string.strip()
 		if enc == 'hex':
@@ -222,8 +223,11 @@ class BaseLib():
 		if enc == 'html':
 			return html.unescape(str)
 		if enc == 'base64':
-			b = base64.b64decode(str)
-			rst = codecs.decode(b, encoding = 'utf-8', errors = 'backslashreplace')
+			rst = ''
+			strs = str.split('\n')
+			for str in strs:
+				b = base64.b64decode(str)
+				rst = rst + codecs.decode(b, encoding = 'utf-8', errors = 'backslashreplace')
 			return rst
 		else:
 			b = eval('b' + "'" + str + "'")		
@@ -297,23 +301,25 @@ class BaseLib():
 				return {'/':i, '.':i2, 'parent':parent, 'filename':filename, 'name':name, 'ext':ext, 'isfile':1, 'isdir':0, 'is_exist':1}
 			if i2 == -1 or i2 < i:
 				name = path[i+1: ]
-				return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0, 'is_exist':1}
+				return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0, 'is_exist':1}
 		if os.path.isdir(path):
 			i = path.rfind(r'/')
 			parent = path[ :i]
 			filename = path[i+1: ]
-			return {'/':i, '.':None, 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1, 'is_exist':1}
-		return {'/':-1, '.':-1, 'filename':path, 'parent':-1, 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0}
+			return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1, 'is_exist':1}
+		return {'/':0, '.':len(path), 'filename':path, 'parent':'', 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0}
 
 
 
 	def check_path_exist(self, list, isfile = 0):
+		if type(list) == str:
+			list = [list]
 		for path in list:
 			if path == '' or path == '\n':
 				continue
 			pinfo = self.get_path_info(path)
 			if pinfo['is_exist'] == 0:
-				messagebox.showerror ("ERROR", '"' + path + '"' + '\n\nDoes not exist !')
+				messagebox.showerror ("ERROR", '"' + path + '"' + '\n\ndoes not exist !')
 				return -1
 			if isfile == 1:
 				if pinfo['isfile'] == 0:
@@ -337,7 +343,7 @@ class BaseLib():
 
 
 	# length = 5, digit = 3, outset = 1  =>  [001,002,003,004,005]
-	def generate_ordinal(self, length, digit = 1, outset = 0):
+	def generate_ordinal(self, length, digit = 1, outset = 0, interval = 1):
 		all = []
 		n = 0 + outset
 		for i in range(length):
@@ -345,7 +351,7 @@ class BaseLib():
 				all.append( '0'*(digit - len(str(n)) ) + str(n) )
 			else:
 				all.append('-' + '0'*(digit - len(str(n)) + 1) + str(abs(n)) )
-			n = n + 1
+			n = n + interval
 		return all
 
 

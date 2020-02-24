@@ -10,6 +10,11 @@ import os
 import sys
 import json
 import copy
+import subprocess
+import time
+
+import tkinterdnd2 
+from tkinterdnd2 import *
 
 
 
@@ -46,6 +51,8 @@ class CreateFrameFilter():
 			j['file_tools']['file']['filter']['check_recursive'] = 1
 		if not 'including_string' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['including_string'] = ''
+		if not 'including_second' in j['file_tools']['file']['filter']:
+			j['file_tools']['file']['filter']['including_second'] = ''
 		if not 'excluding_string' in j['file_tools']['file']['filter']:
 			j['file_tools']['file']['filter']['excluding_string'] = ''
 		if not 'file_size_max' in j['file_tools']['file']['filter']:
@@ -79,6 +86,7 @@ class CreateFrameFilter():
 		self.FilterCheckExtensionVar.set( j['file_tools']['file']['filter']['check_extension'])
 		self.FilterCheckRecursiveVar.set( j['file_tools']['file']['filter']['check_recursive'])
 		self.FilterEntryIncluding.insert(0, j['file_tools']['file']['filter']['including_string'])
+		self.FilterEntryIncludingSecond.insert(0, j['file_tools']['file']['filter']['including_second'])
 		self.FilterEntryExcluding.insert(0, j['file_tools']['file']['filter']['excluding_string'])
 		self.FilterEntryMax.insert(0, j['file_tools']['file']['filter']['file_size_max'])
 		self.FilterEntryMin.insert(0, j['file_tools']['file']['filter']['file_size_min'])
@@ -108,6 +116,7 @@ class CreateFrameFilter():
 			j['file_tools']['file']['filter']['check_extension'] = self.FilterCheckExtensionVar.get()
 			j['file_tools']['file']['filter']['check_recursive'] = self.FilterCheckRecursiveVar.get()
 			j['file_tools']['file']['filter']['including_string'] = self.FilterEntryIncluding.get()
+			j['file_tools']['file']['filter']['including_second'] = self.FilterEntryIncludingSecond.get()
 			j['file_tools']['file']['filter']['excluding_string'] = self.FilterEntryExcluding.get()
 			j['file_tools']['file']['filter']['file_size_max'] = self.FilterEntryMax.get()
 			j['file_tools']['file']['filter']['file_size_min'] = self.FilterEntryMin.get()
@@ -163,8 +172,10 @@ class CreateFrameFilter():
 		self.FilterSaveEntry()
 		self.FilterTextDownFiles.delete("1.0", "end")
 		dir = self.FilterPath
-		include = self.FilterEntryIncluding.get()
-		exclude = self.FilterEntryExcluding.get()
+		includes = self.FilterEntryIncluding.get()
+		includes = includes.split('|')
+		excludes = self.FilterEntryExcluding.get()
+		excludes = excludes.split('|')
 		including_file = self.FilterCheckFileVar.get()
 		including_folder = self.FilterCheckFolderVar.get()
 		case = self.FilterCheckCaseVar.get()
@@ -195,14 +206,40 @@ class CreateFrameFilter():
 		except:
 			messagebox.showerror ("ERROR", "Filename Length:\n\nPlease fill a number")
 			return
-		files = self.fl.filter(dir, include, exclude, max, min, including_file, including_folder, case, is_exactly_same, name_max, name_min, is_extension, is_recur)
-		for file in files:
-			self.FilterTextDownFiles.insert(INSERT, file)
-			self.FilterTextDownFiles.insert(INSERT, '\n')
+
+		includes_second = self.FilterEntryIncludingSecond.get()
+		includes_second = includes_second.split('|')
+		for i in range(len(includes)):
+			files = self.fl.filter(dir, includes[i], excludes, max, min, including_file, including_folder, case, 
+						  is_exactly_same, name_max, name_min, is_extension, is_recur, is_custom_list = 0)
+			if includes_second == ['']:
+				n = 0
+				for file in files:
+					self.FilterTextDownFiles.insert(INSERT, file)
+					self.FilterTextDownFiles.insert(INSERT, '\n')
+					n = n + 1
+				self.FilterFrameDownLeft.config(text = 'Filtered  ' + str(n) )
+			else:
+				self.FilterSecond(files, includes_second, case, is_extension)
 		self.FilterCheckRepeat()
 		if len(self.FilterTextDownFiles.get("1.0", "end") ) < 4:
 			self.FilterTextDownFiles.insert(INSERT, "Nothing detected")
 			self.FilterTextDownFiles.insert(INSERT, '\n')
+
+
+
+	def FilterSecond(self, list, includes_second, case, is_extension):
+		if is_extension == 1 or includes_second == ['']:
+			return
+		for include_second in includes_second:
+			n = 0
+			files = self.fl.filter(list, include = include_second, case_insensitive = case, is_custom_list = 1)
+			for file in files:
+				self.FilterTextDownFiles.insert(INSERT, file)
+				self.FilterTextDownFiles.insert(INSERT, '\n')
+				n = n + 1
+		self.FilterFrameDownLeft.config(text = 'Filtered  ' + str(n) )
+
 		
 
 	def OpenAll(self):
@@ -212,10 +249,12 @@ class CreateFrameFilter():
 			return
 		files = self.FilterTextDownFiles.get("1.0", "end")
 		files = files.split('\n')
+		files = self.bl.clean_list(files)
 		for file in files:
-			if file == '\n' or file == '':
-				continue
 			os.startfile(file)
+			#self.root.after(5000, [fun]) or self.FilterTextDownFiles.after(1000)
+				
+
 
 	def CreateWidgetsFrameFilter(self):
 
@@ -231,6 +270,9 @@ class CreateFrameFilter():
 		
 		self.FilterEntryPath = ttk.Entry(self.FilterFrameUpLeft, font = self.ft, xscrollcommand = self.FilterScrollbarXPath.set)
 		self.FilterEntryPath.pack(fill = X)
+
+		self.FilterEntryPath.drop_target_register(DND_FILES, DND_TEXT)
+		self.FilterEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.FilterLableBlank = ttk.Label(self.FilterFrameUpLeft)
 		self.FilterLableBlank.pack(side = TOP, fill = X)
@@ -273,17 +315,11 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterButtonReset = ttk.Button(self.FilterFrameRight, text = "Reset", command = self.FilterReset) 
 		self.FilterButtonReset.pack(fill = X, side = TOP)
 		
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight)
-		self.FilterLableBlank.pack(side = TOP, fill = X)
-		
 		self.FilterButtonAddDirection = ttk.Button(self.FilterFrameRight, text = "Add Direction", command = self.FilterAddDirection) 
 		self.FilterButtonAddDirection.pack(fill = X, side = TOP)
-		
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight)
-		self.FilterLableBlank.pack(side = TOP, fill = X)
-				
+						
 		self.FilterCheckExtensionVar = IntVar()
-		self.FilterCheckExtension = ttk.Checkbutton(self.FilterFrameRight, text = 'Extension Mode ( fill like ".exe" )', \
+		self.FilterCheckExtension = ttk.Checkbutton(self.FilterFrameRight, text = 'Extension Mode ( fill first entry like: .exe )', \
 											variable = self.FilterCheckExtensionVar, onvalue = 1, offvalue = 0) 
 		self.FilterCheckExtension.pack(fill = X, side = TOP)
 		self.FilterCheckExtensionVar.set(0)
@@ -294,25 +330,31 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterCheckRecursive.pack(fill = X, side = TOP)
 		self.FilterCheckRecursiveVar.set(1)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Including String (like ".py" "asd")')
+		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Including String ( like: jpg|png )')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 
 		self.FilterEntryIncluding = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryIncluding.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Excluding String (like ".pyc" "asdf")')
+		self.FilterLableSecond = ttk.Label(self.FilterFrameRight, text = 'Including String ( second filter )')
+		self.FilterLableSecond.pack(side = TOP, fill = X)
+
+		self.FilterEntryIncludingSecond = ttk.Entry(self.FilterFrameRight, font = self.ft)
+		self.FilterEntryIncludingSecond.pack(fill = X)
+
+		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Excluding String ( like: jpeg|bmp )')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryExcluding = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryExcluding.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Max (Unit: Byte, 10240 = 10m)')
+		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Max ( Unit: Byte, 10240 = 10Kb )')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryMax = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryMax.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Min (Unit: Byte)')
+		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Min ( Unit: Byte )')
 		self.FilterLableBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryMin = ttk.Entry(self.FilterFrameRight, font = self.ft)

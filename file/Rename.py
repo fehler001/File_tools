@@ -12,6 +12,8 @@ import sys
 import json
 import copy
 
+import tkinterdnd2 
+from tkinterdnd2 import *
 
 
 class CreateFrameRename():
@@ -27,6 +29,9 @@ class CreateFrameRename():
 		self.RenameDigit = 1
 		self.RenameOutset = 1
 		self.RenamePosition = 0
+		self.RenameInterval = 'interval: 1'
+
+		self.RenameN = 0
 		
 
 
@@ -45,6 +50,8 @@ class CreateFrameRename():
 		j2 = copy.deepcopy(j)
 		if not 'rename' in j['file_tools']['file']:
 			j['file_tools']['file']['rename'] = {}
+		if not 'n' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['n'] = 0
 		if not 'path_rename' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['path_rename'] = ''
 		if not 'check_files' in j['file_tools']['file']['rename']:
@@ -53,10 +60,12 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['check_folders'] = 0
 		if not 'check_recur' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['check_recur'] = 0
-		if not 'entry_digit' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['entry_digit'] = ''
-		if not 'entry_outset' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['entry_outset'] = ''
+		if not 'combo_digit' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['combo_digit'] = 'digit: 1'
+		if not 'combo_outset' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['combo_outset'] = 'outset: 1'
+		if not 'combo_interval' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['combo_interval'] = 'interval: 1'
 		if not 'insert_string' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['insert_string'] = ''
 		if not 'insert_position' in j['file_tools']['file']['rename']:
@@ -67,6 +76,8 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['replace_original'] = ''
 		if not 'replace_substitute' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['replace_substitute'] = ''
+		if not 'replace_match' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['replace_match'] = 'match all'
 		if not 'positon_left' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['positon_left'] = ''
 		if not 'positon_right' in j['file_tools']['file']['rename']:
@@ -83,17 +94,23 @@ class CreateFrameRename():
 	def RenameRestoreState(self):
 		f = open(self.LogPath, 'r', encoding='utf-8')
 		j = json.load(f)
+		self.RenameN = j['file_tools']['file']['rename']['n']
+		self.RenameFrameUpLeft.config(text = 'Files  ' + str(self.RenameN) )
 		self.RenamePath = j['file_tools']['file']['rename']['path_rename']
 		self.RenameCheckFileVar.set( j['file_tools']['file']['rename']['check_files'])
 		self.RenameCheckFolderVar.set( j['file_tools']['file']['rename']['check_folders'])
 		self.RenameCheckRecurVar.set( j['file_tools']['file']['rename']['check_recur'])
-		self.RenameEntryDigit.insert(0, j['file_tools']['file']['rename']['entry_digit'])
-		self.RenameEntryOutset.insert(0, j['file_tools']['file']['rename']['entry_outset'])
+		self.RenameComboDigit.set( j['file_tools']['file']['rename']['combo_digit'])
+		self.RenameComboOutset.set( j['file_tools']['file']['rename']['combo_outset'])
+		self.RenameComboIntervalVar.set( j['file_tools']['file']['rename']['combo_interval'])
 		self.RenameEntryInsertPosition.insert(0, j['file_tools']['file']['rename']['insert_position'])
 		self.RenameEntryInsertString.insert(0, j['file_tools']['file']['rename']['insert_string'])
 		self.RenameCheckDeleteOldVar.set( j['file_tools']['file']['rename']['check_old'] )
 		self.RenameEntryReplaceOriginal.insert(0, j['file_tools']['file']['rename']['replace_original'])
+		self.RenameEntryReplaceOriginal.focus()
+		self.RenameTextUpFiles.focus()
 		self.RenameEntryReplaceSubstitute.insert(0, j['file_tools']['file']['rename']['replace_substitute'])
+		self.RenameComboMatchVar.set( j['file_tools']['file']['rename']['replace_match'])
 		self.RenameEntryP1.insert(0, j['file_tools']['file']['rename']['positon_left'])
 		self.RenameEntryP2.insert(0, j['file_tools']['file']['rename']['positon_right'])
 		self.RenameTextUpFiles.delete('1.0', 'end')
@@ -115,17 +132,20 @@ class CreateFrameRename():
 			f = open(self.LogPath, 'r', encoding='utf-8')
 			j = json.load(f)
 			f.close()
+			j['file_tools']['file']['rename']['n'] = self.RenameN
 			j['file_tools']['file']['rename']['path_rename'] = self.RenamePath
 			j['file_tools']['file']['rename']['check_files'] = self.RenameCheckFileVar.get()
 			j['file_tools']['file']['rename']['check_folders'] = self.RenameCheckFolderVar.get()
 			j['file_tools']['file']['rename']['check_recur'] = self.RenameCheckRecurVar.get()
-			j['file_tools']['file']['rename']['entry_digit'] = self.RenameEntryDigit.get()
-			j['file_tools']['file']['rename']['entry_outset'] = self.RenameEntryOutset.get()
+			j['file_tools']['file']['rename']['combo_digit'] = self.RenameComboDigit.get()
+			j['file_tools']['file']['rename']['combo_outset'] = self.RenameComboOutset.get()
+			j['file_tools']['file']['rename']['combo_interval'] = self.RenameComboIntervalVar.get()
 			j['file_tools']['file']['rename']['insert_position'] = self.RenameEntryInsertPosition.get()
 			j['file_tools']['file']['rename']['insert_string'] = self.RenameEntryInsertString.get()
 			j['file_tools']['file']['rename']['check_old'] = self.RenameCheckDeleteOldVar.get()
 			j['file_tools']['file']['rename']['replace_original'] = self.RenameEntryReplaceOriginal.get()
 			j['file_tools']['file']['rename']['replace_substitute'] = self.RenameEntryReplaceSubstitute.get()
+			j['file_tools']['file']['rename']['replace_match'] = self.RenameComboMatchVar.get()
 			j['file_tools']['file']['rename']['positon_left'] = self.RenameEntryP1.get()
 			j['file_tools']['file']['rename']['positon_right'] = self.RenameEntryP2.get()
 			tmp = self.RenameTextUpFiles.get('1.0', 'end')
@@ -139,6 +159,8 @@ class CreateFrameRename():
 	def RenameReset(self):
 		self.RenameTextUpFiles.delete("1.0", "end")
 		self.RenameTextDownFiles.delete("1.0", "end")
+		self.RenameFrameUpLeft.config(text = 'Files')
+		self.RenameN = 0
 		self.RenameSaveEntry()
 	
 
@@ -148,12 +170,15 @@ class CreateFrameRename():
 		files = files.split('\n')
 		files = set(files)
 		files = sorted(files, key=self.natsort_key2)
+		files = self.bl.clean_list(files)
+		n = 0
 		for file in files:
-			if file == '\n' or file == '':
-				continue
 			file = file.replace('\\', '/')
 			self.RenameTextUpFiles.insert(INSERT, file)
 			self.RenameTextUpFiles.insert(INSERT, '\n')
+			n = n + 1
+		self.RenameFrameUpLeft.config(text = 'Files  ' + str(n) )
+		self.RenameN = n
 	
 
 	def RenameEliminateNullDown(self):
@@ -220,16 +245,18 @@ class CreateFrameRename():
 	
 
 	def RenameInitializeEntry(self):
-		if self.RenameEntryOutset.get() == '':
-			self.RenameEntryOutset.insert(0, 1)
-		outset = self.RenameEntryOutset.get()
+		if self.RenameComboOutset.get() == '':
+			self.RenameComboOutset.set('outset: 1')
+		outset = self.RenameComboOutset.get()
+		outset = outset[7:]
 		if self.bl.check_legit_int(outset) == -1:
 			return -1
 		self.RenameOutset = int(outset)
 
-		if self.RenameEntryDigit.get() == '':
-			self.RenameEntryDigit.insert(0, 1)
-		digit = self.RenameEntryDigit.get()
+		if self.RenameComboDigit.get() == '':
+			self.RenameComboDigit.set('digit: 1')
+		digit = self.RenameComboDigit.get()
+		digit = digit[6:]
 		if self.bl.check_legit_int(digit) == -1:
 			return -1
 		self.RenameDigit = int(digit)
@@ -241,12 +268,21 @@ class CreateFrameRename():
 			return -1
 		self.RenamePosition = int(pos)
 
+		if self.RenameComboIntervalVar.get() == '':
+			self.RenameComboIntervalVar.set('interval: 1')
+		interval = self.RenameComboIntervalVar.get()
+		interval = interval[9:]
+		if self.bl.check_legit_int(interval) == -1:
+			return -1
+		self.RenameInterval = int(interval)
+
+
 
 	def RenameByOrdinal(self):
 		self.RenameSaveEntry()
 		if self.RenameInitializeEntry() == -1:
 			return
-		if len(str(self.RenameEntryDigit.get() )) > 2:
+		if len(str(self.RenameDigit )) > 2:
 			messagebox.showerror ("ERROR", "Rename By Ordinal: Digit\n\n" + 'Under 100, please')
 			return
 		files = self.RenameTextUpFiles.get("1.0", "end") 
@@ -257,7 +293,7 @@ class CreateFrameRename():
 			if self.bl.check_path_exist(files) == -1:
 				return
 		
-		files = self.fl.rename_by_ordinal(files, self.RenameDigit, self.RenameOutset)
+		files = self.fl.rename_by_ordinal(files, self.RenameDigit, self.RenameOutset, self.RenameInterval)
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
@@ -309,7 +345,8 @@ class CreateFrameRename():
 				new_files.append(file)
 		else:
 			new_files = files
-		ordinal = self.bl.generate_ordinal(length = len(new_files), digit = self.RenameDigit, outset = self.RenameOutset)
+		ordinal = self.bl.generate_ordinal(length = len(new_files), 
+								digit = self.RenameDigit, outset = self.RenameOutset, interval = self.RenameInterval)
 		rst = self.fl.insert(new_files, pos = self.RenamePosition, cont = '', ordinal = ordinal)
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in rst:
@@ -330,11 +367,14 @@ class CreateFrameRename():
 
 		original = self.RenameEntryReplaceOriginal.get()
 		substitute = self.RenameEntryReplaceSubstitute.get()
+		match = self.RenameComboMatchVar.get()
 		if self.bl.check_legit_string(substitute) == -1:
 			return
-		files = self.fl.replace_string(files, original, substitute)
-		if self.bl.check_has_repeat(files) == -1:
-			return
+		files = self.fl.replace_string(files, original, substitute, match)
+
+		if files == -1: return
+		if self.bl.check_has_repeat(files) == -1: return
+
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
@@ -474,6 +514,25 @@ class CreateFrameRename():
 		self.RenameCheckRepeatUp()
 
 
+
+
+	def RenameEntryOriginalFocusIn(self, _):
+			if self.RenameEntryReplaceOriginal.get() == " ? = one character, * = any characters":
+				self.RenameEntryReplaceOriginal.delete(0, END)
+				self.RenameEntryReplaceOriginal.config( foreground = "black" )
+				#print(full_name_entry.config()['foreground'][-1])   # get foreground colour
+			
+	def RenameEntryOriginalFocusOut(self, _):
+		if self.RenameEntryReplaceOriginal.get() == '':
+			self.RenameEntryReplaceOriginal.delete(0, END)
+			self.RenameEntryReplaceOriginal.config( foreground = "grey")
+			self.RenameEntryReplaceOriginal.insert(0, " ? = one character, * = any characters")
+	
+	#def RenameEntryOriginalFocusEnter(self):
+	#	print( self.RenameEntryReplaceOriginal.get() )
+
+
+
 	def CreateWidgetsFrameRename(self):
 
 		# start up left Frame		
@@ -489,6 +548,9 @@ class CreateFrameRename():
 		self.RenameTextUpFiles = Text(self.RenameFrameUpLeft, font = self.ft, 
 								xscrollcommand = self.RenameScrollbarXUpfiles.set, yscrollcommand = self.RenameScrollbarYUpfiles.set, wrap = 'none')
 		self.RenameTextUpFiles.pack(fill = BOTH)
+
+		self.RenameTextUpFiles.drop_target_register(DND_FILES, DND_TEXT)
+		self.RenameTextUpFiles.dnd_bind('<<Drop>>', self.drop_in_text)
 		
 		self.RenameScrollbarXUpfiles.config( command = self.RenameTextUpFiles.xview )
 		self.RenameScrollbarYUpfiles.config( command = self.RenameTextUpFiles.yview )
@@ -561,20 +623,37 @@ class CreateFrameRename():
 		self.RenameButtonAddDirection.pack(fill = X, side = LEFT, expand = True)
 		# end RenameFrameRight_0
 		
-		self.RenameLableDigit = ttk.Label(self.RenameFrameRight, text = "Digit", anchor = W)
-		self.RenameLableDigit.pack(side = TOP, fill = X)
-		
-		self.RenameEntryDigit = ttk.Entry(self.RenameFrameRight, font = self.ft)
-		self.RenameEntryDigit.pack(side = TOP, fill = X)
+		values = ('digit: 1', 'digit: 2', 'digit: 3', 'digit: 4', 'digit: 5', 'digit: 6', 'digit: 7', 'digit: 8', 'digit: 9', 'digit: 10', 'digit: 20', 'digit: 99', )
 
-		self.RenameLableOutset = ttk.Label(self.RenameFrameRight, text = "Outset", anchor = W)
-		self.RenameLableOutset.pack(side = TOP, fill = X)
+		self.RenameComboDigitVar = StringVar()
+		self.RenameComboDigit = ttk.Combobox(self.RenameFrameRight, textvariable = self.RenameComboDigitVar)
+		self.RenameComboDigit["values"] = values
+		self.RenameComboDigit.current(0) 
+		self.RenameComboDigit.pack(fill = X, side = TOP)
+
+		values = ('outset: 0', 'outset: 1', 'outset: 2', 'outset: 10', 'outset: 11', 'outset: 100', 'outset: 101', )
+
+		self.RenameComboOutsetVar = StringVar()
+		self.RenameComboOutset = ttk.Combobox(self.RenameFrameRight, textvariable = self.RenameComboOutsetVar)
+		self.RenameComboOutset["values"] = values
+		self.RenameComboOutset.current(1) 
+		self.RenameComboOutset.pack(fill = X, side = TOP)
+
+		# start RenameFrameRight_7
+		self.RenameFrameRight_7 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_7.pack(fill = X, side = TOP)
+
+		values = ('inteval: 1', 'inteval: 2', 'inteval: 3', 'inteval: 5', 'inteval: 10', 'inteval: 20', 'inteval: 50', 'inteval: 100')
+
+		self.RenameComboIntervalVar = StringVar()
+		self.RenameComboInterval = ttk.Combobox(self.RenameFrameRight_7, textvariable = self.RenameComboIntervalVar)
+		self.RenameComboInterval["values"] = values
+		self.RenameComboInterval.current(0) 
+		self.RenameComboInterval.pack(fill = X, side = LEFT)
 		
-		self.RenameEntryOutset = ttk.Entry(self.RenameFrameRight, font = self.ft)
-		self.RenameEntryOutset.pack(side = TOP, fill = X)
-		
-		self.RenameButtonRenameByOrdinal = ttk.Button(self.RenameFrameRight, text = "Rename By Ordinal", command = self.RenameByOrdinal)
-		self.RenameButtonRenameByOrdinal.pack(side = TOP, fill = X)
+		self.RenameButtonRenameByOrdinal = ttk.Button(self.RenameFrameRight_7, text = "Rename By Ordinal", command = self.RenameByOrdinal)
+		self.RenameButtonRenameByOrdinal.pack(fill = X, side = LEFT, expand = True)
+		# end RenameFrameRight_7
 		
 		self.RenameLableInsertString = ttk.Label(self.RenameFrameRight, text = "Insert: String", anchor = W)
 		self.RenameLableInsertString.pack(side = TOP, fill = X)
@@ -582,7 +661,7 @@ class CreateFrameRename():
 		self.RenameEntryInsertString = ttk.Entry(self.RenameFrameRight, font = self.ft)
 		self.RenameEntryInsertString.pack(side = TOP, fill = X)
 
-		self.RenameLableInsertPosition = ttk.Label(self.RenameFrameRight, text = "Insert: Postion ('-1' = end )", anchor = W)
+		self.RenameLableInsertPosition = ttk.Label(self.RenameFrameRight, text = "Insert: Postion ( -1 = end )", anchor = W)
 		self.RenameLableInsertPosition.pack(side = TOP, fill = X)
 		
 		self.RenameEntryInsertPosition = ttk.Entry(self.RenameFrameRight, font = self.ft)
@@ -603,35 +682,52 @@ class CreateFrameRename():
 		self.RenameFrameRight_3 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_3.pack(fill = X, side = TOP)
 
-		self.RenameLableReplaceOriginal = ttk.Label(self.RenameFrameRight_3, text = "Replce: Original", anchor = W)
-		self.RenameLableReplaceOriginal.pack(side = LEFT, fill = X)
+		self.RenameLableReplaceOriginal = ttk.Label(self.RenameFrameRight_3, text = "Replce: Original       ", anchor = W)
+		self.RenameLableReplaceOriginal.pack(side = LEFT, fill = X, expand = True)
 
 		self.RenameCheckDeleteOldVar = IntVar()
 		self.RenameCheckDeleteOld = ttk.Checkbutton(self.RenameFrameRight_3, text = "delete old ordinal", \
 											variable = self.RenameCheckDeleteOldVar, onvalue = 1, offvalue = 0) 
-		self.RenameCheckDeleteOld.pack(fill = X, side = RIGHT)
+		self.RenameCheckDeleteOld.pack(fill = X, side = LEFT, expand = True)
 		self.RenameCheckDeleteOldVar.set(0)
 		# end RenameFrameRight_3
 		
 		self.RenameEntryReplaceOriginal = ttk.Entry(self.RenameFrameRight, font = self.ft, )
 		self.RenameEntryReplaceOriginal.pack(side = TOP, fill = X)
+
+		self.RenameEntryReplaceOriginal.bind("<FocusIn>", self.RenameEntryOriginalFocusIn)
+		self.RenameEntryReplaceOriginal.bind("<FocusOut>", self.RenameEntryOriginalFocusOut)
+		#self.RenameEntryReplaceOriginal.bind("<Return>", handle_enter)
 		
 		self.RenameLableReplaceSubstitute = ttk.Label(self.RenameFrameRight, text = "Replce: Substitute", anchor = W)
 		self.RenameLableReplaceSubstitute.pack(side = TOP, fill = X)
 		
 		self.RenameEntryReplaceSubstitute = ttk.Entry(self.RenameFrameRight, font = self.ft)
 		self.RenameEntryReplaceSubstitute.pack(side = TOP, fill = X)
-		
-		self.RenameButtonInsertEnd = ttk.Button(self.RenameFrameRight, text = "Replace", command = self.Replace)
-		self.RenameButtonInsertEnd.pack(side = TOP, fill = X)
 
-		self.RenameLableP1 = ttk.Label(self.RenameFrameRight, text = "Left Position ( start from last '/' )", anchor = W)
+		# start RenameFrameRight_6
+		self.RenameFrameRight_6 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_6.pack(fill = X, side = TOP)
+
+		values = ('match all', 'match first', 'match second', 'match third', 'match fourth', 'match fifth', 'match last')
+
+		self.RenameComboMatchVar = StringVar()
+		self.RenameComboMatch = ttk.Combobox(self.RenameFrameRight_6, textvariable = self.RenameComboMatchVar)
+		self.RenameComboMatch["values"] = values
+		self.RenameComboMatch.current(0) 
+		self.RenameComboMatch.pack(fill = X, side = LEFT)
+		
+		self.RenameButtonInsertEnd = ttk.Button(self.RenameFrameRight_6, text = "Replace", command = self.Replace)
+		self.RenameButtonInsertEnd.pack(fill = X, side = LEFT, expand = True)
+		# end RenameFrameRight_6
+
+		self.RenameLableP1 = ttk.Label(self.RenameFrameRight, text = "Left Position ( start from last / )", anchor = W)
 		self.RenameLableP1.pack(side = TOP, fill = X)
 
 		self.RenameEntryP1 = ttk.Entry(self.RenameFrameRight, font = self.ft)
 		self.RenameEntryP1.pack(side = TOP, fill = X)
 
-		self.RenameLableP2 = ttk.Label(self.RenameFrameRight, text = "Right Position ( '-1' = end, ext not count )", anchor = W)
+		self.RenameLableP2 = ttk.Label(self.RenameFrameRight, text = "Right Position ( -1 = end, ext not count )", anchor = W)
 		self.RenameLableP2.pack(side = TOP, fill = X)
 
 		self.RenameEntryP2 = ttk.Entry(self.RenameFrameRight, font = self.ft)
@@ -647,14 +743,78 @@ class CreateFrameRename():
 		self.RenameButtonDeleteMiddle = ttk.Button(self.RenameFrameRight_4, text = "Delete Middle", command = self.DeleteMiddle)
 		self.RenameButtonDeleteMiddle.pack(fill = X, side = LEFT, expand = True)
 		# end RenameFrameRight_4
-		
-		# start RenameFrameRight_5
-		self.RenameFrameRight_5 = ttk.Frame(self.RenameFrameRight)
-		self.RenameFrameRight_5.pack(fill = X, side = BOTTOM)
 
-		self.RenameButtonRename = ttk.Button(self.RenameFrameRight_5, text = "Rename", command = self.Rename)
-		self.RenameButtonRename.pack(fill = X, side = LEFT, expand = True)
+		self.RenameButtonRevoke = ttk.Button(self.RenameFrameRight, text = "Revoke", command = self.Revoke)
+		self.RenameButtonRevoke.pack(fill = X, side = BOTTOM)
 
-		self.RenameButtonRevoke = ttk.Button(self.RenameFrameRight_5, text = "Revoke", command = self.Revoke)
-		self.RenameButtonRevoke.pack(fill = X, side = LEFT, expand = True)
+		self.RenameButtonRename = ttk.Button(self.RenameFrameRight, text = "Rename", command = self.Rename)
+		self.RenameButtonRename.pack(fill = X, side = BOTTOM)
 		# end right frame
+
+
+
+
+
+		
+		'''
+			def drop_enter(self, event):
+		event.widget.focus_force()
+		print('Entering widget: %s' % event.widget)
+		return event.action
+
+	def drop_position(self, event):
+	    print('Position: x %d, y %d' %(event.x_root, event.y_root))
+	    return event.action
+	
+	def drop_leave(self, event):
+	    print('Leaving %s' % event.widget)
+	    return event.action
+	
+	def drop(self, event):
+		if event.data:
+			print('Dropped data:\n', event.data)
+			if event.widget == self.RenameTextUpFiles:
+				files = self.RenameTextUpFiles.tk.splitlist(event.data)
+				for f in files:
+					if os.path.exists(f):
+						print('Dropped file: "%s"' % f)
+						self.RenameTextUpFiles.insert(INSERT, f)
+						self.RenameTextUpFiles.insert(INSERT, '\n')
+					else:
+						print('Not dropping file "%s": file does not exist.' % f)
+			else:
+				print('Error: reported event.widget not known')
+		return event.action
+
+
+
+	
+	def drag_init_text(self, event):
+		print_event_info(event)
+		data = ()
+		if self.RenameTextUpFiles.curselection():
+			data = tuple([self.RenameTextUpFiles.get(i) for i in self.RenameTextUpFiles.curselection()])
+			print('Dragging :\n', data)
+		return ((ASK, COPY), (DND_FILES, DND_TEXT), data)
+	
+	def drag_end(self, event):
+	    print('Drag ended for widget:', event.widget)
+
+
+
+	self.RenameTextUpFiles = Text(self.RenameFrameUpLeft, font = self.ft, 
+								xscrollcommand = self.RenameScrollbarXUpfiles.set, yscrollcommand = self.RenameScrollbarYUpfiles.set, wrap = 'none')
+	self.RenameTextUpFiles.pack(fill = BOTH)
+
+	self.RenameTextUpFiles.drop_target_register(DND_FILES, DND_TEXT)
+	self.RenameTextUpFiles.dnd_bind('<<DropEnter>>', self.drop_enter)
+	self.RenameTextUpFiles.dnd_bind('<<DropPosition>>', self.drop_position)
+	self.RenameTextUpFiles.dnd_bind('<<DropLeave>>', self.drop_leave)
+	self.RenameTextUpFiles.dnd_bind('<<Drop>>', self.drop)
+
+	self.RenameTextUpFiles.drag_source_register(1, DND_TEXT, DND_FILES)
+
+	self.RenameTextUpFiles.dnd_bind('<<DragInitCmd>>', self.drag_init_text)
+	self.RenameTextUpFiles.dnd_bind('<<DragEndCmd>>', self.drag_end)
+
+	'''
