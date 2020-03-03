@@ -16,11 +16,14 @@ try:
 	import shutil
 	import json
 	import copy
-	
+	import multiprocessing
+	from multiprocessing import *
+	from multiprocessing import Pool
 	
 	import file
 	import txt
 	import firewall
+	import rar
 
 	import zz
 	
@@ -29,6 +32,7 @@ try:
 	import lib.filelib
 	import lib.txtlib
 	import lib.firewalllib
+	import lib.rarlib
 	
 	import traceback
 	import logging
@@ -66,13 +70,14 @@ try:
 			self.fl = lib.filelib.FileLib()
 			self.tl = lib.txtlib.TxtLib()
 			self.fwl = lib.firewalllib.FirewallLib()
+			self.rl = lib.rarlib.RarLib()
 	
 			self.natsort_key1 = natsort_keygen(key=lambda y: y.lower())   # l1.sort(key=self.natsort_key1)  # lower means lowerCase -> upperCase
 			self.natsort_key2 = natsort_keygen(alg=ns.IGNORECASE)         # l2.sort(key=self.natsort_key2)	
 	
 	
 	
-	class FileTools(Share, file.File, txt.Txt, firewall.Firewall, zz.Zz):
+	class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 
 		def __init__(self):
 			super().__init__()
@@ -153,14 +158,22 @@ try:
 					j['file_tools']['txt'] = {}
 				if not 'firewall' in j['file_tools']:
 					j['file_tools']['firewall'] = {}
+				if not 'rar' in j['file_tools']:
+					j['file_tools']['rar'] = {}
+				if not 'zz' in j['file_tools']:
+					j['file_tools']['zz'] = {}
 				if j != j2:
 					f = open(self.LogPath, 'w', encoding='utf-8')
 					json.dump(j, f, ensure_ascii=False)
 					f.close()
 			except:
-				if os.path.isfile(self.LogPath):
-					os.chmod(self.LogPath, stat.S_IRWXU)
-					os.unlink(self.LogPath)
+				try:
+					if os.path.isfile(self.LogPath):
+						os.chmod(self.LogPath, stat.S_IRWXU)
+						os.unlink(self.LogPath)
+				except:
+					messagebox.showerror ("ERROR", 'Some program is using \n"' + self.LogPath + '" \nPlease delete it by hand and restart')
+					return
 			else:
 				if recur == 0:
 					self.FileToolsDefaultLog(recur = 1)
@@ -237,7 +250,7 @@ try:
 			self.about = Toplevel(self.root)
 			self.about.geometry('300x200')
 			self.about.title("")
-			self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.30\n\n    Author tgbxs", anchor = CENTER)
+			self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.31\n\n    Author tgbxs", anchor = CENTER)
 			self.LabelAbout.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 	
 	
@@ -254,10 +267,20 @@ try:
 				self.DateSaveEntry()
 				self.CsumSaveEntry()
 				
+				self.CleanSaveEntry()
 				self.DivideSaveEntry()
 				self.StrSaveEntry()
-	
+				self.MatchSaveEntry()
+
 				self.ARuleSaveEntry()
+
+				self.BruteSaveEntry()
+
+				try:
+					self.Z1SaveEntry()
+				except:
+					pass
+
 			except:
 				pass
 	
@@ -329,7 +352,12 @@ try:
 			self.TxtDefault()
 			self.FirewallRoot = self.NoteBook01
 			self.FirewallDefault()
+			self.RarRoot = self.NoteBook01
+			self.RarDefault()
 			
+			self.ZzRoot = self.NoteBook01
+			self.ZzDefault()
+
 			self.MainRestoreState2()
 	
 			self.root.update_idletasks()

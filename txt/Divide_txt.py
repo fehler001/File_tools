@@ -286,4 +286,5 @@ dst: 000001.txt( line1, line2.....line500 ), ...... 000010.txt( line4501, line45
 
 		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
 		self.DivideLableBlank.pack(side = TOP, fill = X)
+
 		# end right frame

@@ -153,7 +153,7 @@ class CreateFrameCsum():
 		self.CsumSaveEntry()
 		s1 = self.CsumEntrySum1.get()
 		s2 = self.CsumEntrySum2.get()
-		if s1 == s2:
+		if s1.lower() == s2.lower():
 			messagebox.showinfo("", 'same')
 		else:
 			messagebox.showinfo("", 'different')

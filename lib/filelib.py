@@ -383,10 +383,11 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 				if len(pinfo['filename']) < name_min:
 					continue
 
-			if pinfo['isdir'] == 1:
-				fs = self.bl.get_folder_size(p)
-			if pinfo['isfile'] == 1:
-				fs = os.path.getsize(p)				
+			if max != '' or min != '' :
+				if pinfo['isdir'] == 1:
+					fs = self.bl.get_folder_size(p)
+				if pinfo['isfile'] == 1:
+					fs = os.path.getsize(p)				
 			if max != '' :
 				if fs > max:
 					continue
@@ -396,7 +397,7 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 			if is_extension == 1:
 				if pinfo['isfile'] == 1:
-					if inc == '' and pinfo['filename'] == pinfo['name']:
+					if include == '' and pinfo['filename'] == pinfo['name']:
 						all.append(p)
 						continue
 					if include == pinfo['ext']:

@@ -1,5 +1,5 @@
 #coding=utf-8
-#File_tools/txt/Str_txt.py
+#File_tools/txt/String_encoding_decoding.py
 
 import tkinter
 from tkinter import *
@@ -104,9 +104,21 @@ class CreateFrameStr():
 				j['file_tools']['txt']['string']['text_up'] = tu[0:-1]
 			else:
 				j['file_tools']['txt']['string']['text_up'] = tu
+
+			try:
+				tmp = r'C:\Windows\Temp/' + str ( random.random() )+ str ( random.random() )
+				f2 = open( tmp, 'w', encoding='utf-8' )
+				json.dump(j, f2, ensure_ascii=False)
+				f2.close()
+				os.chmod(tmp, stat.S_IRWXU)
+				os.unlink(tmp)
+			except:
+				return
+
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
 			f.close()
+
 
 
 	def StrReset(self):
@@ -131,6 +143,10 @@ class CreateFrameStr():
 			self.StrEntryTxtSource.delete(0, "end")
 			self.StrEntryTxtSource.insert(0, dir)
 			self.StrTxtPath = dir
+			dir.replace('\\', '/')
+			savedir = dir[ :dir.rfind('/')]
+			self.StrEntryTxtDestination.insert(0, savedir)
+			self.StrSavePath = savedir
 			self.StrSaveEntry()
 		except:pass
 	
@@ -236,7 +252,9 @@ class CreateFrameStr():
 		enc_from = self.StrComboFrom.get()
 		enc_to = self.StrComboTo.get()
 		src = self.StrEntryTxtSource.get()
+		src = src.replace('\\', '/')
 		dst = self.StrEntryTxtDestination.get()
+		dst = dst.replace('\\', '/')
 		is_b = self.StrCheckBinaryVar.get()
 		if not os.path.isfile(src):
 			messagebox.showerror ("Warrning", "_____TXT SOURCE ERROR_____")
@@ -246,7 +264,8 @@ class CreateFrameStr():
 			self.StrTextDown.delete("1.0", "end")
 			if is_b == 1:
 				f = open(src, 'rb')
-				cont = f.read(2000)
+				#cont = f.read(2000)
+				cont = f.read()
 				f.close()
 				new_cont = self.bl.bytes_decode(cont, enc_to)
 				self.StrTextDown.insert(INSERT, new_cont)
@@ -280,6 +299,18 @@ class CreateFrameStr():
 		
 
 
+	def StrEntryTxtSourceFocusOut(self, _):
+		path = self.StrEntryTxtSource.get()
+		if os.path.isfile(path):
+			path2 = self.StrEntryTxtDestination.get()
+			if path != '' and path2 == '':
+				path = path.replace('\\', '/')
+				path2 = path[ :path.rfind('/')]
+				self.StrEntryTxtDestination.insert(0, path2)
+
+
+
+
 	def CreateWidgetsFrameStr(self):
 
 		# start up left Frame
@@ -298,6 +329,7 @@ class CreateFrameStr():
 		
 		self.StrEntryTxtSource = ttk.Entry(self.StrFrame1, font = self.ft, xscrollcommand = self.StrScrollbarXTxtSource.set)
 		self.StrEntryTxtSource.pack(fill = X)
+		self.StrEntryTxtSource.bind("<FocusOut>", self.StrEntryTxtSourceFocusOut)
 
 		self.StrEntryTxtSource.drop_target_register(DND_FILES, DND_TEXT)
 		self.StrEntryTxtSource.dnd_bind('<<Drop>>', self.drop_in_entry)
@@ -384,13 +416,16 @@ class CreateFrameStr():
 		self.StrButtonGuessTxt = ttk.Button(self.StrFrameRight, text = "Guess Encoding", command = self.StrGuessTxt)
 		self.StrButtonGuessTxt.pack(side = TOP, fill = X)
 
+		self.StrLableBlank = ttk.Label(self.StrFrameRight)
+		self.StrLableBlank.pack(side = TOP, fill = X)
+
 		self.StrCheckBinaryVar = IntVar()
 		self.StrCheckBinary = ttk.Checkbutton(self.StrFrameRight, text = 'Binary Mode ( results only affected by "To" )', \
 											variable = self.StrCheckBinaryVar, onvalue = 1, offvalue = 0) 
 		self.StrCheckBinary.pack(fill = X, side = TOP)
 		self.StrCheckBinaryVar.set(0)
 		
-		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Get Preview ( show 2000 characters )", command = self.StrTranscodingTxtPreview)
+		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Get Preview", command = self.StrTranscodingTxtPreview)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
 
 		self.StrLableBlank = ttk.Label(self.StrFrameRight)
@@ -398,10 +433,6 @@ class CreateFrameStr():
 
 		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Transcode txt", command = self.StrTranscodingTxt)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
-
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
-
 
 		self.StrLableBlank = ttk.Label(self.StrFrameRight, text = "From")
 		self.StrLableBlank.pack(side = TOP, fill = X)

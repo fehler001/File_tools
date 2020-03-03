@@ -30,6 +30,8 @@ class CreateFrameRename():
 		self.RenameOutset = 1
 		self.RenamePosition = 0
 		self.RenameInterval = 'interval: 1'
+		self.RenameP1 = 'Left Position: 0'
+		self.RenameP2 = 'Right Position: -1'
 
 		self.RenameN = 0
 		
@@ -79,9 +81,9 @@ class CreateFrameRename():
 		if not 'replace_match' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['replace_match'] = 'match all'
 		if not 'positon_left' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['positon_left'] = ''
+			j['file_tools']['file']['rename']['positon_left'] = 'Left Positon: 0'
 		if not 'positon_right' in j['file_tools']['file']['rename']:
-			j['file_tools']['file']['rename']['positon_right'] = ''
+			j['file_tools']['file']['rename']['positon_right'] = 'Right Positon: -1'
 		if not 'text_up' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['text_up'] = ''
 		if j != j2:
@@ -111,8 +113,8 @@ class CreateFrameRename():
 		self.RenameTextUpFiles.focus()
 		self.RenameEntryReplaceSubstitute.insert(0, j['file_tools']['file']['rename']['replace_substitute'])
 		self.RenameComboMatchVar.set( j['file_tools']['file']['rename']['replace_match'])
-		self.RenameEntryP1.insert(0, j['file_tools']['file']['rename']['positon_left'])
-		self.RenameEntryP2.insert(0, j['file_tools']['file']['rename']['positon_right'])
+		self.RenameComboP1.set( j['file_tools']['file']['rename']['positon_left'])
+		self.RenameComboP2.set( j['file_tools']['file']['rename']['positon_right'])
 		self.RenameTextUpFiles.delete('1.0', 'end')
 		self.RenameTextUpFiles.insert(INSERT, j['file_tools']['file']['rename']['text_up'])
 		f.close()
@@ -146,8 +148,8 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['replace_original'] = self.RenameEntryReplaceOriginal.get()
 			j['file_tools']['file']['rename']['replace_substitute'] = self.RenameEntryReplaceSubstitute.get()
 			j['file_tools']['file']['rename']['replace_match'] = self.RenameComboMatchVar.get()
-			j['file_tools']['file']['rename']['positon_left'] = self.RenameEntryP1.get()
-			j['file_tools']['file']['rename']['positon_right'] = self.RenameEntryP2.get()
+			j['file_tools']['file']['rename']['positon_left'] = self.RenameComboP1.get()
+			j['file_tools']['file']['rename']['positon_right'] = self.RenameComboP2.get()
 			tmp = self.RenameTextUpFiles.get('1.0', 'end')
 			if tmp[-1] == '\n': tmp = tmp[ :-1]
 			j['file_tools']['file']['rename']['text_up'] = tmp 
@@ -276,6 +278,22 @@ class CreateFrameRename():
 			return -1
 		self.RenameInterval = int(interval)
 
+		if self.RenameComboP1.get() == '':
+			self.RenameComboP1.set('Left Positon: 0')
+		left = self.RenameComboP1Var.get()
+		left = left[13:]
+		if self.bl.check_legit_int(left) == -1:
+			return -1
+		self.RenameP1 = int(left)
+
+		if self.RenameComboP2.get() == '':
+			self.RenameComboP2.set('Right Positon: 0')
+		right = self.RenameComboP2Var.get()
+		right = right[14:]
+		if self.bl.check_legit_int(right) == -1:
+			return -1
+		self.RenameP2 = int(right)
+
 
 
 	def RenameByOrdinal(self):
@@ -385,16 +403,10 @@ class CreateFrameRename():
 
 	def GetMiddle(self, get_middle = 1):
 		self.RenameSaveEntry()
-		p1 = self.RenameEntryP1.get()
-		p2 = self.RenameEntryP2.get()
-		c1 = self.bl.check_legit_int(p1)
-		if c1 == -1:
+		if self.RenameInitializeEntry() == -1:
 			return
-		c2 = self.bl.check_legit_int(p2)
-		if c2 == -1:
-			return
-		p1 = int(p1)
-		p2 = int(p2)
+		p1 = self.RenameP1
+		p2 = self.RenameP2
 		if p1 >= 0 and p2 >=0:
 			if p1 >= p2:
 				messagebox.showerror ("ERROR", '"Left Position" MUST < "Right position" !')
@@ -629,7 +641,7 @@ class CreateFrameRename():
 		self.RenameComboDigit = ttk.Combobox(self.RenameFrameRight, textvariable = self.RenameComboDigitVar)
 		self.RenameComboDigit["values"] = values
 		self.RenameComboDigit.current(0) 
-		self.RenameComboDigit.pack(fill = X, side = TOP)
+		self.RenameComboDigit.pack(fill = X, side = TOP, pady = 2)
 
 		values = ('outset: 0', 'outset: 1', 'outset: 2', 'outset: 10', 'outset: 11', 'outset: 100', 'outset: 101', )
 
@@ -637,7 +649,7 @@ class CreateFrameRename():
 		self.RenameComboOutset = ttk.Combobox(self.RenameFrameRight, textvariable = self.RenameComboOutsetVar)
 		self.RenameComboOutset["values"] = values
 		self.RenameComboOutset.current(1) 
-		self.RenameComboOutset.pack(fill = X, side = TOP)
+		self.RenameComboOutset.pack(fill = X, side = TOP, pady = 2)
 
 		# start RenameFrameRight_7
 		self.RenameFrameRight_7 = ttk.Frame(self.RenameFrameRight)
@@ -721,17 +733,38 @@ class CreateFrameRename():
 		self.RenameButtonInsertEnd.pack(fill = X, side = LEFT, expand = True)
 		# end RenameFrameRight_6
 
-		self.RenameLableP1 = ttk.Label(self.RenameFrameRight, text = "Left Position ( start from last / )", anchor = W)
-		self.RenameLableP1.pack(side = TOP, fill = X)
+		
 
-		self.RenameEntryP1 = ttk.Entry(self.RenameFrameRight, font = self.ft)
-		self.RenameEntryP1.pack(side = TOP, fill = X)
+		# start RenameFrameRight_10
+		self.RenameFrameRight_10 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_10.pack(fill = X, side = TOP)
 
-		self.RenameLableP2 = ttk.Label(self.RenameFrameRight, text = "Right Position ( -1 = end, ext not count )", anchor = W)
-		self.RenameLableP2.pack(side = TOP, fill = X)
+		values = ('Left Position: 0', 'Left Position: 1', 'Left Position: 2', 'Left Position: 3', 'Left Position: -2', 'Left Position: -3' )
 
-		self.RenameEntryP2 = ttk.Entry(self.RenameFrameRight, font = self.ft)
-		self.RenameEntryP2.pack(side = TOP, fill = X)
+		self.RenameComboP1Var = StringVar()
+		self.RenameComboP1 = ttk.Combobox(self.RenameFrameRight_10, textvariable = self.RenameComboP1Var)
+		self.RenameComboP1["values"] = values
+		self.RenameComboP1.current(0) 
+		self.RenameComboP1.pack(side = LEFT, pady = 2)
+
+		self.RenameLableP1 = ttk.Label(self.RenameFrameRight_10, text = "Filename Left Position", anchor = W)
+		self.RenameLableP1.pack(fill = X, side = LEFT)
+
+		# start RenameFrameRight_11
+		self.RenameFrameRight_11 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_11.pack(fill = X, side = TOP)
+
+		values = ('Right Position: -1', 'Right Position: -2', 'Right Position: -3', 'Right Position: 5', 'Right Position: 10')
+
+		self.RenameComboP2Var = StringVar()
+		self.RenameComboP2 = ttk.Combobox(self.RenameFrameRight_11, textvariable = self.RenameComboP2Var)
+		self.RenameComboP2["values"] = values
+		self.RenameComboP2.current(0) 
+		self.RenameComboP2.pack(fill = X, side = LEFT, pady = 2)
+
+		self.RenameLableP2 = ttk.Label(self.RenameFrameRight_11, text = "Filename Right Position", anchor = W)
+		self.RenameLableP2.pack(fill = X, side = LEFT)
+		# end RenameFrameRight_10
 
 		# start RenameFrameRight_4
 		self.RenameFrameRight_4 = ttk.Frame(self.RenameFrameRight)
@@ -748,7 +781,7 @@ class CreateFrameRename():
 		self.RenameButtonRevoke.pack(fill = X, side = BOTTOM)
 
 		self.RenameButtonRename = ttk.Button(self.RenameFrameRight, text = "Rename", command = self.Rename)
-		self.RenameButtonRename.pack(fill = X, side = BOTTOM)
+		self.RenameButtonRename.pack(fill = X, side = BOTTOM, pady = 12)
 		# end right frame
 
 

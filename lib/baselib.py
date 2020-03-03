@@ -35,6 +35,31 @@ class BaseLib():
 		self.ascii = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c'
 
 
+
+
+	def increase_one_by_dict(self, string, dict):   # e.g.  dict = '123456789'
+		str = string
+		l = len(str)
+	
+		if str[-1] == dict[-1]:       #  if  '99'  [-1] is '9'        
+			str = str[ : -1] + dict[0]    #  '99'  ->  '91'  
+			for i in range( l ):     #  l = 2
+				if abs(-i-2) > l:     #  if i = 1,  abs(-i-2) = 3 > 2
+					str = dict[0] + str      #  after '99' -> '91' -> '11',   '11'  ->  '111'
+					break
+				else:
+					if str[-i-2] == dict[-1]:   # if i = 0,  after '99' -> '91',  [-i-2] is '9' == dict[-1]
+						str = str[ : -i-2] + dict[ 0 ] + str[ -i-1 : ]     #  '91' -> '11'
+					else:									# if i = 0,  '79',   after '79' -> '71',  [-i-2] is '7' != dict[-1]
+						str = str[ : -i-2] + dict[ dict.index(str[-i-2]) + 1 ] + str[ -i-1 : ]     #  '71' -> '81'
+						break					
+		else:    #  if  '95'  [-1] is '5' != dict[-1]
+			str = str[ : -1] + dict[ dict.index(str[-1]) + 1 ]      #   '95'  ->  '96'
+
+		return str
+
+
+
 	def get_crc(self, input, mode = 'crc-32'):
 		if type(input) == int:
 			input = str(int(input))
@@ -289,8 +314,12 @@ class BaseLib():
 
 	# path must use '/'
 	# 'c:/a.txt'  i1 = index '/', i2 = index '.', filename = 'a.txt', name = 'a', ext = '.txt'
-	def get_path_info(self, path):
+	def get_path_info(self, path, is_size = 0):
 		if os.path.isfile(path):
+			if is_size == 1:
+				size = os.path.getsize(path)
+			else:
+				size = ''
 			i = path.rfind(r'/')
 			i2 = path.rfind('.')
 			parent = path[ :i]
@@ -298,16 +327,20 @@ class BaseLib():
 			if i2 != -1 and i2 > i:
 				name = path[i+1 : i2]
 				ext = path[i2: ]
-				return {'/':i, '.':i2, 'parent':parent, 'filename':filename, 'name':name, 'ext':ext, 'isfile':1, 'isdir':0, 'is_exist':1}
+				return {'/':i, '.':i2, 'parent':parent, 'filename':filename, 'name':name, 'ext':ext, 'isfile':1, 'isdir':0, 'is_exist':1, 'size':size}
 			if i2 == -1 or i2 < i:
 				name = path[i+1: ]
-				return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0, 'is_exist':1}
+				return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':name, 'ext':'', 'isfile':1, 'isdir':0, 'is_exist':1, 'size':size}
 		if os.path.isdir(path):
+			if is_size == 1:
+				size = self.get_folder_size(path)
+			else:
+				size = ''
 			i = path.rfind(r'/')
 			parent = path[ :i]
 			filename = path[i+1: ]
-			return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1, 'is_exist':1}
-		return {'/':0, '.':len(path), 'filename':path, 'parent':'', 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0}
+			return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1, 'is_exist':1, 'size':size}
+		return {'/':0, '.':len(path), 'filename':path, 'parent':'', 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0, 'size':size}
 
 
 
@@ -356,8 +389,8 @@ class BaseLib():
 
 
 
-	# return ['1970-01-01_0.0.0', '1970-01-01_0.1.0', ...... ]
-	def generate_date_ordinal(self, length, outset = '1970.01.01.12.0.0', output_format = '%Y-%m-%d_%H.%M.%S', 
+	# return ['2001-01-01_0.0.0', '2001-01-01_0.1.0', ...... ]
+	def generate_date_ordinal(self, length, outset = '2001.01.01.12.0.0', output_format = '%Y-%m-%d_%H.%M.%S', 
 						   interval = 60, unit = 'second', is_str = 1, is_mktime = 0):
 		all = []
 		
