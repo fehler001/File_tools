@@ -340,7 +340,7 @@ class BaseLib():
 			parent = path[ :i]
 			filename = path[i+1: ]
 			return {'/':i, '.':len(path), 'filename':filename, 'parent':parent, 'name':filename, 'ext':'', 'isfile':0, 'isdir':1, 'is_exist':1, 'size':size}
-		return {'/':0, '.':len(path), 'filename':path, 'parent':'', 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0, 'size':size}
+		return {'/':0, '.':len(path), 'filename':path, 'parent':'', 'name':path, 'ext':'', 'isfile':0, 'isdir':0, 'is_exist':0, 'size':''}
 
 
 

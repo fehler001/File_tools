@@ -103,6 +103,7 @@ class CreateFrameFilter():
 	def ReadFilterPath(self):
 		f = open(self.LogPath, 'r', encoding='utf-8')
 		j = json.load(f)
+		self.FilterPath = self.FilterEntryPath.get()
 		self.FilterPath = j['file_tools']['file']['filter']['path_filter']
 		f.close()
 	
@@ -169,9 +170,12 @@ class CreateFrameFilter():
 
 
 	def Filter(self):
+		self.ReadFilterPath()
 		self.FilterSaveEntry()
 		self.FilterTextDownFiles.delete("1.0", "end")
 		dir = self.FilterPath
+		if self.fl.check_banned_path(dir) == -1:
+			return
 		includes = self.FilterEntryIncluding.get()
 		includes = includes.split('|')
 		excludes = self.FilterEntryExcluding.get()

@@ -76,31 +76,100 @@ class FileLib():
 
 
 
+	def check_system_file(self, path):
+		path = path.replace('\\', '/')
+		path = path.replace('//', '/')
+		path = path.lower()
+		if 'System Volume Information'.lower() in path:
+			return -1
+		if  '$RECYCLE.BIN'.lower() in path:
+			return -1
+	
+
+	def check_banned_path(self, path):
+		path = path.replace('\\', '/')
+		path = path.replace('//', '/')
+		path = path.lower()
+		if path[-1:] == r'/' and len(path) > 3:
+			path = path[ :-1]
+		s = 0
+		for i in range(9):
+			if  path == 'C:/'.lower():
+				s = 1
+				break
+			if  path == 'C:/ProgramData'.lower():
+				s = 1
+				break
+			'''
+			if  path == 'C:/ProgramData/Application Data'.lower():
+				s = 1
+				break
+			if  path == 'C:/ProgramData/ASTER Control'.lower():
+				s = 1
+				break
+			if  path == 'C:/ProgramData/Documents'.lower():
+				s = 1
+				break
+			if  path == 'C:/ProgramData/Start Menu'.lower():
+				s = 1
+				break
+			if  path == 'C:/ProgramData/Desktop'.lower():
+				s = 1
+				break
+			if  path == 'C:/ProgramData/Templates'.lower():
+				s = 1
+				break
+			if  path == 'C:/Documents and Settings'.lower():
+				s = 1
+				break
+			'''
+		if s == 1:
+			messagebox.showerror ("ERROR", '"C:/ProgramData" is not supported')
+			return -1
+		if not os.path.isdir(path):
+			messagebox.showerror ("ERROR", path + '\n\ndoes not exist')
+			return -1
+		
 
 	def collect_files_and_folders(self, path, is_add_file = 1, is_add_folder = 0, is_recur = 0):
 		all = []
-		if path[-1:] == r'/':
+		if path[-1:] == r'/' and len(path) > 4:
 			path = path[ :-1]
+		path = path.replace('\\', '/')
 		if is_recur == 1:
 			if is_add_folder == 1:
 				for root, subfolders, files in os.walk(path):
+					if self.check_system_file(root) == -1: 
+						continue
 					for subfolder in subfolders:
+						if self.check_system_file(subfolder) == -1: 
+							continue
 						folder1 = root.replace('\\', '/') + '/' + subfolder
 						all.append(folder1)
 			if is_add_file == 1:
 				for root, subfolders, files in os.walk(path):
+					if self.check_system_file(root) == -1: 
+						continue
 					for file in files:
+						if self.check_system_file(file) == -1: 
+							continue
 						file1 = root.replace('\\', '/') + '/' + file
 						all.append(file1)
+			for i in range(len(all)):
+				all[i] = all[i].replace('//', '/')
 			return all
 		if is_add_file == 1 or is_add_folder == 1:
 			files = os.listdir(path) 
 			for file in files:
+				if self.check_system_file(file) == -1: 
+						continue
 				file1 = path + '/' + file
 				if os.path.isfile(file1) and is_add_file == 1:
 					all.append(file1)
 				if os.path.isdir(file1) and is_add_folder == 1:
 					all.append(file1)
+		for i in range(len(all)):
+			all[i] = all[i].replace('//', '/')
 		return all
 
 
