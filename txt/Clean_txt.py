@@ -282,13 +282,13 @@ mode 2: Remove all empty lines\n\n\
 		self.CleanLableBlank.pack(side = TOP, fill = X)
 
 		self.CleanCheckRepeatVar = IntVar()
-		self.CleanCheckRepeat = ttk.Checkbutton(self.CleanFrameRight, text = 'Remove Repeat', \
+		self.CleanCheckRepeat = ttk.Checkbutton(self.CleanFrameRight, text = 'Remove repeat lines', \
 											variable = self.CleanCheckRepeatVar, onvalue = 1, offvalue = 0) 
 		self.CleanCheckRepeat.pack(fill = X, side = TOP)
 		self.CleanCheckRepeatVar.set(0)
 
 		self.CleanCheckSortVar = IntVar()
-		self.CleanCheckSort = ttk.Checkbutton(self.CleanFrameRight, text = 'Sort Lines', \
+		self.CleanCheckSort = ttk.Checkbutton(self.CleanFrameRight, text = 'Sort lines', \
 											variable = self.CleanCheckSortVar, onvalue = 1, offvalue = 0) 
 		self.CleanCheckSort.pack(fill = X, side = TOP)
 		self.CleanCheckSortVar.set(0)

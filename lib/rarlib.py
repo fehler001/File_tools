@@ -11,6 +11,8 @@ from multiprocessing import Process
 from multiprocessing import Pool
 from multiprocessing import cpu_count
 import io
+import zipfile
+
 
 try:
 	import lib.baselib
@@ -86,8 +88,15 @@ class RarLib():
 			pw = self.unrar_escape_cmd(pa)
 			if is_rar == 'rar':
 				newpara =  '"'+unrar+'"'+ ' e ' +  '-p'+pw + ' ' + '"'+rar+'"' + ' ' + '"'+dir+'"'
-			else:
+			elif is_rar == '7z':
 				newpara =  '"'+unrar+'"'+ ' x ' + '-o'+'"'+dir+'"' + ' ' + '"'+rar+'"'+ ' ' + '-p'+pw + ' ' + '-aos' 
+			elif is_rar == 'zip':
+				zf=zipfile.ZipFile(rar)
+				pw = self.bl.str_encode(pa, enc = 'utf-8')
+				try: zf.extractall(path = dir, pwd = pw)
+				except: pass
+				newpara = ''
+
 			if pa != dict[-1]:
 				pa = dict[ dict.index(pa) + 1 ]	
 			return pa, newpara
@@ -97,8 +106,15 @@ class RarLib():
 				pw = self.unrar_escape_cmd(pa)
 				if is_rar == 'rar':
 					para =  unrar + ' e ' +  '-p'+pw + ' ' + rar + ' ' + dir
-				else:
-					para =  '"'+unrar+'"'+ ' x ' + '-o'+'"'+dir+'"' + ' ' + '"'+rar+'"'+ ' ' + '-p'+pw
+				elif is_rar == '7z':
+					para =  '"'+unrar+'"'+ ' x ' + '-o'+dir + ' ' + rar + ' ' + '-p'+pw
+				elif is_rar == 'zip':
+					zf=zipfile.ZipFile(rar)
+					pw = self.bl.str_encode(pa, enc = 'utf-8')
+					try: zf.extractall(path = dir, pwd = pw)
+					except: pass
+					para = ''
+
 				newpara = newpara + '&' + para
 				pa = self.bl.increase_one_by_dict(pa, dict)			
 
@@ -129,6 +145,15 @@ if __name__ == '__main__':
 	rl = RarLib()
 	subprocess.run( ['powershell', 'd:\p.ps1'] )
 	#os.startfile(r'd:\p.ps1')
+
+# python zip
+#rar = r'C:\Users\Administrator\Desktop\New folder\RJ280013.zip'
+#dir = r'C:\Users\Administrator\Desktop\New folder'
+#pw = 'nikaidou'
+#pw = str(pw)
+#pw = eval('b' + "'" + pw + "'")
+#zf=zipfile.ZipFile(rar)
+#zf.extractall(path = dir, pwd = pw)
 
 
 

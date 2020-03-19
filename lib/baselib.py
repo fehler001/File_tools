@@ -212,6 +212,8 @@ class BaseLib():
 
 	def str_encode(self, string, enc = 'utf-8'):
 		str = string.strip()
+		if enc == 'ord':
+			return ord(str)
 		if enc == 'hex':
 			return hex(int(str))
 		if enc == 'binary':
@@ -241,6 +243,8 @@ class BaseLib():
 			str = string[2:-1]
 		else:
 			str = string
+		if enc == 'chr':
+			return chr(int(str))
 		if enc == 'int':
 			return int(str)
 		if enc == 'ascii-unhex':

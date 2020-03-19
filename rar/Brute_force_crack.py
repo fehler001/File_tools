@@ -263,6 +263,17 @@ class CreateFrameBrute():
 		if is_custom == 0 and is_rar == '7z':
 			messagebox.showerror ("Warrning", 'Due to there is some unknows bugs in "7z.exe"\n\n\"7z" should only be used in custom dict mode')
 			return
+		p_info = self.bl.get_path_info(rar)
+		if p_info['ext'] != '.rar' and is_rar == 'rar':
+			if p_info['ext'] != '.r':
+				messagebox.showerror ("Warrning", 'Not a "rar" file')
+				return
+		if p_info['ext'] != '.7z' and is_rar == '7z':
+			messagebox.showerror ("Warrning", 'Not a "7z" file')
+			return
+		if p_info['ext'] != '.zip' and is_rar == 'zip':
+			messagebox.showerror ("Warrning", 'Not a "zip" file')
+			return
 
 		dir = rar[ 0 : rar.rfind(r'/') + 1 ] 
 		
@@ -309,6 +320,8 @@ class CreateFrameBrute():
 				password = pa
 				pa, newpara = self.rl.unrar_brute_get_parameter(rar = rar, 
 													dir = dir, unrar = unrar, dict = d, outset = pa, ii0 = ii0, is_custom_dict = is_custom, is_rar = is_rar)
+				if is_rar == 'zip':
+						continue
 				if is_show_info == 0:
 					p.apply_async( self.rl.unrar_brute_run, args = (newpara,) )
 					pass
@@ -477,6 +490,10 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 									   command = self.BruteRadioRarToggle)
 		self.BruteRadioRar.pack(fill = X, side = TOP)
 		self.BruteRadioRar.invoke()
+
+		self.BruteRadioZip = ttk.Radiobutton(self.BruteFrameRight, text = "zip  ( doesn't need external tool, but very slow )", variable = self.BruteRadioRarVar, value = 'zip',
+									  command = self.BruteRadioRarToggle)
+		self.BruteRadioZip.pack(fill = X, side = TOP)
 
 		self.BruteRadio7z = ttk.Radiobutton(self.BruteFrameRight, text = "7z   ( should only be used in custom dict mode )", variable = self.BruteRadioRarVar, value = '7z',
 									  command = self.BruteRadioRarToggle)

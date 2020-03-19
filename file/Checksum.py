@@ -135,6 +135,7 @@ class CreateFrameCsum():
 
 
 	def CsumCalculate(self):
+		self.ReadCsumPath()
 		self.CsumSaveEntry()
 		self.CsumEntrySum1.delete(0, "end")
 		if self.bl.check_path_exist([self.CsumPath], isfile = 1) == -1:
