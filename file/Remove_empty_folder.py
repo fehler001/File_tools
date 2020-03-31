@@ -152,8 +152,8 @@ class CreateFrameRemove():
 		self.RemoveFrameUpLeft = ttk.LabelFrame(self.RemoveRoot, text = "")
 		self.RemoveFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 
-		self.RemoveLablePath = ttk.Label(self.RemoveFrameUpLeft, text = "Search Empty Folder Path", anchor = W)
-		self.RemoveLablePath.pack(side = TOP, fill = X)
+		self.RemoveLabelPath = ttk.Label(self.RemoveFrameUpLeft, text = "Search Empty Folder Path", anchor = W)
+		self.RemoveLabelPath.pack(side = TOP, fill = X)
 		
 		self.RemoveScrollbarXPath = ttk.Scrollbar(self.RemoveFrameUpLeft, orient = HORIZONTAL)
 		self.RemoveScrollbarXPath.pack( side = BOTTOM, fill = X )
@@ -164,14 +164,14 @@ class CreateFrameRemove():
 		self.RemoveEntryPath.drop_target_register(DND_FILES, DND_TEXT)
 		self.RemoveEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
-		self.RemoveLableBlank = ttk.Label(self.RemoveFrameUpLeft)
-		self.RemoveLableBlank.pack(side = TOP, fill = X)
+		self.RemoveLabelBlank = ttk.Label(self.RemoveFrameUpLeft)
+		self.RemoveLabelBlank.pack(side = TOP, fill = X)
 
-		self.RemoveLableDescription = ttk.Label(self.RemoveFrameUpLeft, text = "Description:\n\n\
+		self.RemoveLabelDescription = ttk.Label(self.RemoveFrameUpLeft, text = "Description:\n\n\
 1. Walk through the root direction recursively\n\n\
 2. Scan for any empty folder then fill in the downside area\n\n\
 			", anchor = W)
-		self.RemoveLableDescription.pack(side = TOP, fill = X)
+		self.RemoveLabelDescription.pack(side = TOP, fill = X)
 		
 		self.RemoveScrollbarXPath.config( command = self.RemoveEntryPath.xview )
 		# end up left Frame
@@ -201,23 +201,23 @@ xscrollcommand = self.RemoveScrollbarXDownFolders.set, yscrollcommand = self.Rem
 		self.RemoveButtonReset = ttk.Button(self.RemoveFrameRight, text = "Reset", command = self.RemoveReset) 
 		self.RemoveButtonReset.pack(fill = X, side = TOP)
 		
-		self.RemoveLableBlank = ttk.Label(self.RemoveFrameRight)
-		self.RemoveLableBlank.pack(side = TOP, fill = X)
+		self.RemoveLabelBlank = ttk.Label(self.RemoveFrameRight)
+		self.RemoveLabelBlank.pack(side = TOP, fill = X)
 		
 		self.RemoveButtonAddDirection = ttk.Button(self.RemoveFrameRight, text = "Add Direction", command = self.RemoveAddDirection) 
 		self.RemoveButtonAddDirection.pack(fill = X, side = TOP)
 		
-		self.RemoveLableBlank = ttk.Label(self.RemoveFrameRight)
-		self.RemoveLableBlank.pack(side = TOP, fill = X)
+		self.RemoveLabelBlank = ttk.Label(self.RemoveFrameRight)
+		self.RemoveLabelBlank.pack(side = TOP, fill = X)
 				
 		self.RemoveButtonDetect = ttk.Button(self.RemoveFrameRight, text = "Detect", command = self.RemoveDetect) 
 		self.RemoveButtonDetect.pack(fill = X, side = TOP)
 
-		self.RemoveLableBlank = ttk.Label(self.RemoveFrameRight)
-		self.RemoveLableBlank.pack(side = TOP, fill = X)
+		self.RemoveLabelBlank = ttk.Label(self.RemoveFrameRight)
+		self.RemoveLabelBlank.pack(side = TOP, fill = X)
 
-		self.RemoveLableBlank = ttk.Label(self.RemoveFrameRight)
-		self.RemoveLableBlank.pack(side = TOP, fill = X)
+		self.RemoveLabelBlank = ttk.Label(self.RemoveFrameRight)
+		self.RemoveLabelBlank.pack(side = TOP, fill = X)
 
 		self.RemoveButtonRemove = ttk.Button(self.RemoveFrameRight, text = "Remove", command = self.Remove) #bg = "#e1e1e1"
 		self.RemoveButtonRemove.pack(side = TOP, fill = X)

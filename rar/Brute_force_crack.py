@@ -374,8 +374,8 @@ class CreateFrameBrute():
 		self.BruteScrollbarXRarSource = ttk.Scrollbar(self.BruteFrame1, orient = HORIZONTAL)
 		self.BruteScrollbarXRarSource.pack( side = BOTTOM, fill = X )
 
-		self.BruteLableRarSource = ttk.Label(self.BruteFrame1, text = "rar or 7z file Path ( the shorter path is, the faster running speed you get )", anchor = W)
-		self.BruteLableRarSource.pack(side = TOP, fill = X)
+		self.BruteLabelRarSource = ttk.Label(self.BruteFrame1, text = "rar or 7z file Path ( the shorter path is, the faster running speed you get )", anchor = W)
+		self.BruteLabelRarSource.pack(side = TOP, fill = X)
 		
 		self.BruteEntryRarSource = ttk.Entry(self.BruteFrame1, font = self.ft, xscrollcommand = self.BruteScrollbarXRarSource.set)
 		self.BruteEntryRarSource.pack(fill = X)
@@ -393,8 +393,8 @@ class CreateFrameBrute():
 		self.BruteScrollbarXUnrar = ttk.Scrollbar(self.BruteFrame3, orient = HORIZONTAL)
 		self.BruteScrollbarXUnrar.pack( side = BOTTOM, fill = X )
 
-		self.BruteLableUnrar = ttk.Label(self.BruteFrame3, text = "UnRAR.exe or 7z.exe Path ( the shorter path is, the bigger insider loop you could set )", anchor = W)
-		self.BruteLableUnrar.pack(side = TOP, fill = X)
+		self.BruteLabelUnrar = ttk.Label(self.BruteFrame3, text = "UnRAR.exe or 7z.exe Path ( the shorter path is, the bigger insider loop you could set )", anchor = W)
+		self.BruteLabelUnrar.pack(side = TOP, fill = X)
 							   
 		self.BruteEntryUnrar = ttk.Entry(self.BruteFrame3, font = self.ft, xscrollcommand = self.BruteScrollbarXUnrar.set)
 		self.BruteEntryUnrar.pack(fill = X)
@@ -412,8 +412,8 @@ class CreateFrameBrute():
 		self.BruteScrollbarXDictPath = ttk.Scrollbar(self.BruteFrame2, orient = HORIZONTAL)
 		self.BruteScrollbarXDictPath.pack( side = BOTTOM, fill = X )
 
-		self.BruteLableDictPath = ttk.Label(self.BruteFrame2, text = 'dict Path  ( fill in dict like this: line1"123456", line2"password", ...... , every line will only be tried by once )', anchor = W)
-		self.BruteLableDictPath.pack(side = TOP, fill = X)
+		self.BruteLabelDictPath = ttk.Label(self.BruteFrame2, text = 'dict Path  ( fill in dict like this: line1"123456", line2"password", ...... , every line will only be tried by once )', anchor = W)
+		self.BruteLabelDictPath.pack(side = TOP, fill = X)
 		
 		self.BruteEntryDictPath = ttk.Entry(self.BruteFrame2, font = self.ft, xscrollcommand = self.BruteScrollbarXDictPath.set)
 		self.BruteEntryDictPath.pack(fill = X)
@@ -424,13 +424,13 @@ class CreateFrameBrute():
 		self.BruteScrollbarXDictPath.config( command = self.BruteEntryDictPath.xview )
 		# end Frame2
 
-		self.BruteLableDescription = ttk.Label(self.BruteFrameUpLeft, text = '\
+		self.BruteLabelDescription = ttk.Label(self.BruteFrameUpLeft, text = '\
 If not using custom dict, do not set path with "space" and with the exception of "a-Z0-9"\n\
 Set rar or 7z file to "d:/1.r" or "d:/1.7z", "UnRAR.exe" to "d:/u.exe" can increase running speed to max\n\
 To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR for Windows"\n\
 \
 			', anchor = W)
-		self.BruteLableDescription.pack(side = TOP, fill = X, pady = 5)
+		self.BruteLabelDescription.pack(side = TOP, fill = X, pady = 5)
 		# end up left Frame
 		
 		# start down left Frame
@@ -499,36 +499,36 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 									  command = self.BruteRadioRarToggle)
 		self.BruteRadio7z.pack(fill = X, side = TOP)
 
-		self.BruteLableii = ttk.Label(self.BruteFrameRight, text = "Big Loop", anchor = W)
-		self.BruteLableii.pack(side = TOP, fill = X)
+		self.BruteLabelii = ttk.Label(self.BruteFrameRight, text = "Big Loop", anchor = W)
+		self.BruteLabelii.pack(side = TOP, fill = X)
 		
 		self.BruteEntryii = ttk.Entry(self.BruteFrameRight, font = self.ft)
 		self.BruteEntryii.pack(fill = X)
 
-		self.BruteLableFeedback = ttk.Label(self.BruteFrameRight, text = "Feedback Interval ( number of big loops )", anchor = W)
-		self.BruteLableFeedback.pack(side = TOP, fill = X)
+		self.BruteLabelFeedback = ttk.Label(self.BruteFrameRight, text = "Feedback Interval ( number of big loops )", anchor = W)
+		self.BruteLabelFeedback.pack(side = TOP, fill = X)
 		
 		self.BruteEntryFeedback = ttk.Entry(self.BruteFrameRight, font = self.ft)
 		self.BruteEntryFeedback.pack(fill = X)
 
 
-		self.BruteLableBlank = ttk.Label(self.BruteFrameRight)
-		self.BruteLableBlank.pack(side = TOP, fill = X)
+		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight)
+		self.BruteLabelBlank.pack(side = TOP, fill = X)
 
-		self.BruteLableii0 = ttk.Label(self.BruteFrameRight, text = "Inside Loop ( loop inside big loop, set 1 - 250 )", anchor = W)
-		self.BruteLableii0.pack(side = TOP, fill = X)
+		self.BruteLabelii0 = ttk.Label(self.BruteFrameRight, text = "Inside Loop ( loop inside big loop, set 1 - 250 )", anchor = W)
+		self.BruteLabelii0.pack(side = TOP, fill = X)
 
-		self.BruteLableii0 = ttk.Label(self.BruteFrameRight, text = '( use "Show Info" to see how much you could set )', anchor = W)
-		self.BruteLableii0.pack(side = TOP, fill = X)
+		self.BruteLabelii0 = ttk.Label(self.BruteFrameRight, text = '( use "Show Info" to see how much you could set )', anchor = W)
+		self.BruteLabelii0.pack(side = TOP, fill = X)
 
 		self.BruteEntryii0 = ttk.Entry(self.BruteFrameRight, font = self.ft)
 		self.BruteEntryii0.pack(fill = X)	
 
-		self.BruteLableBlank = ttk.Label(self.BruteFrameRight)
-		self.BruteLableBlank.pack(side = TOP, fill = X)
+		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight)
+		self.BruteLabelBlank.pack(side = TOP, fill = X)
 
-		self.BruteLableOutset = ttk.Label(self.BruteFrameRight, text = "Crack Start From ( if ascii, 'a' or '1000a' or other )", anchor = W)
-		self.BruteLableOutset.pack(side = TOP, fill = X)
+		self.BruteLabelOutset = ttk.Label(self.BruteFrameRight, text = "Crack Start From ( if ascii, 'a' or '1000a' or other )", anchor = W)
+		self.BruteLabelOutset.pack(side = TOP, fill = X)
 							   
 		self.BruteEntryOutset = ttk.Entry(self.BruteFrameRight, font = self.ft)
 		self.BruteEntryOutset.pack(fill = X)
@@ -536,8 +536,8 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		self.BruteButtonRestoreDefault = ttk.Button(self.BruteFrameRight, text = "Restore Default dict", command = self.BruteRestoreDefaultDict)
 		self.BruteButtonRestoreDefault.pack(side = TOP, fill = X)
 
-		self.BruteLableCore = ttk.Label(self.BruteFrameRight, text = "Number of Cores ( set max could be harm for cpu )", anchor = W)
-		self.BruteLableCore.pack(side = TOP, fill = X)
+		self.BruteLabelCore = ttk.Label(self.BruteFrameRight, text = "Number of Cores ( set max could be harm for cpu )", anchor = W)
+		self.BruteLabelCore.pack(side = TOP, fill = X)
 							   
 		self.BruteEntryCore = ttk.Entry(self.BruteFrameRight, font = self.ft)
 		self.BruteEntryCore.pack(fill = X)
@@ -557,8 +557,8 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		self.BruteButtonCrack = ttk.Button(self.BruteFrameRight, text = "Start Crack", command = self.BruteCrack)
 		self.BruteButtonCrack.pack(side = TOP, fill = X)
 
-		self.BruteLableBlank = ttk.Label(self.BruteFrameRight)
-		self.BruteLableBlank.pack(side = TOP, fill = X)
+		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight)
+		self.BruteLabelBlank.pack(side = TOP, fill = X)
 
 		self.BruteButtonStop = ttk.Button(self.BruteFrameRight, text = "Stop ( fiercely click me )", command = self.BruteStop)
 		self.BruteButtonStop.pack(side = TOP, fill = X)

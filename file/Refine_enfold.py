@@ -157,8 +157,8 @@ class CreateFrameRefine():
 		self.RefineFrameUpLeft = ttk.LabelFrame(self.RefineRoot, text = "")
 		self.RefineFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 
-		self.RefineLablePath = ttk.Label(self.RefineFrameUpLeft, text = "Refine Folder Path", anchor = W)
-		self.RefineLablePath.pack(side = TOP, fill = X)
+		self.RefineLabelPath = ttk.Label(self.RefineFrameUpLeft, text = "Refine Folder Path", anchor = W)
+		self.RefineLabelPath.pack(side = TOP, fill = X)
 		
 		self.RefineScrollbarXPath = ttk.Scrollbar(self.RefineFrameUpLeft, orient = HORIZONTAL)
 		self.RefineScrollbarXPath.pack( side = BOTTOM, fill = X )
@@ -169,17 +169,17 @@ class CreateFrameRefine():
 		self.RefineEntryPath.drop_target_register(DND_FILES, DND_TEXT)
 		self.RefineEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
-		self.RefineLableBlank = ttk.Label(self.RefineFrameUpLeft)
-		self.RefineLableBlank.pack(side = TOP, fill = X)
+		self.RefineLabelBlank = ttk.Label(self.RefineFrameUpLeft)
+		self.RefineLabelBlank.pack(side = TOP, fill = X)
 
-		self.RefineLableDescription = ttk.Label(self.RefineFrameUpLeft, text = 'Description:     "c:\\foo\\bar\\bar  ->  c:\\foo\\bar"\n\n\
+		self.RefineLabelDescription = ttk.Label(self.RefineFrameUpLeft, text = 'Description:     "c:\\foo\\bar\\bar  ->  c:\\foo\\bar"\n\n\
 Walk through the root direction recursively, detect the folloing conditions and satisfying each of one in same time\n\n\
 1. Child folder in parent folder and the names of two are exactly same\n\n\
 2. Child is the solely folder with no other files in the parent\n\n\
 3. Root folder is not counted\n\n\
 ( If you are in the "Refine" pending folder, it will not success )\n\n\
 			', anchor = W)
-		self.RefineLableDescription.pack(side = TOP, fill = X)
+		self.RefineLabelDescription.pack(side = TOP, fill = X)
 		
 		self.RefineScrollbarXPath.config( command = self.RefineEntryPath.xview )
 		# end up left Frame
@@ -208,14 +208,14 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		self.RefineButtonReset = ttk.Button(self.RefineFrameRight, text = "Reset", command = self.RefineReset) 
 		self.RefineButtonReset.pack(fill = X, side = TOP)
 		
-		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
-		self.RefineLableBlank.pack(side = TOP, fill = X)
+		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
+		self.RefineLabelBlank.pack(side = TOP, fill = X)
 		
 		self.RefineButtonAddDirection = ttk.Button(self.RefineFrameRight, text = "Add Direction", command = self.RefineAddDirection) 
 		self.RefineButtonAddDirection.pack(fill = X, side = TOP)
 		
-		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
-		self.RefineLableBlank.pack(side = TOP, fill = X)
+		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
+		self.RefineLabelBlank.pack(side = TOP, fill = X)
 
 		self.RefineCheckSamenameVar = IntVar()
 		self.RefineCheckSamename = ttk.Checkbutton(self.RefineFrameRight, text = "Exactly Samename ( condition 1 )", \
@@ -226,10 +226,20 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		self.RefineButtonDetect = ttk.Button(self.RefineFrameRight, text = "Detect", command = self.RefineDetect) 
 		self.RefineButtonDetect.pack(fill = X, side = TOP)
 
-		self.RefineLableBlank = ttk.Label(self.RefineFrameRight)
-		self.RefineLableBlank.pack(side = TOP, fill = X)
+		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
+		self.RefineLabelBlank.pack(side = TOP, fill = X)
 
+		self.RefineLabelCache = ttk.Label(self.RefineFrameRight, text = '"Detect" not functioned?  Try this')
+		self.RefineLabelCache.pack(fill = X, side = TOP)
+
+		self.RefineButtonCache = ttk.Button(self.RefineFrameRight, text = "Clear Cache", command = self.fl.clear_windows_cache) 
+		self.RefineButtonCache.pack(fill = X, side = TOP)
+
+		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
+		self.RefineLabelBlank.pack(side = TOP, fill = X)
 		
+		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
+		self.RefineLabelBlank.pack(side = TOP, fill = X)
 
 		self.RefineButtonRefine = ttk.Button(self.RefineFrameRight, text = "Refine", command = self.Refine) #bg = "#e1e1e1"
 		self.RefineButtonRefine.pack(side = TOP, fill = X)

@@ -266,8 +266,8 @@ class CreateFrameFilter():
 		self.FilterFrameUpLeft = ttk.LabelFrame(self.FilterRoot, text = "")
 		self.FilterFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 
-		self.FilterLablePath = ttk.Label(self.FilterFrameUpLeft, text = "Filter Path", anchor = W)
-		self.FilterLablePath.pack(side = TOP, fill = X)
+		self.FilterLabelPath = ttk.Label(self.FilterFrameUpLeft, text = "Filter Path", anchor = W)
+		self.FilterLabelPath.pack(side = TOP, fill = X)
 		
 		self.FilterScrollbarXPath = ttk.Scrollbar(self.FilterFrameUpLeft, orient = HORIZONTAL)
 		self.FilterScrollbarXPath.pack( side = BOTTOM, fill = X )
@@ -278,10 +278,10 @@ class CreateFrameFilter():
 		self.FilterEntryPath.drop_target_register(DND_FILES, DND_TEXT)
 		self.FilterEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameUpLeft)
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameUpLeft)
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 
-		self.FilterLableDescription = ttk.Label(self.FilterFrameUpLeft, text = 'Description:\n\n\
+		self.FilterLabelDescription = ttk.Label(self.FilterFrameUpLeft, text = 'Description:\n\n\
 1. Walk through the root direction recursively\n\n\
 2. Filter out every file(or folder) with specified string in it\n\
    (leaves blank means every file(or folder) )\n\n\
@@ -289,7 +289,7 @@ class CreateFrameFilter():
    (leaves blank means unlimited, set them same will be filtering out the exactly size of file(or folder) )\n\
     \
 			', anchor = W)
-		self.FilterLableDescription.pack(side = TOP, fill = X)
+		self.FilterLabelDescription.pack(side = TOP, fill = X)
 		
 		self.FilterScrollbarXPath.config( command = self.FilterEntryPath.xview )
 		# end up left Frame
@@ -334,44 +334,44 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterCheckRecursive.pack(fill = X, side = TOP)
 		self.FilterCheckRecursiveVar.set(1)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Including String ( like: jpg|png )')
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'Including String ( like: jpg|png )')
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 
 		self.FilterEntryIncluding = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryIncluding.pack(fill = X)
 
-		self.FilterLableSecond = ttk.Label(self.FilterFrameRight, text = 'Including String ( second filter )')
-		self.FilterLableSecond.pack(side = TOP, fill = X)
+		self.FilterLabelSecond = ttk.Label(self.FilterFrameRight, text = 'Including String ( second filter )')
+		self.FilterLabelSecond.pack(side = TOP, fill = X)
 
 		self.FilterEntryIncludingSecond = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryIncludingSecond.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Excluding String ( like: jpeg|bmp )')
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'Excluding String ( like: jpeg|bmp )')
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryExcluding = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryExcluding.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Max ( Unit: Byte, 10240 = 10Kb )')
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Max ( Unit: Byte, 10240 = 10Kb )')
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryMax = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryMax.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Min ( Unit: Byte )')
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'File Size: Min ( Unit: Byte )')
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryMin = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryMin.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Filename Length: Max')
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'Filename Length: Max')
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryNameMax = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryNameMax.pack(fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'Filename Length: Min')
-		self.FilterLableBlank.pack(side = TOP, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'Filename Length: Min')
+		self.FilterLabelBlank.pack(side = TOP, fill = X)
 				
 		self.FilterEntryNameMin = ttk.Entry(self.FilterFrameRight, font = self.ft)
 		self.FilterEntryNameMin.pack(fill = X)
@@ -406,7 +406,7 @@ xscrollcommand = self.FilterScrollbarXDownFolders.set, yscrollcommand = self.Fil
 		self.FilterButtonOpen = ttk.Button(self.FilterFrameRight, text = "OPEN ALL", command = self.OpenAll) #bg = "#e1e1e1"
 		self.FilterButtonOpen.pack(side = BOTTOM, fill = X)
 
-		self.FilterLableBlank = ttk.Label(self.FilterFrameRight, text = 'EXTREMELY DANGERS !')
-		self.FilterLableBlank.pack(side = BOTTOM, fill = X)
+		self.FilterLabelBlank = ttk.Label(self.FilterFrameRight, text = 'EXTREMELY DANGERS !')
+		self.FilterLabelBlank.pack(side = BOTTOM, fill = X)
 		
 		# end right frame

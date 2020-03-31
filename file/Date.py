@@ -470,14 +470,14 @@ class CreateFrameDate():
 		self.DateCheckAccess.pack(fill = X, side = TOP)
 		self.DateCheckAccessVar.set(0)
 		
-		self.DateLableInsertPosition = ttk.Label(self.DateFrameRight, text = "Insert: Postion ( -1 = end )", anchor = W)
-		self.DateLableInsertPosition.pack(side = TOP, fill = X)
+		self.DateLabelInsertPosition = ttk.Label(self.DateFrameRight, text = "Insert: Postion ( -1 = end )", anchor = W)
+		self.DateLabelInsertPosition.pack(side = TOP, fill = X)
 		
 		self.DateEntryInsertPosition = ttk.Entry(self.DateFrameRight, font = self.ft)
 		self.DateEntryInsertPosition.pack(side = TOP, fill = X)
 
-		self.DateLableOutput = ttk.Label(self.DateFrameRight, text = 'Output Format: ( like %Y-%m-%d_%H.%M.%S )', anchor = W)
-		self.DateLableOutput.pack(side = TOP, fill = X)
+		self.DateLabelOutput = ttk.Label(self.DateFrameRight, text = 'Output Format: ( like %Y-%m-%d_%H.%M.%S )', anchor = W)
+		self.DateLabelOutput.pack(side = TOP, fill = X)
 		
 		self.DateEntryOutput = ttk.Entry(self.DateFrameRight, font = self.ft)
 		self.DateEntryOutput.pack(side = TOP, fill = X)
@@ -485,14 +485,14 @@ class CreateFrameDate():
 		self.DateButtonInsertSelf = ttk.Button(self.DateFrameRight, text = "Insert Self Date", command = self.InsertSelfDate) 
 		self.DateButtonInsertSelf.pack(fill = X, side = TOP)
 
-		self.DateLableOutset = ttk.Label(self.DateFrameRight, text = 'Date Start From: ( fill like: 2001.01.01.12.00.00 )', anchor = W)
-		self.DateLableOutset.pack(side = TOP, fill = X)
+		self.DateLabelOutset = ttk.Label(self.DateFrameRight, text = 'Date Start From: ( fill like: 2001.01.01.12.00.00 )', anchor = W)
+		self.DateLabelOutset.pack(side = TOP, fill = X)
 		
 		self.DateEntryOutset = ttk.Entry(self.DateFrameRight, font = self.ft)
 		self.DateEntryOutset.pack(side = TOP, fill = X)
 
-		self.DateLableUnit = ttk.Label(self.DateFrameRight, text = "Interval Unit:", anchor = W)
-		self.DateLableUnit.pack(side = TOP, fill = X)
+		self.DateLabelUnit = ttk.Label(self.DateFrameRight, text = "Interval Unit:", anchor = W)
+		self.DateLabelUnit.pack(side = TOP, fill = X)
 
 		values = ('year', 'month', 'day', 'hour', 'minute', 'second')
 
@@ -502,8 +502,8 @@ class CreateFrameDate():
 		self.DateComboUnit.current(2) 
 		self.DateComboUnit.pack(fill = X)
 
-		self.DateLableInterval = ttk.Label(self.DateFrameRight, text = 'Interval:', anchor = W)
-		self.DateLableInterval.pack(side = TOP, fill = X)
+		self.DateLabelInterval = ttk.Label(self.DateFrameRight, text = 'Interval:', anchor = W)
+		self.DateLabelInterval.pack(side = TOP, fill = X)
 		
 		self.DateEntryInterval = ttk.Entry(self.DateFrameRight, font = self.ft)
 		self.DateEntryInterval.pack(side = TOP, fill = X)
@@ -511,8 +511,8 @@ class CreateFrameDate():
 		self.DateButtonInsertIncrement = ttk.Button(self.DateFrameRight, text = "Insert Date Ordinal", command = self.InsertDateIncrement) 
 		self.DateButtonInsertIncrement.pack(fill = X, side = TOP)
 
-		self.DateLableBlank = ttk.Label(self.DateFrameRight)
-		self.DateLableBlank.pack(side = TOP, fill = X)
+		self.DateLabelBlank = ttk.Label(self.DateFrameRight)
+		self.DateLabelBlank.pack(side = TOP, fill = X)
 
 		self.DateButtonWriteRename = ttk.Button(self.DateFrameRight, text = "Write Results to Rename ( Downbox )", command = self.DateWriteRename) 
 		self.DateButtonWriteRename.pack(fill = X, side = TOP)
@@ -525,8 +525,8 @@ class CreateFrameDate():
 		self.DateButtonModifyDate = ttk.Button(self.DateFrameRight, text = "Modify Self Date", command = self.DateModify) 
 		self.DateButtonModifyDate.pack(fill = X, side = BOTTOM)
 
-		self.DateLableBlank = ttk.Label(self.DateFrameRight)
-		self.DateLableBlank.pack(fill = X, side = BOTTOM)
+		self.DateLabelBlank = ttk.Label(self.DateFrameRight)
+		self.DateLabelBlank.pack(fill = X, side = BOTTOM)
 
 		self.DateButtonModifyDatePreview = ttk.Button(self.DateFrameRight, text = "Modify Self Date ( Preview )", command = self.DateModifyPreview) 
 		self.DateButtonModifyDatePreview.pack(fill = X, side = BOTTOM)
@@ -537,8 +537,8 @@ class CreateFrameDate():
 		self.DateCheckIncrement.pack(fill = X, side = BOTTOM)
 		self.DateCheckIncrementVar.set(0)
 
-		self.DateLableModify = ttk.Label(self.DateFrameRight, text = 'Notice: "Created Time" not supported', anchor = W)
-		self.DateLableModify.pack(fill = X, side = BOTTOM)
+		self.DateLabelModify = ttk.Label(self.DateFrameRight, text = 'Notice: "Created Time" not supported', anchor = W)
+		self.DateLabelModify.pack(fill = X, side = BOTTOM)
 
 		
 

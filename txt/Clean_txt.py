@@ -207,8 +207,8 @@ class CreateFrameClean():
 		self.CleanScrollbarXTxtSource = ttk.Scrollbar(self.CleanFrame1, orient = HORIZONTAL)
 		self.CleanScrollbarXTxtSource.pack( side = BOTTOM, fill = X )
 
-		self.CleanLableTxtSource = ttk.Label(self.CleanFrame1, text = "Txt Source Path", anchor = W)
-		self.CleanLableTxtSource.pack(side = TOP, fill = X)
+		self.CleanLabelTxtSource = ttk.Label(self.CleanFrame1, text = "Txt Source Path", anchor = W)
+		self.CleanLabelTxtSource.pack(side = TOP, fill = X)
 		
 		self.CleanEntryTxtSource = ttk.Entry(self.CleanFrame1, font = self.ft, xscrollcommand = self.CleanScrollbarXTxtSource.set)
 		self.CleanEntryTxtSource.pack(fill = X)
@@ -226,8 +226,8 @@ class CreateFrameClean():
 		self.CleanScrollbarXTxtDestination = ttk.Scrollbar(self.CleanFrame2, orient = HORIZONTAL)
 		self.CleanScrollbarXTxtDestination.pack( side = BOTTOM, fill = X )
 
-		self.CleanLableTxtDestination = ttk.Label(self.CleanFrame2, text = "Txt Save Path", anchor = W)
-		self.CleanLableTxtDestination.pack(side = TOP, fill = X)
+		self.CleanLabelTxtDestination = ttk.Label(self.CleanFrame2, text = "Txt Save Path", anchor = W)
+		self.CleanLabelTxtDestination.pack(side = TOP, fill = X)
 		
 		self.CleanEntryTxtDestination = ttk.Entry(self.CleanFrame2, font = self.ft, xscrollcommand = self.CleanScrollbarXTxtDestination.set)
 		self.CleanEntryTxtDestination.pack(fill = X)
@@ -238,13 +238,13 @@ class CreateFrameClean():
 		self.CleanScrollbarXTxtDestination.config( command = self.CleanEntryTxtDestination.xview )
 		# end Frame2
 
-		self.CleanLableDescription = ttk.Label(self.CleanFrameUpLeft, text = '\
+		self.CleanLabelDescription = ttk.Label(self.CleanFrameUpLeft, text = '\
 Description:\n\n\
 mode 1: Keep original format\n\n\
 mode 2: Remove all empty lines\n\n\
 	\
 			', anchor = W)
-		self.CleanLableDescription.pack(side = TOP, fill = X)
+		self.CleanLabelDescription.pack(side = TOP, fill = X)
 		# end up left Frame
 		
 
@@ -278,8 +278,8 @@ mode 2: Remove all empty lines\n\n\
 		self.CleanButtonSetDestination = ttk.Button(self.CleanFrameRight, text = "Set Save Path", command = self.CleanAddDirection) 
 		self.CleanButtonSetDestination.pack(fill = X, side = TOP)
 
-		self.CleanLableBlank = ttk.Label(self.CleanFrameRight)
-		self.CleanLableBlank.pack(side = TOP, fill = X)
+		self.CleanLabelBlank = ttk.Label(self.CleanFrameRight)
+		self.CleanLabelBlank.pack(side = TOP, fill = X)
 
 		self.CleanCheckRepeatVar = IntVar()
 		self.CleanCheckRepeat = ttk.Checkbutton(self.CleanFrameRight, text = 'Remove repeat lines', \
@@ -310,8 +310,8 @@ mode 2: Remove all empty lines\n\n\
 		self.CleanButtonTxt = ttk.Button(self.CleanFrameRight, text = "Clean txt ( preview )", command = self.CleanTxtPreview)
 		self.CleanButtonTxt.pack(side = TOP, fill = X)
 
-		self.CleanLableBlank = ttk.Label(self.CleanFrameRight)
-		self.CleanLableBlank.pack(side = TOP, fill = X)
+		self.CleanLabelBlank = ttk.Label(self.CleanFrameRight)
+		self.CleanLabelBlank.pack(side = TOP, fill = X)
 
 		self.CleanButtonTxt = ttk.Button(self.CleanFrameRight, text = "Clean txt", command = self.CleanTxt)
 		self.CleanButtonTxt.pack(side = TOP, fill = X)

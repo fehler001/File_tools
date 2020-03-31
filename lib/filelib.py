@@ -522,7 +522,7 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 	# see 'Move' description  
 	# to achieve 'c:/bar/a.txt' -> 'd:/bar/a.txt',  'd:/' is an enpty folder
 	# shutil.copytree('c:/bar', 'd:/bar')  or  shutil.copy2('c:/bar/a.txt', 'd:/bar/a.txt')
-	def move_or_copy(self, lines, path, is_creating_new_folder = 0, new_folder_name = '', is_interval = 0, interval = 100, skip = 0, is_move = 0 ):
+	def move_or_copy(self, lines, path, is_creating_new_folder = 0, new_folder_name = '', is_interval = 0, interval = 100, skip = 0, is_move = 0, is_overwrite = 0 ):
 		if not os.path.isdir(path):
 			messagebox.showerror ("Warrning", "_____PATH ERROR_____")
 			return -1
@@ -541,11 +541,12 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 		for line in lines:
 			if os.path.isdir(line):
 				dst = dir + '/' + line[line.rfind('/') + 1: ]    # like 'd:/bar'
-				if os.path.isdir(dst):
-					if skip == 1:
+				if os.path.exists(dst):
+					if is_overwrite == 0:
+						messagebox.showerror ("Warrning", dst + "\n\nAlready exists")
+						return -1
+					else:
 						continue
-					messagebox.showerror ("Warrning", dst + "\n\nAlready exists")
-					return -1
 				else:
 					new_folders.append(dst)   # like 'd:/bar'
 					old_folders.append(line)  # like 'c:/bar'
@@ -564,8 +565,8 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 					else:
 						dir3 = dir2
 					if n3 < n2:
-						if os.path.isdir(dir3):
-							if skip == 0:
+						if os.path.exists(dir3):
+							if is_overwrite == 0:
 								messagebox.showerror ("Warrning", dir3 + "\n\nAlready exists")
 								return -1
 						else:
@@ -578,6 +579,13 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 					if skip == 1:
 						n = n + 1
 						continue
+					elif is_overwrite == 1:
+						n = n + 1
+						try:
+							os.unlink(dst)
+						except:
+							messagebox.showerror ("Error", dst + "\n\nCould not be overwrited")
+							return -1
 					else:
 						messagebox.showerror ("Warrning", dst + "\n\nAlready exists")
 						return -1
@@ -632,15 +640,20 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 
 	# delete one file or one folder(not empty)
-	def delete_single(self, path, including_read_only = 1):
-		if including_read_only == 1:
-			os.chmod(path, stat.S_IRWXU)
-		if os.path.isfile(path):
-			os.remove(path)
-			return
-		if os.path.isdir(path):
-			shutil.rmtree(path)
-			return	
+	def delete_single(self, path, including_read_only = 1, show_error = 1):
+		try:
+			if including_read_only == 1:
+				os.chmod(path, stat.S_IRWXU)
+			if os.path.isfile(path):
+				os.remove(path)
+				return
+			if os.path.isdir(path):
+				shutil.rmtree(path)
+				return	
+		except:
+			if show_error == 1:
+				messagebox.showerror ("Error", path + "\n\nCan not be deleted")
+				return -1
 
 
 
@@ -674,6 +687,46 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 						messagebox.showerror ("Warrning", line + "\n\nWent Wrong")
 						return -1
 
+
+
+	def copy_folder(self, path_from, path_to, is_overwrite = 0):
+		#existed = self.find_same_folder_strctrue(src = path_from, dst = path_to, is_subfolder_with_same_name = 0)
+		#print(existed)
+		#self.delete_list(list = existed, including_read_only = 1, skip_error = 0)
+		
+		items = self.collect_files_and_folders(path = path_from, is_add_file = 1, is_add_folder = 1, is_recur = 1)
+		
+		for item in items:
+			new_item = item.replace(path_from, path_to)
+		
+			if os.path.isdir(item):
+				if not os.path.exists(new_item):
+					if os.listdir(item) == []:
+						shutil.copytree(item, new_item)
+				continue
+		
+			parent = new_item[ : new_item.rfind('/')]
+			
+			if not os.path.exists(parent):
+				os.makedirs(parent)
+			if os.path.exists(new_item):
+				if is_overwrite == 0:
+					messagebox.showerror ("Error", new_item + "\n\nAlready exist")
+					return -1
+				else:
+					os.unlink(new_item)
+			shutil.copy2(item, new_item)
+
+
+
+
+	def clear_windows_cache(self):
+		for root, subfolders, files in os.walk(r'C:\Users\Administrator\AppData\Local\Temp'):
+			for file in files:
+				path = root + '/' + file
+				self.delete_single(path, including_read_only = 1, show_error = 0)
+				
+		
 
 
 if __name__ == '__main__':

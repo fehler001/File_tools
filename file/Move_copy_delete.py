@@ -256,8 +256,8 @@ class CreateFrameMove():
 		self.MoveFrameUpLeft = ttk.LabelFrame(self.MoveRoot, text = "")
 		self.MoveFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 
-		self.MoveLableMove = ttk.Label(self.MoveFrameUpLeft, text = "Path where you want to move something to", anchor = W)
-		self.MoveLableMove.pack(side = TOP, fill = X)
+		self.MoveLabelMove = ttk.Label(self.MoveFrameUpLeft, text = "Path where you want to move something to", anchor = W)
+		self.MoveLabelMove.pack(side = TOP, fill = X)
 		
 		self.MoveScrollbarXPath = ttk.Scrollbar(self.MoveFrameUpLeft, orient = HORIZONTAL)
 		self.MoveScrollbarXPath.pack( side = BOTTOM, fill = X )
@@ -268,10 +268,10 @@ class CreateFrameMove():
 		self.MoveEntryPath.drop_target_register(DND_FILES, DND_TEXT)
 		self.MoveEntryPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameUpLeft)
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameUpLeft)
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
-		self.MoveLableDescription = ttk.Label(self.MoveFrameUpLeft, text = 'Usage:\n\n\
+		self.MoveLabelDescription = ttk.Label(self.MoveFrameUpLeft, text = 'Usage:\n\n\
 1. Set the destination path, Read files or folders from "Rename" upbox or "Filter"\n\n\
 2. If you want to move files to a new folder in destination, check the "Creating..." and fill a folder name\n\n\
 3. If you want to seperate files into multiple folders, check the "Seperating..." and fill a interval number \n\
@@ -279,7 +279,7 @@ class CreateFrameMove():
 4. If you check "Skip...", this app will not show error when there is already a file or folder with same name in the destination\n\
    (Thought thoroughly when you choose to "Move")\n\n\
 			', anchor = W)
-		self.MoveLableDescription.pack(side = TOP, fill = X)
+		self.MoveLabelDescription.pack(side = TOP, fill = X)
 		
 		self.MoveScrollbarXPath.config( command = self.MoveEntryPath.xview )
 		# end up left Frame
@@ -308,8 +308,8 @@ class CreateFrameMove():
 		self.MoveButtonReset = ttk.Button(self.MoveFrameRight, text = "Reset", command = self.MoveReset) 
 		self.MoveButtonReset.pack(fill = X, side = TOP)
 		
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
 		self.MoveButtonSetDestination = ttk.Button(self.MoveFrameRight, text = "Set Move or Copy Root Path", command = self.MoveAddDirection) 
 		self.MoveButtonSetDestination.pack(fill = X, side = TOP)
@@ -332,8 +332,8 @@ variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambd
 		self.MoveEntryInterval = ttk.Entry(self.MoveFrameRight, font = self.ft)
 		self.MoveEntryInterval.pack(fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
 		self.MoveCheckSkipVar = IntVar() # StringVar()
 		self.MoveCheckSkip = ttk.Checkbutton(self.MoveFrameRight, text = "Skip when file (or folder) exists", \
@@ -344,20 +344,20 @@ variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambd
 		self.MoveButtonMove = ttk.Button(self.MoveFrameRight, text = "Move", command = self.Move) #bg = "#e1e1e1"
 		self.MoveButtonMove.pack(side = TOP, fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
 		self.MoveButtonMove = ttk.Button(self.MoveFrameRight, text = "Copy", command = self.Copy) #bg = "#e1e1e1"
 		self.MoveButtonMove.pack(side = TOP, fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight, text = "TAKE RESPONSIBILITY BY YOUR SELF")
-		self.MoveLableBlank.pack(side = TOP, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight, text = "TAKE RESPONSIBILITY BY YOUR SELF")
+		self.MoveLabelBlank.pack(side = TOP, fill = X)
 
 		self.MoveCheckReadOnlyVar = IntVar() # StringVar()
 		self.MoveCheckReadOnly = ttk.Checkbutton(self.MoveFrameRight, text = "Including Read Only (recommended)", \
@@ -383,12 +383,12 @@ variable = self.MoveCheckIntervalVar, onvalue = 1, offvalue = 0, command = lambd
 		self.MoveButtonReadRename = ttk.Button(self.MoveFrameRight, text = "Read Rename (upbox)", command = self.ReadRename) #bg = "#e1e1e1"
 		self.MoveButtonReadRename.pack(side = BOTTOM, fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = BOTTOM, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = BOTTOM, fill = X)
 
 		self.MoveButtonClear = ttk.Button(self.MoveFrameRight, text = "Clear Left", command = self.MoveClearLeft) #bg = "#e1e1e1"
 		self.MoveButtonClear.pack(side = BOTTOM, fill = X)
 
-		self.MoveLableBlank = ttk.Label(self.MoveFrameRight)
-		self.MoveLableBlank.pack(side = BOTTOM, fill = X)
+		self.MoveLabelBlank = ttk.Label(self.MoveFrameRight)
+		self.MoveLabelBlank.pack(side = BOTTOM, fill = X)
 		# end right frame

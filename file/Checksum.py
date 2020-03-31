@@ -176,8 +176,8 @@ class CreateFrameCsum():
 		self.CsumScrollbarXPath = ttk.Scrollbar(self.CsumFrame1, orient = HORIZONTAL)
 		self.CsumScrollbarXPath.pack( side = BOTTOM, fill = X )
 
-		self.CsumLablePath = ttk.Label(self.CsumFrame1, text = "File", anchor = W)
-		self.CsumLablePath.pack(side = TOP, fill = X)
+		self.CsumLabelPath = ttk.Label(self.CsumFrame1, text = "File", anchor = W)
+		self.CsumLabelPath.pack(side = TOP, fill = X)
 		
 		self.CsumEntryPath = ttk.Entry(self.CsumFrame1, font = self.ft, xscrollcommand = self.CsumScrollbarXPath.set)
 		self.CsumEntryPath.pack(fill = X)
@@ -188,8 +188,8 @@ class CreateFrameCsum():
 		self.CsumScrollbarXPath.config( command = self.CsumEntryPath.xview )
 		# end Frame1
 
-		self.CsumLableBlank = ttk.Label(self.CsumFrameUpLeft)
-		self.CsumLableBlank.pack(side = TOP, fill = X)
+		self.CsumLabelBlank = ttk.Label(self.CsumFrameUpLeft)
+		self.CsumLabelBlank.pack(side = TOP, fill = X)
 
 		# start Frame2
 		self.CsumFrame2 = ttk.Frame(self.CsumFrameUpLeft)
@@ -198,8 +198,8 @@ class CreateFrameCsum():
 		self.CsumScrollbarXSum1 = ttk.Scrollbar(self.CsumFrame2, orient = HORIZONTAL)
 		self.CsumScrollbarXSum1.pack( side = BOTTOM, fill = X )
 
-		self.CsumLableSum1 = ttk.Label(self.CsumFrame2, text = "Result", anchor = W)
-		self.CsumLableSum1.pack(side = TOP, fill = X)
+		self.CsumLabelSum1 = ttk.Label(self.CsumFrame2, text = "Result", anchor = W)
+		self.CsumLabelSum1.pack(side = TOP, fill = X)
 		
 		self.CsumEntrySum1 = ttk.Entry(self.CsumFrame2, font = self.ft, xscrollcommand = self.CsumScrollbarXSum1.set)
 		self.CsumEntrySum1.pack(fill = X)
@@ -210,8 +210,8 @@ class CreateFrameCsum():
 		self.CsumButtonCopy = ttk.Button(self.CsumFrameUpLeft, text = "             Copy             ", command = self.CsumCopyResult) 
 		self.CsumButtonCopy.pack(anchor = W, side = TOP)
 
-		self.CsumLableBlank = ttk.Label(self.CsumFrameUpLeft)
-		self.CsumLableBlank.pack(side = TOP, fill = X)
+		self.CsumLabelBlank = ttk.Label(self.CsumFrameUpLeft)
+		self.CsumLabelBlank.pack(side = TOP, fill = X)
 
 		# start Frame3
 		self.CsumFrame3 = ttk.Frame(self.CsumFrameUpLeft)
@@ -220,8 +220,8 @@ class CreateFrameCsum():
 		self.CsumScrollbarXSum2 = ttk.Scrollbar(self.CsumFrame3, orient = HORIZONTAL)
 		self.CsumScrollbarXSum2.pack( side = BOTTOM, fill = X )
 
-		self.CsumLableSum2 = ttk.Label(self.CsumFrame3, text = "Paste here to compare ( this entry will be saved when exit )", anchor = W)
-		self.CsumLableSum2.pack(side = TOP, fill = X)
+		self.CsumLabelSum2 = ttk.Label(self.CsumFrame3, text = "Paste here to compare ( this entry will be saved when exit )", anchor = W)
+		self.CsumLabelSum2.pack(side = TOP, fill = X)
 		
 		self.CsumEntrySum2 = ttk.Entry(self.CsumFrame3, font = self.ft, xscrollcommand = self.CsumScrollbarXSum2.set)
 		self.CsumEntrySum2.pack(fill = X)
@@ -267,17 +267,17 @@ class CreateFrameCsum():
 		self.CsumButtonReset = ttk.Button(self.CsumFrameRight, text = "Reset", command = self.CsumReset) 
 		self.CsumButtonReset.pack(fill = X, side = TOP)
 
-		self.CsumLableBlank = ttk.Label(self.CsumFrameRight)
-		self.CsumLableBlank.pack(side = TOP, fill = X)
+		self.CsumLabelBlank = ttk.Label(self.CsumFrameRight)
+		self.CsumLabelBlank.pack(side = TOP, fill = X)
 
 		self.CsumButtonAddFile = ttk.Button(self.CsumFrameRight, text = "Add File", command = self.CsumAddFile) 
 		self.CsumButtonAddFile.pack(fill = X, side = TOP)
 
-		self.CsumLableBlank = ttk.Label(self.CsumFrameRight)
-		self.CsumLableBlank.pack(side = TOP, fill = X)
+		self.CsumLabelBlank = ttk.Label(self.CsumFrameRight)
+		self.CsumLabelBlank.pack(side = TOP, fill = X)
 
-		self.CsumLableBlank = ttk.Label(self.CsumFrameRight, text = "Mode:")
-		self.CsumLableBlank.pack(side = TOP, fill = X)
+		self.CsumLabelBlank = ttk.Label(self.CsumFrameRight, text = "Mode:")
+		self.CsumLabelBlank.pack(side = TOP, fill = X)
 
 		values = ('MD5', 'SHA1', 'SHA256', 'SHA384', 'SHA512', 'CRC-8', 'CRC-16', 'CRC-32', 'CRC-64')
 
@@ -291,8 +291,8 @@ class CreateFrameCsum():
 		self.CsumButtonCalculate = ttk.Button(self.CsumFrameRight, text = "Calculate", command = self.CsumCalculate)
 		self.CsumButtonCalculate.pack(side = TOP, fill = X)
 
-		self.CsumLableBlank = ttk.Label(self.CsumFrameRight)
-		self.CsumLableBlank.pack(side = TOP, fill = X)
+		self.CsumLabelBlank = ttk.Label(self.CsumFrameRight)
+		self.CsumLabelBlank.pack(side = TOP, fill = X)
 
 		
 

@@ -324,8 +324,8 @@ class CreateFrameStr():
 		self.StrScrollbarXTxtSource = ttk.Scrollbar(self.StrFrame1, orient = HORIZONTAL)
 		self.StrScrollbarXTxtSource.pack( side = BOTTOM, fill = X )
 
-		self.StrLableTxtSource = ttk.Label(self.StrFrame1, text = "Txt Source Path", anchor = W)
-		self.StrLableTxtSource.pack(side = TOP, fill = X)
+		self.StrLabelTxtSource = ttk.Label(self.StrFrame1, text = "Txt Source Path", anchor = W)
+		self.StrLabelTxtSource.pack(side = TOP, fill = X)
 		
 		self.StrEntryTxtSource = ttk.Entry(self.StrFrame1, font = self.ft, xscrollcommand = self.StrScrollbarXTxtSource.set)
 		self.StrEntryTxtSource.pack(fill = X)
@@ -344,8 +344,8 @@ class CreateFrameStr():
 		self.StrScrollbarXTxtDestination = ttk.Scrollbar(self.StrFrame2, orient = HORIZONTAL)
 		self.StrScrollbarXTxtDestination.pack( side = BOTTOM, fill = X )
 
-		self.StrLableTxtDestination = ttk.Label(self.StrFrame2, text = "Txt Save Path", anchor = W)
-		self.StrLableTxtDestination.pack(side = TOP, fill = X)
+		self.StrLabelTxtDestination = ttk.Label(self.StrFrame2, text = "Txt Save Path", anchor = W)
+		self.StrLabelTxtDestination.pack(side = TOP, fill = X)
 		
 		self.StrEntryTxtDestination = ttk.Entry(self.StrFrame2, font = self.ft, xscrollcommand = self.StrScrollbarXTxtDestination.set)
 		self.StrEntryTxtDestination.pack(fill = X)
@@ -410,14 +410,14 @@ class CreateFrameStr():
 		self.StrButtonSetDestination = ttk.Button(self.StrFrameRight, text = "Set Save Path", command = self.StrAddDirection) 
 		self.StrButtonSetDestination.pack(fill = X, side = TOP)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrButtonGuessTxt = ttk.Button(self.StrFrameRight, text = "Guess Encoding", command = self.StrGuessTxt)
 		self.StrButtonGuessTxt.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrCheckBinaryVar = IntVar()
 		self.StrCheckBinary = ttk.Checkbutton(self.StrFrameRight, text = 'Binary Mode ( results only affected by "To" )', \
@@ -428,14 +428,14 @@ class CreateFrameStr():
 		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Get Preview", command = self.StrTranscodingTxtPreview)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrButtonTranscodingTxt = ttk.Button(self.StrFrameRight, text = "Transcode txt", command = self.StrTranscodingTxt)
 		self.StrButtonTranscodingTxt.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight, text = "From")
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight, text = "From")
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		values = ('utf-8', 'utf-16', 'utf-32', 'raw_unicode_escape', 'unicode_escape', 'ascii', 
 			'gb2312', 'big5', 'gbk', 'gb18030', 'shift-jis', 'shift_jis_2004', 'shift_jisx0213', 
@@ -450,8 +450,8 @@ class CreateFrameStr():
 		self.StrComboFrom.pack(fill = X)
 		#comboxlist.bind("<<ComboboxSelected>>", fun)   # when one item selected, fun()
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight, text = "To")
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight, text = "To")
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrComboToVar = StringVar()
 		self.StrComboTo = ttk.Combobox(self.StrFrameRight, textvariable = self.StrComboToVar)
@@ -468,23 +468,23 @@ class CreateFrameStr():
 		self.StrButtonDecoding = ttk.Button(self.StrFrameRight, text = 'Decode ( only affected by "To" )', command = self.StrDecoding)
 		self.StrButtonDecoding.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrButtonDownToUp = ttk.Button(self.StrFrameRight, text = "Read Clipboard to Up", command = self.StrReadClipboard)
 		self.StrButtonDownToUp.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrButtonDownToUp = ttk.Button(self.StrFrameRight, text = "Read Down to Up", command = self.StrDownToUp)
 		self.StrButtonDownToUp.pack(side = TOP, fill = X)
 
-		self.StrLableBlank = ttk.Label(self.StrFrameRight)
-		self.StrLableBlank.pack(side = TOP, fill = X)
+		self.StrLabelBlank = ttk.Label(self.StrFrameRight)
+		self.StrLabelBlank.pack(side = TOP, fill = X)
 
 		self.StrButtonDownToUp = ttk.Button(self.StrFrameRight, text = "Copy Result", command = self.StrCopyResult)
 		self.StrButtonDownToUp.pack(side = TOP, fill = X)

@@ -185,8 +185,8 @@ class CreateFrameMatch():
 		self.MatchScrollbarXTxtSource = ttk.Scrollbar(self.MatchFrame1, orient = HORIZONTAL)
 		self.MatchScrollbarXTxtSource.pack( side = BOTTOM, fill = X )
 
-		self.MatchLableTxtSource = ttk.Label(self.MatchFrame1, text = "Txt Source Path ( use dict to match content in source )", anchor = W)
-		self.MatchLableTxtSource.pack(side = TOP, fill = X)
+		self.MatchLabelTxtSource = ttk.Label(self.MatchFrame1, text = "Txt Source Path ( use dict to match content in source )", anchor = W)
+		self.MatchLabelTxtSource.pack(side = TOP, fill = X)
 		
 		self.MatchEntryTxtSource = ttk.Entry(self.MatchFrame1, font = self.ft, xscrollcommand = self.MatchScrollbarXTxtSource.set)
 		self.MatchEntryTxtSource.pack(fill = X)
@@ -204,8 +204,8 @@ class CreateFrameMatch():
 		self.MatchScrollbarXTxtDict = ttk.Scrollbar(self.MatchFrame2, orient = HORIZONTAL)
 		self.MatchScrollbarXTxtDict.pack( side = BOTTOM, fill = X )
 
-		self.MatchLableTxtDict = ttk.Label(self.MatchFrame2, text = "Txt Dict Path ( put your keyword in the txt )", anchor = W)
-		self.MatchLableTxtDict.pack(side = TOP, fill = X)
+		self.MatchLabelTxtDict = ttk.Label(self.MatchFrame2, text = "Txt Dict Path ( put your keyword in the txt )", anchor = W)
+		self.MatchLabelTxtDict.pack(side = TOP, fill = X)
 		
 		self.MatchEntryTxtDict = ttk.Entry(self.MatchFrame2, font = self.ft, xscrollcommand = self.MatchScrollbarXTxtDict.set)
 		self.MatchEntryTxtDict.pack(fill = X)
@@ -270,17 +270,17 @@ class CreateFrameMatch():
 		self.MatchButtonSetDict = ttk.Button(self.MatchFrameRight, text = "Set Dict Path", command = self.MatchAddDirection) 
 		self.MatchButtonSetDict.pack(fill = X, side = TOP)
 
-		self.MatchLableBlank = ttk.Label(self.MatchFrameRight)
-		self.MatchLableBlank.pack(side = TOP, fill = X)
+		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight)
+		self.MatchLabelBlank.pack(side = TOP, fill = X)
 
-		self.MatchLableBlank = ttk.Label(self.MatchFrameRight, text = "mode 1: Use every line in dict as key")
-		self.MatchLableBlank.pack(side = TOP, fill = X, pady = 2)
+		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight, text = "mode 1: Use every line in dict as key")
+		self.MatchLabelBlank.pack(side = TOP, fill = X, pady = 2)
 
-		self.MatchLableBlank = ttk.Label(self.MatchFrameRight, text = "mode 2: Use every two characters in dict as key")
-		self.MatchLableBlank.pack(side = TOP, fill = X, pady = 2)
+		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight, text = "mode 2: Use every two characters in dict as key")
+		self.MatchLabelBlank.pack(side = TOP, fill = X, pady = 2)
 
-		self.MatchLableBlank = ttk.Label(self.MatchFrameRight, text = "mode 3: Use every single character in dict as key")
-		self.MatchLableBlank.pack(side = TOP, fill = X, pady = 2)
+		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight, text = "mode 3: Use every single character in dict as key")
+		self.MatchLabelBlank.pack(side = TOP, fill = X, pady = 2)
 
 		values = ('mode 1', 'mode 2', 'mode 3')
 
@@ -293,13 +293,13 @@ class CreateFrameMatch():
 		self.MatchButtonCheckString = ttk.Button(self.MatchFrameRight, text = "Check String", command = self.MatchCheckText)
 		self.MatchButtonCheckString.pack(side = TOP, fill = X)
 
-		self.MatchLableBlank = ttk.Label(self.MatchFrameRight)
-		self.MatchLableBlank.pack(side = TOP, fill = X)
+		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight)
+		self.MatchLabelBlank.pack(side = TOP, fill = X)
 
 		self.MatchButtonCheckTxt = ttk.Button(self.MatchFrameRight, text = "Check txt", command = self.MatchCheckTxt)
 		self.MatchButtonCheckTxt.pack(side = TOP, fill = X)
 
-		self.MatchLableBlank = ttk.Label(self.MatchFrameRight)
-		self.MatchLableBlank.pack(side = TOP, fill = X)
+		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight)
+		self.MatchLabelBlank.pack(side = TOP, fill = X)
 
 		# end right frame

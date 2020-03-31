@@ -212,8 +212,8 @@ Pending to add in firewall rules, repeat checking will be handled  ( NOTE: DO NO
 		self.ARuleFrameUpLeft = ttk.LabelFrame(self.ARuleRoot, text = "")
 		self.ARuleFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 
-		self.ARuleLablePath = ttk.Label(self.ARuleFrameUpLeft, text = "Path to search", anchor = W)
-		self.ARuleLablePath.pack(side = TOP, fill = X)
+		self.ARuleLabelPath = ttk.Label(self.ARuleFrameUpLeft, text = "Path to search", anchor = W)
+		self.ARuleLabelPath.pack(side = TOP, fill = X)
 		
 		self.ARuleScrollbarXPath = ttk.Scrollbar(self.ARuleFrameUpLeft, orient = HORIZONTAL)
 		self.ARuleScrollbarXPath.pack( side = BOTTOM, fill = X )
@@ -228,10 +228,10 @@ Pending to add in firewall rules, repeat checking will be handled  ( NOTE: DO NO
 													command = lambda: os.startfile( self.ARuleEntryPath.get() )  ) 
 		self.ARuleButtonOpen.pack(anchor = W, side = TOP)
 
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameUpLeft)
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameUpLeft)
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 
-		self.ARuleLableDescription = ttk.Label(self.ARuleFrameUpLeft, text = 'Description:   (This function only supports windows powershell)\n\n\
+		self.ARuleLabelDescription = ttk.Label(self.ARuleFrameUpLeft, text = 'Description:   (This function only supports windows powershell)\n\n\
 1. Walk through the root direction recursively and find all the "exe" files, then put them into windows firewall rules\n\
    (if you use global proxy, windows firewall will not work, BE CAREFUL, because you know... )\n\n\
 2. If import a "txt" file, fill like this in "txt":\n' + 
@@ -239,7 +239,7 @@ Pending to add in firewall rules, repeat checking will be handled  ( NOTE: DO NO
    r'C:\Program Files\Adobe' + '\n' +
    r"C:\Users\Administrator\AppData\Local\Adobe        # don't change this" + '\n' \
 			, anchor = W)
-		self.ARuleLableDescription.pack(side = TOP, fill = X)
+		self.ARuleLabelDescription.pack(side = TOP, fill = X)
 		
 		self.ARuleScrollbarXPath.config( command = self.ARuleEntryPath.xview )
 		# end up left Frame
@@ -269,23 +269,23 @@ xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARul
 		self.ARuleButtonReset = ttk.Button(self.ARuleFrameRight, text = "Reset", command = self.ARuleReset) 
 		self.ARuleButtonReset.pack(fill = X, side = TOP)
 
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight)
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameRight)
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 		
 		self.ARuleButtonAddDirection = ttk.Button(self.ARuleFrameRight, text = "Add txt", command = self.ARuleAddTxt) 
 		self.ARuleButtonAddDirection.pack(fill = X, side = TOP)
 		
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight)
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameRight)
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 		
 		self.ARuleButtonAddDirection = ttk.Button(self.ARuleFrameRight, text = "Add Direction", command = self.ARuleAddDirection) 
 		self.ARuleButtonAddDirection.pack(fill = X, side = TOP)
 		
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight)
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameRight)
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight, text = 'Extension ( fill like: .exe )')
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameRight, text = 'Extension ( fill like: .exe )')
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 				
 		self.ARuleEntryExtension = ttk.Entry(self.ARuleFrameRight, font = self.ft)
 		self.ARuleEntryExtension.pack(fill = X, side = TOP)
@@ -293,8 +293,8 @@ xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARul
 		self.ARuleButtonSearch = ttk.Button(self.ARuleFrameRight, text = "Search Files", command = self.ARuleSearchFiles) #bg = "#e1e1e1"
 		self.ARuleButtonSearch.pack(side = TOP, fill = X)
 
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight)
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameRight)
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 		
 		self.ARuleCheckInVar = IntVar()
 		self.ARuleCheckIn = ttk.Checkbutton(self.ARuleFrameRight, text = "Add to Inbound Rules ( not recommanded )", \
@@ -311,8 +311,8 @@ xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARul
 		self.ARuleButtonAddRule = ttk.Button(self.ARuleFrameRight, text = "Add Rules", command = self.AddRule)
 		self.ARuleButtonAddRule.pack(side = TOP, fill = X)		
 
-		self.ARuleLableBlank = ttk.Label(self.ARuleFrameRight)
-		self.ARuleLableBlank.pack(side = TOP, fill = X)
+		self.ARuleLabelBlank = ttk.Label(self.ARuleFrameRight)
+		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 
 		self.ARuleButtonAddRule = ttk.Button(self.ARuleFrameRight, text = "Go to Firewall Advanced", command = self.fwl.open_window_firewall_advanced)
 		self.ARuleButtonAddRule.pack(side = TOP, fill = X)	

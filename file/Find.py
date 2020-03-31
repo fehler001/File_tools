@@ -211,8 +211,8 @@ class CreateFrameFind():
 		self.FindScrollbarXSource = ttk.Scrollbar(self.FindFrame1, orient = HORIZONTAL)
 		self.FindScrollbarXSource.pack( side = BOTTOM, fill = X )
 
-		self.FindLableSource = ttk.Label(self.FindFrame1, text = "Find Same File Strcture: Source Path", anchor = W)
-		self.FindLableSource.pack(side = TOP, fill = X)
+		self.FindLabelSource = ttk.Label(self.FindFrame1, text = "Find Same File Strcture: Source Path", anchor = W)
+		self.FindLabelSource.pack(side = TOP, fill = X)
 		
 		self.FindEntrySource = ttk.Entry(self.FindFrame1, font = self.ft, xscrollcommand = self.FindScrollbarXSource.set)
 		self.FindEntrySource.pack(fill = X)
@@ -230,8 +230,8 @@ class CreateFrameFind():
 		self.FindScrollbarXDestination = ttk.Scrollbar(self.FindFrame2, orient = HORIZONTAL)
 		self.FindScrollbarXDestination.pack( side = BOTTOM, fill = X )
 
-		self.FindLableDestination = ttk.Label(self.FindFrame2, text = "Find Same File Strcture: Destination Path", anchor = W)
-		self.FindLableDestination.pack(side = TOP, fill = X)
+		self.FindLabelDestination = ttk.Label(self.FindFrame2, text = "Find Same File Strcture: Destination Path", anchor = W)
+		self.FindLabelDestination.pack(side = TOP, fill = X)
 		
 		self.FindEntryDestination = ttk.Entry(self.FindFrame2, font = self.ft, xscrollcommand = self.FindScrollbarXDestination.set)
 		self.FindEntryDestination.pack(fill = X)
@@ -242,7 +242,7 @@ class CreateFrameFind():
 		self.FindScrollbarXDestination.config( command = self.FindEntryDestination.xview )
 		# end Frame2
 
-		self.FindLableDescription = ttk.Label(self.FindFrameUpLeft, text = '\
+		self.FindLabelDescription = ttk.Label(self.FindFrameUpLeft, text = '\
 src  =  folder A { a.txt, b.txt, folder B { c.mp4 } }\n\
 dst  =  folder X { a.txt, b.txt, c.mp4, d.txt, folder B { c.mp4, e.mp4, b.txt, folder A { a.txt, b.txt, folder B { c.mp4 } }  }  }\n\n\
 "Find Same File Structure"\n\
@@ -251,7 +251,7 @@ Found: folder X { a.txt, b.txt, folder B { c.mp4,  if "Including..." checked: fo
 Found:  All the files or folders in dst with exactly same name in "a.txt, b.txt, c.mp4, folder B"\n\n\
 	\
 			', anchor = W)
-		self.FindLableDescription.pack(side = TOP, fill = X)
+		self.FindLabelDescription.pack(side = TOP, fill = X)
 		# end up left Frame
 		
 		# start down left Frame
@@ -278,23 +278,23 @@ Found:  All the files or folders in dst with exactly same name in "a.txt, b.txt,
 		self.FindButtonReset = ttk.Button(self.FindFrameRight, text = "Reset", command = self.FindReset) 
 		self.FindButtonReset.pack(fill = X, side = TOP)
 		
-		self.FindLableBlank = ttk.Label(self.FindFrameRight)
-		self.FindLableBlank.pack(side = TOP, fill = X)
+		self.FindLabelBlank = ttk.Label(self.FindFrameRight)
+		self.FindLabelBlank.pack(side = TOP, fill = X)
 		
 		self.FindButtonAddSource = ttk.Button(self.FindFrameRight, text = "Add Source", command = self.FindAddSource) 
 		self.FindButtonAddSource.pack(fill = X, side = TOP)
 		
-		self.FindLableBlank = ttk.Label(self.FindFrameRight)
-		self.FindLableBlank.pack(side = TOP, fill = X)
+		self.FindLabelBlank = ttk.Label(self.FindFrameRight)
+		self.FindLabelBlank.pack(side = TOP, fill = X)
 
 		self.FindButtonAddDestination = ttk.Button(self.FindFrameRight, text = "Add Destination", command = self.FindAddDestination) 
 		self.FindButtonAddDestination.pack(fill = X, side = TOP)
 
-		self.FindLableBlank = ttk.Label(self.FindFrameRight)
-		self.FindLableBlank.pack(side = TOP, fill = X)
+		self.FindLabelBlank = ttk.Label(self.FindFrameRight)
+		self.FindLabelBlank.pack(side = TOP, fill = X)
 
-		self.FindLableBlank = ttk.Label(self.FindFrameRight)
-		self.FindLableBlank.pack(side = TOP, fill = X)
+		self.FindLabelBlank = ttk.Label(self.FindFrameRight)
+		self.FindLabelBlank.pack(side = TOP, fill = X)
 
 		self.FindCheckSubfolderVar = IntVar() # StringVar()
 		self.FindCheckSubfolder = ttk.Checkbutton(self.FindFrameRight, text = "Including subfolder with same name", \
@@ -305,8 +305,8 @@ Found:  All the files or folders in dst with exactly same name in "a.txt, b.txt,
 		self.FindButtonFind = ttk.Button(self.FindFrameRight, text = "Find Same File Structure", command = self.Find) #bg = "#e1e1e1"
 		self.FindButtonFind.pack(side = TOP, fill = X)
 
-		self.FindLableBlank = ttk.Label(self.FindFrameRight)
-		self.FindLableBlank.pack(side = TOP, fill = X)
+		self.FindLabelBlank = ttk.Label(self.FindFrameRight)
+		self.FindLabelBlank.pack(side = TOP, fill = X)
 
 		self.FindCheckFileVar = IntVar()
 		self.FindCheckFile = ttk.Checkbutton(self.FindFrameRight, text = "Including Files", \

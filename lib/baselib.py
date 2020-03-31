@@ -319,6 +319,7 @@ class BaseLib():
 	# path must use '/'
 	# 'c:/a.txt'  i1 = index '/', i2 = index '.', filename = 'a.txt', name = 'a', ext = '.txt'
 	def get_path_info(self, path, is_size = 0):
+		path = path.replace('\\', '/')
 		if os.path.isfile(path):
 			if is_size == 1:
 				size = os.path.getsize(path)
@@ -485,6 +486,9 @@ class BaseLib():
 				messagebox.showerror ("ERROR", '"' + str(dt1) + '"' + '  exceed system date range !' + 
 					'\n\nPlease set between\n\n' + '"' + str(min_dt3) + '"' + ' - ' + '"' + str(max_dt3) + '"')
 				return -1
+
+
+
 
 
 

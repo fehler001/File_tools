@@ -191,8 +191,8 @@ class CreateFrameDivide():
 		self.DivideScrollbarXTxtSource = ttk.Scrollbar(self.DivideFrame1, orient = HORIZONTAL)
 		self.DivideScrollbarXTxtSource.pack( side = BOTTOM, fill = X )
 
-		self.DivideLableTxtSource = ttk.Label(self.DivideFrame1, text = "Txt Source Path", anchor = W)
-		self.DivideLableTxtSource.pack(side = TOP, fill = X)
+		self.DivideLabelTxtSource = ttk.Label(self.DivideFrame1, text = "Txt Source Path", anchor = W)
+		self.DivideLabelTxtSource.pack(side = TOP, fill = X)
 		
 		self.DivideEntryTxtSource = ttk.Entry(self.DivideFrame1, font = self.ft, xscrollcommand = self.DivideScrollbarXTxtSource.set)
 		self.DivideEntryTxtSource.pack(fill = X)
@@ -210,8 +210,8 @@ class CreateFrameDivide():
 		self.DivideScrollbarXTxtDestination = ttk.Scrollbar(self.DivideFrame2, orient = HORIZONTAL)
 		self.DivideScrollbarXTxtDestination.pack( side = BOTTOM, fill = X )
 
-		self.DivideLableTxtDestination = ttk.Label(self.DivideFrame2, text = "Path where you want to put your new multiple txts", anchor = W)
-		self.DivideLableTxtDestination.pack(side = TOP, fill = X)
+		self.DivideLabelTxtDestination = ttk.Label(self.DivideFrame2, text = "Path where you want to put your new multiple txts", anchor = W)
+		self.DivideLabelTxtDestination.pack(side = TOP, fill = X)
 		
 		self.DivideEntryTxtDestination = ttk.Entry(self.DivideFrame2, font = self.ft, xscrollcommand = self.DivideScrollbarXTxtDestination.set)
 		self.DivideEntryTxtDestination.pack(fill = X)
@@ -222,12 +222,12 @@ class CreateFrameDivide():
 		self.DivideScrollbarXTxtDestination.config( command = self.DivideEntryTxtDestination.xview )
 		# end Frame2
 
-		self.DivideLableTxtDescription = ttk.Label(self.DivideFrameUpLeft, text = 'Description:\n\n\
+		self.DivideLabelTxtDescription = ttk.Label(self.DivideFrameUpLeft, text = 'Description:\n\n\
 src: mytxt.txt( line1, line2......line5000 )\n\n\
 limit = 500, digit = 6\n\n\
 dst: 000001.txt( line1, line2.....line500 ), ...... 000010.txt( line4501, line4502.....line5000 )\n\n\
 			', anchor = W)
-		self.DivideLableTxtDescription.pack(side = TOP, fill = X)
+		self.DivideLabelTxtDescription.pack(side = TOP, fill = X)
 		# end up left Frame
 		
 		# start down left Frame
@@ -254,29 +254,29 @@ dst: 000001.txt( line1, line2.....line500 ), ...... 000010.txt( line4501, line45
 		self.DivideButtonReset = ttk.Button(self.DivideFrameRight, text = "Reset", command = self.DivideReset) 
 		self.DivideButtonReset.pack(fill = X, side = TOP)
 
-		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
-		self.DivideLableBlank.pack(side = TOP, fill = X)
+		self.DivideLabelBlank = ttk.Label(self.DivideFrameRight)
+		self.DivideLabelBlank.pack(side = TOP, fill = X)
 
 		self.DivideButtonSetSource = ttk.Button(self.DivideFrameRight, text = "Add txt", command = self.DivideAddSource) 
 		self.DivideButtonSetSource.pack(fill = X, side = TOP)
 		
-		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
-		self.DivideLableBlank.pack(side = TOP, fill = X)
+		self.DivideLabelBlank = ttk.Label(self.DivideFrameRight)
+		self.DivideLabelBlank.pack(side = TOP, fill = X)
 
 		self.DivideButtonSetDestination = ttk.Button(self.DivideFrameRight, text = "Set Save Path", command = self.DivideAddDirection) 
 		self.DivideButtonSetDestination.pack(fill = X, side = TOP)
 
-		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
-		self.DivideLableBlank.pack(side = TOP, fill = X)
+		self.DivideLabelBlank = ttk.Label(self.DivideFrameRight)
+		self.DivideLabelBlank.pack(side = TOP, fill = X)
 
-		self.DivideLableBlank = ttk.Label(self.DivideFrameRight, text = "txt Name Digit")
-		self.DivideLableBlank.pack(side = TOP, fill = X)
+		self.DivideLabelBlank = ttk.Label(self.DivideFrameRight, text = "txt Name Digit")
+		self.DivideLabelBlank.pack(side = TOP, fill = X)
 
 		self.DivideEntryDigit = ttk.Entry(self.DivideFrameRight, font = self.ft)
 		self.DivideEntryDigit.pack(fill = X)
 
-		self.DivideLableBlank = ttk.Label(self.DivideFrameRight, text = "Set Limit Lines in Each txt")
-		self.DivideLableBlank.pack(side = TOP, fill = X)
+		self.DivideLabelBlank = ttk.Label(self.DivideFrameRight, text = "Set Limit Lines in Each txt")
+		self.DivideLabelBlank.pack(side = TOP, fill = X)
 
 		self.DivideEntryLimit = ttk.Entry(self.DivideFrameRight, font = self.ft)
 		self.DivideEntryLimit.pack(fill = X)
@@ -284,7 +284,7 @@ dst: 000001.txt( line1, line2.....line500 ), ...... 000010.txt( line4501, line45
 		self.DivideButtonDivide = ttk.Button(self.DivideFrameRight, text = "Divide txt", command = self.Divide) #bg = "#e1e1e1"
 		self.DivideButtonDivide.pack(side = TOP, fill = X)
 
-		self.DivideLableBlank = ttk.Label(self.DivideFrameRight)
-		self.DivideLableBlank.pack(side = TOP, fill = X)
+		self.DivideLabelBlank = ttk.Label(self.DivideFrameRight)
+		self.DivideLabelBlank.pack(side = TOP, fill = X)
 
 		# end right frame

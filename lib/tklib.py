@@ -6,8 +6,8 @@ from tkinter.ttk import *
 # http://tkinter.unpythonic.net/wiki/VerticalScrolledFrame
 
 class VerticalScrolledFrame(Frame):
-    """A pure Tkinter scrollable frame that actually works!
-    * Use the 'interior' attribute to place widgets inside the scrollable frame
+    """A pure Tkinter scrolLabel frame that actually works!
+    * Use the 'interior' attribute to place widgets inside the scrolLabel frame
     * Construct and pack/place/grid normally
     * This frame only allows vertical scrolling
     """
