@@ -48,6 +48,10 @@ class CreateFrameMatch():
 			j['file_tools']['txt']['match']['path_source'] = ''
 		if not 'path_dict' in j['file_tools']['txt']['match']:
 			j['file_tools']['txt']['match']['path_dict'] = ''
+		if not 'reverse' in j['file_tools']['txt']['match']:
+			j['file_tools']['txt']['match']['reverse'] = 0
+		if not 'remove_space' in j['file_tools']['txt']['match']:
+			j['file_tools']['txt']['match']['remove_space'] = 0
 		if not 'combo_mode' in j['file_tools']['txt']['match']:
 			j['file_tools']['txt']['match']['combo_mode'] = 'mode 1'
 		if not 'text_up' in j['file_tools']['txt']['match']:
@@ -67,6 +71,8 @@ class CreateFrameMatch():
 		self.MatchDictPath = j['file_tools']['txt']['match']['path_dict']
 		self.MatchEntryTxtSource.insert(0, self.MatchSourcePath)
 		self.MatchEntryTxtDict.insert(0, self.MatchDictPath )
+		self.MatchCheckReverseVar.set(j['file_tools']['txt']['match']['reverse'])
+		self.MatchCheckSpaceVar.set(j['file_tools']['txt']['match']['remove_space'])
 		self.MatchComboMode.set(j['file_tools']['txt']['match']['combo_mode'])
 		self.MatchTextUp.insert(INSERT, j['file_tools']['txt']['match']['text_up'] )
 		f.close()
@@ -90,6 +96,8 @@ class CreateFrameMatch():
 			f.close()
 			j['file_tools']['txt']['match']['path_source'] = self.MatchEntryTxtSource.get()
 			j['file_tools']['txt']['match']['path_dict'] = self.MatchEntryTxtDict.get()
+			j['file_tools']['txt']['match']['reverse'] = self.MatchCheckReverseVar.get()
+			j['file_tools']['txt']['match']['remove_space'] = self.MatchCheckSpaceVar.get()
 			j['file_tools']['txt']['match']['combo_mode'] = self.MatchComboMode.get()
 			tu = self.MatchTextUp.get('1.0', 'end')
 			if tu[-1] == '\n':
@@ -150,21 +158,25 @@ class CreateFrameMatch():
 		self.MatchSaveEntry()
 		self.ReadMatchPath()
 		self.MatchTextDown.delete("1.0", "end")
+		is_reverse = self.MatchCheckReverseVar.get()
+		is_strip_space = self.MatchCheckSpaceVar.get()
 		mode = self.MatchComboMode.get()
 		textup = self.MatchTextUp.get("1.0", "end")
-		textdown = self.tl.check_string_in(source = textup, dict = self.MatchDictPath, mode = mode)
+		textdown = self.tl.check_string_in(source = textup, dict = self.MatchDictPath, mode = mode, is_reverse = is_reverse, is_strip_space = is_strip_space)
 		for line in textdown:
 			self.MatchTextDown.insert(INSERT, line)
 			self.MatchTextDown.insert(INSERT, '\n')
 
 
 
-	def MatchCheckTxt(self, preview = False):
+	def MatchCheckTxt(self):
 		self.MatchSaveEntry()
 		self.ReadMatchPath()
 		self.MatchTextDown.delete("1.0", "end")
+		is_reverse = self.MatchCheckReverseVar.get()
+		is_strip_space = self.MatchCheckSpaceVar.get()
 		mode = self.MatchComboMode.get()
-		textdown = self.tl.check_string_in(source = self.MatchSourcePath, dict = self.MatchDictPath, mode = mode)
+		textdown = self.tl.check_string_in(source = self.MatchSourcePath, dict = self.MatchDictPath, mode = mode, is_reverse = is_reverse, is_strip_space = is_strip_space)
 		for line in textdown:
 			self.MatchTextDown.insert(INSERT, line)
 			self.MatchTextDown.insert(INSERT, '\n')
@@ -272,6 +284,18 @@ class CreateFrameMatch():
 
 		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight)
 		self.MatchLabelBlank.pack(side = TOP, fill = X)
+
+		self.MatchCheckReverseVar = IntVar()
+		self.MatchCheckReverse = ttk.Checkbutton(self.MatchFrameRight, text = 'Reverse (dict not in source)', \
+												variable = self.MatchCheckReverseVar, onvalue = 1, offvalue = 0) 
+		self.MatchCheckReverse.pack(fill = X, side = TOP)
+		self.MatchCheckReverseVar.set(0)
+
+		self.MatchCheckSpaceVar = IntVar()
+		self.MatchCheckSpace = ttk.Checkbutton(self.MatchFrameRight, text = 'Remove "space" in every key and source', \
+												variable = self.MatchCheckSpaceVar, onvalue = 1, offvalue = 0) 
+		self.MatchCheckSpace.pack(fill = X, side = TOP)
+		self.MatchCheckSpaceVar.set(0)
 
 		self.MatchLabelBlank = ttk.Label(self.MatchFrameRight, text = "mode 1: Use every line in dict as key")
 		self.MatchLabelBlank.pack(side = TOP, fill = X, pady = 2)

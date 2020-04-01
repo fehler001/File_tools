@@ -168,23 +168,29 @@ class TxtLib():
 
 
 
-	def check_string_in(self, source, dict, mode):
+	def check_string_in(self, source, dict, mode, is_reverse = 0, is_strip_space = 0):
 		all = []
 
 		if len(source) < 1000:
 			if os.path.exists(source):
 				try:
-					src = self.get_txt_content(source, split == 'wholetext')
+					src = self.get_txt_content(source)
 				except:
 					messagebox.showerror ("ERROR", 'Can not open src\n\nUTF-8 txt file needed')
 					return -1
 			else: src = source
 		else: src = source
+
+		if is_strip_space == 1:
+			n = 0
+			for line in src:
+				src[n] = src[n].replace(' ', '')
+				n = n + 1
 			
 
 		if os.path.exists(dict):
 			try:
-				d = self.get_txt_content(dict)
+				d = self.get_txt_content(dict)   # get a dict with multiple lines, not a whole single string
 			except:
 				messagebox.showerror ("ERROR", 'Can not open src\n\nUTF-8 txt file needed')
 				return -1
@@ -193,7 +199,11 @@ class TxtLib():
 		
 		s = []
 		if mode == 'mode 1':
-			s = d
+			if is_strip_space == 0:
+				s = d
+			else:
+				for line in d:
+					s.append(line.replace(' ', ''))
 		elif mode == 'mode 2':
 			for i in range(len(d)):
 				l = len(d[i])
@@ -211,8 +221,12 @@ class TxtLib():
 		s = self.bl.clean_list(s)
 
 		for i in range(len(s)):
-			if s[i] in src:
-				all .append(s[i])
+			if is_reverse == 0:
+				if s[i] in src:
+					all .append(s[i])
+			else:
+				if s[i] not in src:
+					all .append(s[i])
 
 		return all
 
