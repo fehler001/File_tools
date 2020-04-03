@@ -131,7 +131,7 @@ class FirewallLib():
 			log_in = self.read_log_file_in()
 			for f in fs:
 				if f not in log_in:
-					self.add_one_rule_in(files)
+					self.add_one_rule_in(f)
 					n_in = n_in + 1
 		self.delete_log()
 		messagebox.showinfo("Complete", \

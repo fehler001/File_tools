@@ -297,7 +297,7 @@ xscrollcommand = self.ARuleScrollbarXDownFolders.set, yscrollcommand = self.ARul
 		self.ARuleLabelBlank.pack(side = TOP, fill = X)
 		
 		self.ARuleCheckInVar = IntVar()
-		self.ARuleCheckIn = ttk.Checkbutton(self.ARuleFrameRight, text = "Add to Inbound Rules ( not recommanded )", \
+		self.ARuleCheckIn = ttk.Checkbutton(self.ARuleFrameRight, text = "Add to Inbound Rules", \
 											variable = self.ARuleCheckInVar, onvalue = 1, offvalue = 0) 
 		self.ARuleCheckIn.pack(fill = X, side = TOP)
 		self.ARuleCheckInVar.set(0)
