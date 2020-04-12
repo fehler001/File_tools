@@ -454,7 +454,10 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 			if max != '' or min != '' :
 				if pinfo['isdir'] == 1:
-					fs = self.bl.get_folder_size(p)
+					try:
+						fs = self.bl.get_folder_size(p)       # some windows folder can not be accessed
+					except:
+						continue
 				if pinfo['isfile'] == 1:
 					fs = os.path.getsize(p)				
 			if max != '' :
