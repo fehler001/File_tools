@@ -511,13 +511,12 @@ class CreateFrameDate():
 		self.DateButtonInsertIncrement = ttk.Button(self.DateFrameRight, text = "Insert Date Ordinal", command = self.InsertDateIncrement) 
 		self.DateButtonInsertIncrement.pack(fill = X, side = TOP)
 
-		self.DateLabelBlank = ttk.Label(self.DateFrameRight)
-		self.DateLabelBlank.pack(side = TOP, fill = X)
-
 		self.DateButtonWriteRename = ttk.Button(self.DateFrameRight, text = "Write Results to Rename ( Downbox )", command = self.DateWriteRename) 
 		self.DateButtonWriteRename.pack(fill = X, side = TOP)
 
-		
+		self.DateLabelBlank = ttk.Label(self.DateFrameRight)
+		self.DateLabelBlank.pack(side = TOP, fill = X)
+
 
 		self.DateButtonModifyDate = ttk.Button(self.DateFrameRight, text = "Undo Modify", command = self.DateUndoModify) 
 		self.DateButtonModifyDate.pack(fill = X, side = BOTTOM)
