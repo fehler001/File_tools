@@ -1,6 +1,8 @@
 #coding=utf-8
 #File_tools/main.py
 
+# if you use linux, don't put folder "FIle_tools" into anyplace under "~/home/"
+# just create a new folder lile "/a" and put in it would be ok
 
 import tkinter
 from tkinter import *
@@ -60,7 +62,11 @@ class Share():
 
 		self.RootWidth = 1000
 		self.RootHeight = 615
-		self.LogPath = r"C:\temp\File_tools.json"
+		if os.name == 'nt':
+			self.LogPath = r"C:\temp\File_tools.json"
+		else:
+			self.LogPath = r"/temp/File_tools.json"
+		
 		self.firewall_add_rules_savefile = r'firewall_add_rules_savefile.txt'
 		self.EnableLog = 1
 		self.CheckPathExist = 1
@@ -240,7 +246,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.help = Toplevel(self.root)
 		self.help.geometry('300x200')
 		self.help.title("")
-		self.LabelHelp = ttk.Label(self.help, text = r'Log path: "C:\temp\File_tools.json"', anchor = CENTER)
+		self.LabelHelp = ttk.Label(self.help, text = self.LogPath, anchor = CENTER)
 		self.LabelHelp.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 		#print(temp)
 
@@ -297,7 +303,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		if os.name == 'nt':
 			self.ft = Font(family = 'Microsoft YaHei', size = 10)
 		else:
-			self.ft = Font(family = 'Arial', size = 10)
+			self.ft = Font(family = 'xxxxxxxxxxxxxx', size = 10)
 		self.root.title("File Tools")
 		
 		#self.root.geometry(str(self.RootWidth) + 'x' + str(self.RootHeight))

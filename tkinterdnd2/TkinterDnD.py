@@ -35,29 +35,24 @@ TkdndVersion = None
 def _require(tkroot):
     '''Internal function.'''
     global TkdndVersion
-    #try:
-    import os.path
-    import platform
+    try:
+        import os.path
+        import platform
 
-    if platform.system()=="Darwin":
-        tkdnd_platform_rep = "osx64"
-    elif platform.system()=="Linux":
-        tkdnd_platform_rep = "linux64"
-    elif platform.system()=="Windows":
-        tkdnd_platform_rep = "win64"
-    else:
-        raise RuntimeError('Plaform not supported.')
-    
-    module_path = os.path.join(os.path.dirname(__file__), 'tkdnd', tkdnd_platform_rep)
-
-    #tkroot.tk.eval('global auto_path; lappend auto_path {%s}' % module_path)
-    #TkdndVersion = tkroot.tk.eval('package require tkdnd')
-    #tkroot._tkdnd_loaded = True
-
-    tkroot.tk.call('lappend', 'auto_path', module_path)
-    TkdndVersion = tkroot.tk.call('package', 'require', 'tkdnd')
-    #except tkinter.TclError:
-    #    raise RuntimeError('Unable to load tkdnd library.')
+        if platform.system()=="Darwin":
+            tkdnd_platform_rep = "osx64"
+        elif platform.system()=="Linux":
+            tkdnd_platform_rep = "linux64"
+        elif platform.system()=="Windows":
+            tkdnd_platform_rep = "win64"
+        else:
+            raise RuntimeError('Plaform not supported.')
+        
+        module_path = os.path.join(os.path.dirname(__file__), 'tkdnd', tkdnd_platform_rep)
+        tkroot.tk.call('lappend', 'auto_path', module_path)
+        TkdndVersion = tkroot.tk.call('package', 'require', 'tkdnd')
+    except tkinter.TclError:
+        raise RuntimeError('Unable to load tkdnd library.')
     return TkdndVersion
 
 class DnDEvent:

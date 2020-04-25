@@ -153,8 +153,9 @@ class CreateFrameMove():
 
 	def MoveOrCopy(self, IsMove):
 		self.MoveSaveEntry()
+		self.ReadMovePath()
 		lines = self.MoveTextDownFiles.get("1.0", "end")
-		if len(lines) < 5:
+		if len(lines) < 4:
 			messagebox.showerror ("Warrning", "_____EMPTY BOX_____")
 			return
 		dir = self.MovePath
@@ -162,15 +163,20 @@ class CreateFrameMove():
 			messagebox.showerror ("Warrning", "_____PATH ERROR_____")
 			return
 		lines = lines.split('\n')
-		new_folder_name = self.MoveEntryCreating.get()
-		if self.bl.check_legit_string(new_folder_name) == -1:
-			return
+
 		is_creating_new_folder = self.MoveCheckCreatingVar.get()
-		interval = self.MoveEntryInterval.get()
-		if self.bl.check_legit_int(interval) == -1:
-			return
+		new_folder_name = self.MoveEntryCreating.get()     # if is_interval == 1, even if new_folder_name == '', it's still needed
+		if is_creating_new_folder == 1:    
+			if self.bl.check_legit_string(new_folder_name) == -1:
+				return
+			
 		is_interval = self.MoveCheckIntervalVar.get()
-		interval = abs(int(interval))
+		interval = self.MoveEntryInterval.get()     # if is_interval == 0, move or copy still need it as parameter
+		if is_interval == 1:
+			if self.bl.check_legit_int(interval) == -1:
+				return
+			interval = abs(int(interval))
+		
 		skip = self.MoveCheckSkipVar.get()
 		tmp = messagebox.askquestion("Excute", "This may cause your file 'CHAOS'\n\nAre you sure?")
 		if tmp == 'no':
