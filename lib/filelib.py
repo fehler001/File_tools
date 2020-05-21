@@ -255,7 +255,7 @@ class FileLib():
 
 
 	# original = 'ar', substitute = 'zz', 'c:/foo/bar.txt'   =>   'c:/foo/bzz.txt'  
-	def replace_string(self, files, original, substitute, match_pos):
+	def replace_string(self, files, original, substitute, match_pos, is_check_path_exist = 1, is_advanced_mode = 0):
 		all = []
 		if type(files) == str:
 			files = [files]
@@ -265,6 +265,11 @@ class FileLib():
 		
 		for file in files:
 			pinfo = self.bl.get_path_info(file)
+
+			if is_advanced_mode == 1:
+				pinfo['filename'] = pinfo['parent'] + '/' + pinfo['filename']
+				pinfo['parent'] = ''
+
 			matchs = re.findall(original, pinfo['filename'])			# , [re.MULTILINE]) search in all lines
 			if matchs == []:
 				all.append(file)
@@ -272,7 +277,10 @@ class FileLib():
 			
 			if match_pos == 'match all':
 				for m in matchs:
-					pinfo['filename'] = pinfo['filename'].replace(m, substitute)
+					if substitute != r'\n':
+						pinfo['filename'] = pinfo['filename'].replace(m, substitute)
+					else:
+						pinfo['filename'] = pinfo['filename'].replace(m, '\n')
 			else:
 				pos = None
 				if match_pos == 'match first': pos = 0
@@ -298,9 +306,18 @@ class FileLib():
 				if p < 0:
 					if abs(p) > len(s): p = 0
 				f = pinfo['filename']
-				pinfo['filename'] = f[ 0 : s[p][0] ] + substitute + f[ s[p][1] : ]
+				if substitute != r'\n':
+					pinfo['filename'] = f[ 0 : s[p][0] ] + substitute + f[ s[p][1] : ]
+				else:
+					pinfo['filename'] = f[ 0 : s[p][0] ] + '\n' + f[ s[p][1] : ]
 
-			all.append(pinfo['parent'] + '/' + pinfo['filename'])
+			if is_check_path_exist == 1:
+				if is_advanced_mode == 1:
+					all.append(pinfo['filename'])
+				else:
+					all.append(pinfo['parent'] + '/' + pinfo['filename'])
+			else:
+				all.append(pinfo['filename'])
 		return all
 
 
@@ -724,10 +741,14 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 
 	def clear_windows_cache(self):
+		if os.name != 'nt':
+			messagebox.showinfo("error", 'Clear Cache" only supports windows')
+			return
 		for root, subfolders, files in os.walk(r'C:\Users\Administrator\AppData\Local\Temp'):
 			for file in files:
 				path = root + '/' + file
 				self.delete_single(path, including_read_only = 1, show_error = 0)
+		messagebox.showinfo("info", "Windows cache cleared")
 				
 		
 

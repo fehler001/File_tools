@@ -98,6 +98,7 @@ class CreateFrameRename():
 		j = json.load(f)
 		self.RenameN = j['file_tools']['file']['rename']['n']
 		self.RenameFrameUpLeft.config(text = 'Files  ' + str(self.RenameN) )
+		self.toggle_check_path_exist()
 		self.RenamePath = j['file_tools']['file']['rename']['path_rename']
 		self.RenameCheckFileVar.set( j['file_tools']['file']['rename']['check_files'])
 		self.RenameCheckFolderVar.set( j['file_tools']['file']['rename']['check_folders'])
@@ -375,6 +376,7 @@ class CreateFrameRename():
 
 	def Replace(self):
 		self.RenameSaveEntry()
+
 		files = self.RenameTextUpFiles.get("1.0", "end")
 		files = files.split('\n')
 		files = self.bl.clean_list(files)
@@ -386,9 +388,12 @@ class CreateFrameRename():
 		original = self.RenameEntryReplaceOriginal.get()
 		substitute = self.RenameEntryReplaceSubstitute.get()
 		match = self.RenameComboMatchVar.get()
-		if self.bl.check_legit_string(substitute) == -1:
-			return
-		files = self.fl.replace_string(files, original, substitute, match)
+		if substitute != r'\n':
+			if  self.AdvancedMode == 0:
+				if self.bl.check_legit_string(substitute) == -1:
+					return
+		files = self.fl.replace_string(files, original, substitute, match,  
+				 is_check_path_exist = self.CheckPathExist,  is_advanced_mode = self.AdvancedMode )
 
 		if files == -1: return
 		if self.bl.check_has_repeat(files) == -1: return
@@ -476,10 +481,10 @@ class CreateFrameRename():
 		for i in range(len(UpFiles)):
 			if UpFiles[i] == DownFiles[i]:
 				continue
-			try:
-				os.rename(UpFiles[i], DownFiles[i])
-			except:
-				pass
+			parent = DownFiles[i][ : DownFiles[i].rfind('/') ]
+			if not os.path.isdir(parent):
+				os.makedirs(parent)
+			os.rename(UpFiles[i], DownFiles[i])
 		self.RenameTextUpFiles.delete("1.0", "end")
 		self.RenameTextUpFiles.insert(INSERT, self.RenameTextDownFiles.get("1.0", "end"))
 		self.RenameTextDownFiles.delete("1.0", "end")
@@ -600,12 +605,22 @@ class CreateFrameRename():
 		self.RenameButtonAddOneFolder = ttk.Button(self.RenameFrameRight_00, text = "Add One Folder", command = self.RenameAddOneFolder) 
 		self.RenameButtonAddOneFolder.pack(fill = X, side = LEFT, expand = True)
 		# end RenameFrameRight_00
+
+		# start RenameFrameRight_01
+		self.RenameFrameRight_01 = ttk.Frame(self.RenameFrameRight)
+		self.RenameFrameRight_01.pack(fill = X, side = TOP) 
 						
 		self.RenameCheckFileVar = IntVar() # StringVar()
-		self.RenameCheckFile = ttk.Checkbutton(self.RenameFrameRight, text = "Including Files", \
+		self.RenameCheckFile = ttk.Checkbutton(self.RenameFrameRight_01, text = "Including Files               ", \
 											variable = self.RenameCheckFileVar, onvalue = 1, offvalue = 0) 
-		self.RenameCheckFile.pack(fill = X, side = TOP)
+		self.RenameCheckFile.pack(fill = X, side = LEFT)
 		self.RenameCheckFileVar.set(1)
+
+		#self.RenameButtonSortUp = ttk.Button(self.RenameFrameRight_01, text = "Sort Upbox", command = self.RenameCheckRepeatUp ) 
+		#self.RenameButtonSortUp.pack(fill = X, side = LEFT, expand = True)
+		
+		# end RenameFrameRight_01
+
 
 		# start RenameFrameRight_1
 		self.RenameFrameRight_1 = ttk.Frame(self.RenameFrameRight)

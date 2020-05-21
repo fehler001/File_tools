@@ -33,7 +33,9 @@ class BaseLib():
 		#self.year_mktime = 365*24*3600 + 5*3600 + 48*60 + 46
 		self.year_mktime = 365.25*24*3600
 		self.ascii = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r\x0b\x0c'
-
+		self.filename_forbidden_windows = ['con', 'aux', 'prn', 'lst', 
+				     'com0. com1', 'com2', 'com3', 'com4', 'com5', 'com6', 'com7', 'com8', 'com9', 
+				     'lpt0', 'lpt1', 'lpt2', 'lpt3', 'lpt4', 'lpt5', 'lpt6', 'lpt7', 'lpt8', 'lpt9']
 
 
 

@@ -67,9 +67,11 @@ class Share():
 		else:
 			self.LogPath = r"/temp/File_tools.json"
 		
+		self.IsFirstTimeOpen = 1
 		self.firewall_add_rules_savefile = r'firewall_add_rules_savefile.txt'
 		self.EnableLog = 1
 		self.CheckPathExist = 1
+		self.AdvancedMode = 0
 
 		self.bl = lib.baselib.BaseLib()
 		self.fl = lib.filelib.FileLib()
@@ -149,6 +151,8 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 				j['file_tools']['menu']['rename']['check_path'] = 1
 			if not 'log' in j['file_tools']['menu']:
 				j['file_tools']['menu']['log'] = {}
+			if not 'is_first_time_open' in j['file_tools']['menu']['log']:
+				j['file_tools']['menu']['log']['is_first_time_open'] = 1
 			if not 'enable_log' in j['file_tools']['menu']['log']:
 				j['file_tools']['menu']['log']['enable_log'] = 1
 			if not 'notebook' in j['file_tools']:
@@ -191,10 +195,19 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		f.close()
 		self.RootWidth = j['file_tools']['window']['width']
 		self.RootHeight = j['file_tools']['window']['height']
+		self.IsFirstTimeOpen = j['file_tools']['menu']['log']['is_first_time_open']
 		self.EnableLog = j['file_tools']['menu']['log']['enable_log']
 		self.EnableLogVar.set(self.EnableLog)
 		self.CheckPathExist = j['file_tools']['menu']['rename']['check_path']
 		self.CheckPathExistVar.set(self.CheckPathExist)
+
+		if self.IsFirstTimeOpen == 1:
+			tmp = messagebox.askquestion("Warning", "Please read carefully !\n\n" + 
+			"This application could cause your files or folders CHAOS or DISAPPEAR\n\n" +
+			"Will you take all responsibility by yourself ?")
+			if tmp == 'no':
+				sys.exit()
+
 
 	def MainRestoreState2(self):
 		f = open(self.LogPath, 'r', encoding='utf-8')
@@ -211,6 +224,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		f = open(self.LogPath, 'r', encoding='utf-8')
 		j = json.load(f)
 		f.close()
+		j['file_tools']['menu']['log']['is_first_time_open'] = self.IsFirstTimeOpen
 		j['file_tools']['menu']['log']['enable_log'] = self.EnableLogVar.get()
 		j['file_tools']['menu']['rename']['check_path'] = self.CheckPathExistVar.get()
 		j['file_tools']['window']['width'] = self.root.winfo_width()
@@ -221,9 +235,35 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		f.close()
 
 
+
 	def toggle_check_path_exist(self):
 		self.CheckPathExist = self.CheckPathExistVar.get()
+		self.update_rename_state()
 		self.SaveAll(exit = 0)
+
+
+
+	def toggle_advanced_mode(self):
+		self.AdvancedMode = self.AdvancedModeVar.get()
+		if self.AdvancedMode == 1:
+			tmp = messagebox.askquestion("Warning", "In Advanced Mode:\n\n" + 
+			'When using "Replace", instead of filename, you are dealing with the full path\n\n' +
+			"Any tiny mistake could cause your file end up NOWHERE or EVERYWHERE !\n\n" + 
+			'Plus: Path validity will not be checked')
+			if tmp == 'no':
+				self.AdvancedModeVar.set(0)
+				self.AdvancedMode = self.AdvancedModeVar.get()
+		self.update_rename_state()
+		self.SaveAll(exit = 0)
+
+
+	def update_rename_state(self):
+		text_results = 'Results'
+		if self.CheckPathExist == 0:
+			text_results = text_results + '   ( "Check Path Exists" is OFF )' 
+		if self.AdvancedMode == 1:
+			text_results = text_results + '   ( "Advanced Mode" is On )' 
+		self.RenameFrameDownLeft.config(text = text_results )
 
 
 	def toggle_log(self):
@@ -241,12 +281,23 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.restart()
 
 
+
 	def help(self):
 		#print(StockText.TextUpTemp)
 		self.help = Toplevel(self.root)
-		self.help.geometry('300x200')
+		self.help.geometry('860x250')
 		self.help.title("")
-		self.LabelHelp = ttk.Label(self.help, text = self.LogPath, anchor = CENTER)
+		self.LabelHelp = ttk.Label(self.help, text = 
+#'\n' +
+'Github: https://github.com/fehler001/File_tools\n\n'
+'Gui rename script and others \n' +
+"Made for windows purposely, also works in linux ( doesn't have much meaning if you are a linux veteran ) \n\n"
+'log path: ' + self.LogPath + '\n\n' + 
+'Advanced Mode: Dealing with full path ( only works with "Replace" ) \n\n' +
+'Check Path Exist: When ON, every "Rename" proccess will check whether every line is a real file or folder \n\n' + 
+'You can not name file or folder with these words, e.g. "con", "CON", "Con", "con.txt"\n' + str(self.bl.filename_forbidden_windows)[1:-1] + '\n\n'
+'Clear Cache: Only works in windows, when you feel something wrong, try this'
+			     , anchor = 'nw')
 		self.LabelHelp.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 		#print(temp)
 
@@ -255,11 +306,12 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.about = Toplevel(self.root)
 		self.about.geometry('300x200')
 		self.about.title("")
-		self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.32\n\n    Author tgbxs", anchor = CENTER)
+		self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.33\n\n    Author tgbxs", anchor = CENTER)
 		self.LabelAbout.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 
 
 	def SaveAll(self, exit = 1):
+		self.IsFirstTimeOpen = 0
 		try:
 			self.MainSaveEntry()
 
@@ -328,7 +380,14 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.CheckPathExistVar = IntVar()
 		self.renamemenu.add_checkbutton( label = "Check Path Exist", \
 			variable = self.CheckPathExistVar, onvalue = 1, offvalue = 0, command = self.toggle_check_path_exist )
+		self.AdvancedModeVar = IntVar()
+		self.renamemenu.add_checkbutton( label = "Advanced Mode", \
+			variable = self.AdvancedModeVar, onvalue = 1, offvalue = 0, command = self.toggle_advanced_mode )
 		self.menubar.add_cascade( label = "Rename", menu = self.renamemenu)
+
+		self.cachemenu = Menu(self.menubar, tearoff = 0)
+		self.cachemenu.add_command ( label = "Clear Cache", command = self.fl.clear_windows_cache )
+		self.menubar.add_cascade(label = "Cache", menu = self.cachemenu)
 		
 		self.helpmenu = Menu(self.menubar, tearoff = 0)
 		self.helpmenu.add_command ( label = "Help", command = self.help )
