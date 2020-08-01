@@ -557,10 +557,7 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		self.BruteButtonCrack = ttk.Button(self.BruteFrameRight, text = "Start Crack", command = self.BruteCrack)
 		self.BruteButtonCrack.pack(side = TOP, fill = X)
 
-		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight)
-		self.BruteLabelBlank.pack(side = TOP, fill = X)
-
 		self.BruteButtonStop = ttk.Button(self.BruteFrameRight, text = "Stop ( fiercely click me )", command = self.BruteStop)
-		self.BruteButtonStop.pack(side = TOP, fill = X)
+		self.BruteButtonStop.pack(side = BOTTOM, fill = X)
 
 		# end right frame

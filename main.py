@@ -2,7 +2,7 @@
 #File_tools/main.py
 
 # if you use linux, don't put folder "FIle_tools" into anyplace under "~/home/"
-# just create a new folder lile "/a" and put in it would be ok
+# just create a new folder like "/a" and put in it would be ok
 
 import tkinter
 from tkinter import *
@@ -290,7 +290,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.LabelHelp = ttk.Label(self.help, text = 
 #'\n' +
 'Github: https://github.com/fehler001/File_tools\n\n'
-'Gui rename script and others \n' +
+'GUI rename script and others \n' +
 "Made for windows purposely, also works in linux ( doesn't have much meaning if you are a linux veteran ) \n\n"
 'log path: ' + self.LogPath + '\n\n' + 
 'Advanced Mode: Dealing with full path ( only works with "Replace" ) \n\n' +

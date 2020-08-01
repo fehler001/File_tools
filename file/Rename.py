@@ -282,7 +282,7 @@ class CreateFrameRename():
 		if self.RenameComboP1.get() == '':
 			self.RenameComboP1.set('Left Positon: 0')
 		left = self.RenameComboP1Var.get()
-		left = left[13:]
+		left = left[14:]
 		if self.bl.check_legit_int(left) == -1:
 			return -1
 		self.RenameP1 = int(left)
@@ -290,7 +290,7 @@ class CreateFrameRename():
 		if self.RenameComboP2.get() == '':
 			self.RenameComboP2.set('Right Positon: 0')
 		right = self.RenameComboP2Var.get()
-		right = right[14:]
+		right = right[15:]
 		if self.bl.check_legit_int(right) == -1:
 			return -1
 		self.RenameP2 = int(right)
