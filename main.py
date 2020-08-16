@@ -285,7 +285,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 	def help(self):
 		#print(StockText.TextUpTemp)
 		self.help = Toplevel(self.root)
-		self.help.geometry('860x250')
+		self.help.geometry('860x300')
 		self.help.title("")
 		self.LabelHelp = ttk.Label(self.help, text = 
 #'\n' +
@@ -296,7 +296,9 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 'Advanced Mode: Dealing with full path ( only works with "Replace" ) \n\n' +
 'Check Path Exist: When ON, every "Rename" proccess will check whether every line is a real file or folder \n\n' + 
 'You can not name file or folder with these words, e.g. "con", "CON", "Con", "con.txt"\n' + str(self.bl.filename_forbidden_windows)[1:-1] + '\n\n'
-'Clear Cache: Only works in windows, when you feel something wrong, try this'
+'Clear Cache: Only works in windows, when you feel something wrong, try this \n\n' +
+'If any text got garbled, log will not be handled correctly'
+
 			     , anchor = 'nw')
 		self.LabelHelp.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 		#print(temp)

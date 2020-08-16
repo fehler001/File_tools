@@ -204,15 +204,11 @@ class FileLib():
 
 		n = 0
 		for file in files:
-			file = file.replace('\\', '/')
-			i = file.rfind(r'/')
-			if i == -1:
-				all.append(file)
+			pinfo = self.bl.get_path_info(file)
+			if pinfo['/'] == 0:           # if not exist
+				all.append(file)        
 				continue
-			i2 = file.rfind(r'.')
-			if i2 == -1 or i2 < i:
-				i2 = len(file)
-			new_file = file[0:i] + r'/' + ordinal[n] + file[i2: ]
+			new_file = file[ 0 : pinfo['/'] ] + r'/' + ordinal[n] + file[ pinfo['.'] : ]
 			all.append(new_file)
 			n = n + 1
 		return all

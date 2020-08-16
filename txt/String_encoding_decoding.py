@@ -94,7 +94,8 @@ class CreateFrameStr():
 			f = open(self.LogPath, 'r', encoding='utf-8')
 			j = json.load(f)
 			f.close()
-			j['file_tools']['txt']['string']['path_txt'] = self.StrEntryTxtSource.get()
+			self.StrTxtPath = self.StrEntryTxtSource.get()
+			j['file_tools']['txt']['string']['path_txt'] = self.StrTxtPath
 			j['file_tools']['txt']['string']['path_save'] = self.StrEntryTxtDestination.get()
 			j['file_tools']['txt']['string']['combo_from'] = self.StrComboFrom.get()
 			j['file_tools']['txt']['string']['combo_to'] = self.StrComboTo.get()
@@ -105,7 +106,7 @@ class CreateFrameStr():
 			else:
 				j['file_tools']['txt']['string']['text_up'] = tu
 
-			try:
+			try:             # if text got garbled, saving into txt will got error, this is a test try
 				tmp = r'C:\Windows\Temp/' + str ( random.random() )+ str ( random.random() )
 				f2 = open( tmp, 'w', encoding='utf-8' )
 				json.dump(j, f2, ensure_ascii=False)
@@ -190,7 +191,6 @@ class CreateFrameStr():
 
 	def StrGuessTxt(self):
 		self.StrSaveEntry()
-		self.ReadStrPath()
 		self.StrTextDown.delete("1.0", "end")
 		src = self.StrTxtPath
 		if not os.path.isfile(src):

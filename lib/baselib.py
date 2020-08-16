@@ -320,6 +320,7 @@ class BaseLib():
 
 	# path must use '/'
 	# 'c:/a.txt'  i1 = index '/', i2 = index '.', filename = 'a.txt', name = 'a', ext = '.txt'
+	# 'c:/folder'  i1 = index '/', i2 = len('c:/folder'), filename = 'folder', name = 'folder', ext = ''
 	def get_path_info(self, path, is_size = 0):
 		path = path.replace('\\', '/')
 		if os.path.isfile(path):
