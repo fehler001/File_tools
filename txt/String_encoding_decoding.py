@@ -54,8 +54,6 @@ class CreateFrameStr():
 			j['file_tools']['txt']['string']['combo_to'] = 'utf-8'
 		if not 'check_binary' in j['file_tools']['txt']['string']:
 			j['file_tools']['txt']['string']['check_binary'] = 1
-		if not 'text_up' in j['file_tools']['txt']['string']:
-			j['file_tools']['txt']['string']['text_up'] = ''
 		if j != j2:
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)
@@ -74,7 +72,6 @@ class CreateFrameStr():
 		self.StrComboFrom.set(j['file_tools']['txt']['string']['combo_from'])
 		self.StrComboTo.set(j['file_tools']['txt']['string']['combo_to'])
 		self.StrCheckBinaryVar.set( j['file_tools']['txt']['string']['check_binary'] )
-		self.StrTextUp.insert(INSERT, j['file_tools']['txt']['string']['text_up'] )
 		f.close()
 
 
@@ -100,21 +97,6 @@ class CreateFrameStr():
 			j['file_tools']['txt']['string']['combo_from'] = self.StrComboFrom.get()
 			j['file_tools']['txt']['string']['combo_to'] = self.StrComboTo.get()
 			j['file_tools']['txt']['string']['check_binary'] = self.StrCheckBinaryVar.get()
-			tu = self.StrTextUp.get('1.0', 'end')
-			if tu[-1] == '\n':
-				j['file_tools']['txt']['string']['text_up'] = tu[0:-1]
-			else:
-				j['file_tools']['txt']['string']['text_up'] = tu
-
-			try:             # if text got garbled, saving into txt will got error, this is a test try
-				tmp = r'C:\Windows\Temp/' + str ( random.random() )+ str ( random.random() )
-				f2 = open( tmp, 'w', encoding='utf-8' )
-				json.dump(j, f2, ensure_ascii=False)
-				f2.close()
-				os.chmod(tmp, stat.S_IRWXU)
-				os.unlink(tmp)
-			except:
-				return
 
 			f = open(self.LogPath, 'w', encoding='utf-8')
 			json.dump(j, f, ensure_ascii=False)

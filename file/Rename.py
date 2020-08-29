@@ -481,10 +481,16 @@ class CreateFrameRename():
 		for i in range(len(UpFiles)):
 			if UpFiles[i] == DownFiles[i]:
 				continue
-			parent = DownFiles[i][ : DownFiles[i].rfind('/') ]
-			if not os.path.isdir(parent):
-				os.makedirs(parent)
-			os.rename(UpFiles[i], DownFiles[i])
+			if os.path.isfile(UpFiles[i]) is True:
+				os.rename(UpFiles[i], DownFiles[i])
+		for i in range(len(UpFiles)):
+			if UpFiles[i] == DownFiles[i]:
+				continue
+			if os.path.isdir(UpFiles[i]) is True:
+				parent = DownFiles[i][ : DownFiles[i].rfind('/') ]
+				if not os.path.isdir(parent):
+					os.makedirs(parent)
+				os.rename(UpFiles[i], DownFiles[i])
 		self.RenameTextUpFiles.delete("1.0", "end")
 		self.RenameTextUpFiles.insert(INSERT, self.RenameTextDownFiles.get("1.0", "end"))
 		self.RenameTextDownFiles.delete("1.0", "end")

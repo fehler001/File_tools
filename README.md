@@ -1,12 +1,12 @@
 # File_tools
-GUI rename script and others  
+GUI rename script, files or folders or file structure filter or move script, rar brute force crack(not included in release version) and other stuff   
+  
+Using "tkinterdnd2" as "drag and drop" function ( already put in the repository ) https://github.com/pmgagne/tkinterdnd2  
   
 Made for windows purposely, also works in linux ( doesn't have much meaning if you are a linux veteran )  
-Using "tkinterdnd2" as "drag and drop" function ( already put in the repository ) https://github.com/pmgagne/tkinterdnd2  
-
+  
 ## How to use
 Using pip install chardet, natsort, crcmod  
-run main.py  
-
+Run main.py  
 ## Note
-Function in unrar include "subprocess", so part of it won't work well after using pyinstaller    
+Rar brute force crack using Multithreading, so it doesn't compatible with pyinstaller  

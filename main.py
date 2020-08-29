@@ -64,9 +64,11 @@ class Share():
 		self.RootHeight = 615
 		if os.name == 'nt':
 			self.LogPath = r"C:\temp\File_tools.json"
+			self.LogPathBackup = r'C:\Windows\Temp\File_tools_backup.json'
 		else:
 			self.LogPath = r"/temp/File_tools.json"
-		
+			self.LogPathBackup = r'/temp/File_tools_backup.json'
+
 		self.IsFirstTimeOpen = 1
 		self.firewall_add_rules_savefile = r'firewall_add_rules_savefile.txt'
 		self.EnableLog = 1
@@ -285,13 +287,10 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 	def help(self):
 		#print(StockText.TextUpTemp)
 		self.help = Toplevel(self.root)
-		self.help.geometry('860x300')
+		self.help.geometry('860x240')
 		self.help.title("")
 		self.LabelHelp = ttk.Label(self.help, text = 
 #'\n' +
-'Github: https://github.com/fehler001/File_tools\n\n'
-'GUI rename script and others \n' +
-"Made for windows purposely, also works in linux ( doesn't have much meaning if you are a linux veteran ) \n\n"
 'log path: ' + self.LogPath + '\n\n' + 
 'Advanced Mode: Dealing with full path ( only works with "Replace" ) \n\n' +
 'Check Path Exist: When ON, every "Rename" proccess will check whether every line is a real file or folder \n\n' + 
@@ -306,15 +305,23 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 
 	def about(self):
 		self.about = Toplevel(self.root)
-		self.about.geometry('300x200')
+		self.about.geometry('340x100')
 		self.about.title("")
-		self.LabelAbout = ttk.Label(self.about, text="File tools Ver 0.33\n\n    Author tgbxs", anchor = CENTER)
+		self.LabelAbout = ttk.Label(self.about, text=
+#'\n' +
+'Github: https://github.com/fehler001/File_tools\n\n' +
+'GPL-3.0 Lisence\n\n' + 
+"File tools Ver 0.34        Author  tgbxs\n\n"
+		, anchor = 'w')
 		self.LabelAbout.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 
 
 	def SaveAll(self, exit = 1):
 		self.IsFirstTimeOpen = 0
 		try:
+			if os.path.isfile(self.LogPath):
+				shutil.copy2(self.LogPath, self.LogPathBackup)
+
 			self.MainSaveEntry()
 
 			self.RenameSaveEntry()
@@ -341,8 +348,13 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 				pass
 
 		except:
-			pass
+			if os.path.isfile(self.LogPathBackup):
+				shutil.copy2(self.LogPathBackup, self.LogPath)
+				os.unlink(self.LogPathBackup)
 
+		if os.path.isfile(self.LogPathBackup):
+				os.unlink(self.LogPathBackup)
+		
 		if exit == 0:
 			return
 		sys.exit()
