@@ -432,6 +432,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.FirewallDefault()
 		self.RarRoot = self.NoteBook01
 		self.RarDefault()
+		#self.RarRoot.hide(13)
 		
 		self.ZzRoot = self.NoteBook01
 		self.ZzDefault()

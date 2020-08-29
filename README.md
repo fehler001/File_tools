@@ -9,4 +9,4 @@ Made for windows purposely, also works in linux ( doesn't have much meaning if y
 Using pip install chardet, natsort, crcmod  
 Run main.py  
 ## Note
-Rar brute force crack using Multithreading, so it doesn't compatible with pyinstaller  
+Rar brute force crack using Multithreading, so it isn't compatible with pyinstaller  
