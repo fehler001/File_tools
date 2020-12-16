@@ -23,8 +23,6 @@ class TxtLib():
 		except:
 			self.bl = baselib.BaseLib()
 
-		self.natsort_key1 = natsort_keygen(key=lambda y: y.lower())
-		self.natsort_key2 = natsort_keygen(alg=ns.IGNORECASE) 
 
 
 
@@ -77,6 +75,7 @@ class TxtLib():
 	def clean_txt(self, source, mode = 'mode 1', is_repeat = 0, is_sort = 0, is_enter = 0):
 		all = []
 
+		s = 0
 		if len(source) < 1000:
 			if os.path.exists(source):
 				src = self.get_txt_content(source)
@@ -84,6 +83,7 @@ class TxtLib():
 					return -1
 			else: s = 1
 		else: s = 1
+
 		if s ==1:
 			src = source
 			#src = src.replace('\n', '\n \n')

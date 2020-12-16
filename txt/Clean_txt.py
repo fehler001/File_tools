@@ -166,8 +166,9 @@ class CreateFrameClean():
 		if preview == True:
 			self.CleanTextDown.delete("1.0", "end")
 			f = open(src, 'r', encoding = 'utf-8')
-			cont = f.read()
-			f.close()
+			cont = self.tl.get_txt_content(src, split = 'wholetext')
+			if cont == -1:
+				return
 			new_cont = self.tl.clean_txt(cont, mode = mode, is_repeat = is_repeat, is_sort = is_sort, is_enter = is_enter)
 			if new_cont == -1:
 				return
@@ -177,13 +178,22 @@ class CreateFrameClean():
 			return
 
 		if not os.path.isdir(dst):
-			messagebox.showerror ("Warrning", "_____PATH ERROR_____")
+			messagebox.showerror ("Warrning", "_____PATH ERROR_____\n\nPath should be a direction( a folder )")
 			return
 
-		new_txt = dst + '/' + 'new' + src[ src.rfind('/') + 1 : ]
+		pinfo = self.bl.get_path_info(src)
+		n = 1
+		switch = 1
+		while switch:
+			new_txt = dst + '/' + pinfo['name']  + '(' + str(n) + ')' + pinfo['ext']
+			if os.path.exists(new_txt):
+				n = n + 1
+			else:
+				switch = 0
+		
 		new_cont = self.tl.clean_txt(src, mode = mode, is_repeat = is_repeat, is_sort = is_sort, is_enter = is_enter)
 		if new_cont == -1:
-				return
+			return
 		f = open(new_txt, 'w', encoding = 'utf-8')
 		for line in new_cont:
 			if line == '':

@@ -145,9 +145,16 @@ class CreateFrameRefine():
 		tmp = messagebox.askquestion("Excute Refine", "There is no going back !\n\n        Are you sure?")
 		if tmp != 'yes':
 			return
-		self.fl.refine_enfold(folders)
+		keep_name = self.RefineRadioKeepNameVar.get()
+		self.fl.refine_enfold(folders, keep_name = keep_name)
 		self.RefineTextDownFolders.delete("1.0", "end")
 		self.RefineTextDownFolders.insert(INSERT, "Finished")
+
+
+
+
+	def RefineRadioKeepNameToggle(self):
+		pass
 
 
 
@@ -231,6 +238,16 @@ Walk through the root direction recursively, detect the folloing conditions and 
 		
 		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
 		self.RefineLabelBlank.pack(side = TOP, fill = X)
+
+		self.RefineRadioKeepNameVar = StringVar()
+		self.RefineRadioKeepName = ttk.Radiobutton(self.RefineFrameRight, text = 'Keep Name = Outside  ', 
+					variable = self.RefineRadioKeepNameVar, value = 'outside', command = self.RefineRadioKeepNameToggle)
+		self.RefineRadioKeepName.pack(fill = X, side = TOP)
+		self.RefineRadioKeepName.invoke()
+
+		self.RefineRadioZip = ttk.Radiobutton(self.RefineFrameRight, text = "Keep Name = Inside", 
+					variable = self.RefineRadioKeepNameVar, value = 'inside', command = self.RefineRadioKeepNameToggle)
+		self.RefineRadioZip.pack(fill = X, side = TOP)
 
 		self.RefineButtonRefine = ttk.Button(self.RefineFrameRight, text = "Refine", command = self.Refine) #bg = "#e1e1e1"
 		self.RefineButtonRefine.pack(side = TOP, fill = X)

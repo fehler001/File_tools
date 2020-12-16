@@ -289,6 +289,7 @@ class CreateFrameBrute():
 			d = d.split('\n')
 		else:		#  is_custom == 0
 			d = self.BruteTextUp.get()
+			#d = self.bl.ascii
 
 		if d == '':
 			messagebox.showerror ("Warrning", "_____DICT ERROR_____")
@@ -319,9 +320,9 @@ class CreateFrameBrute():
 			for i2 in range(core):
 				password = pa
 				pa, newpara = self.rl.unrar_brute_get_parameter(rar = rar, 
-													dir = dir, unrar = unrar, dict = d, outset = pa, ii0 = ii0, is_custom_dict = is_custom, is_rar = is_rar)
+							dir = dir, unrar = unrar, dict = d, outset = pa, ii0 = ii0, is_custom_dict = is_custom, is_rar = is_rar)
 				if is_rar == 'zip':
-						continue
+					continue
 				if is_show_info == 0:
 					p.apply_async( self.rl.unrar_brute_run, args = (newpara,) )
 					pass
@@ -367,7 +368,7 @@ class CreateFrameBrute():
 		self.BruteFrameUpLeft = ttk.LabelFrame(self.BruteRoot, text = "Windows Only")
 		self.BruteFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.46)
 
-		# start Frame1
+		## start Frame1
 		self.BruteFrame1 = ttk.Frame(self.BruteFrameUpLeft)
 		self.BruteFrame1.pack(side = TOP, fill = X)
 
@@ -384,9 +385,9 @@ class CreateFrameBrute():
 		self.BruteEntryRarSource.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.BruteScrollbarXRarSource.config( command = self.BruteEntryRarSource.xview )
-		# end Frame1
+		## end Frame1
 
-		# start Frame3
+		## start Frame3
 		self.BruteFrame3 = ttk.Frame(self.BruteFrameUpLeft)
 		self.BruteFrame3.pack(side = TOP, fill = X)
 
@@ -403,9 +404,9 @@ class CreateFrameBrute():
 		self.BruteEntryUnrar.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.BruteScrollbarXUnrar.config( command = self.BruteEntryUnrar.xview )
-		# end Frame3
+		## end Frame3
 
-		# start Frame2
+		## start Frame2
 		self.BruteFrame2 = ttk.Frame(self.BruteFrameUpLeft)
 		self.BruteFrame2.pack(side = TOP, fill = X)
 
@@ -422,7 +423,7 @@ class CreateFrameBrute():
 		self.BruteEntryDictPath.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.BruteScrollbarXDictPath.config( command = self.BruteEntryDictPath.xview )
-		# end Frame2
+		## end Frame2
 
 		self.BruteLabelDescription = ttk.Label(self.BruteFrameUpLeft, text = '\
 If not using custom dict, do not set path with "space" and with the exception of "a-Z0-9"\n\
@@ -437,7 +438,7 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		self.BruteFrameDownLeft = ttk.Frame(self.BruteRoot)
 		self.BruteFrameDownLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.47, relheight = 0.52)
 		
-		# start down left frame 1
+		## start down left frame 1
 		self.BruteFrameDownLeft_1 = ttk.LabelFrame(self.BruteFrameDownLeft, text = r'Default dict ( Being used by brute force crack, could be modified )')
 		self.BruteFrameDownLeft_1.place(relx = 0.0, relwidth = 1.0, rely = 0.0, relheight = 0.20)
 
@@ -448,9 +449,9 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		self.BruteTextUp.pack(fill = BOTH)
 		
 		self.BruteScrollbarXUpText.config( command = self.BruteTextUp.xview )
-		# end down left frame 1
+		## end down left frame 1
 
-		# start down left frame 2
+		## start down left frame 2
 		self.BruteFrameDownLeft_2 = ttk.LabelFrame(self.BruteFrameDownLeft, text = r'Progress ( where big loop proceeded, could be fill in "Crack Start From" and crack next time )')
 		self.BruteFrameDownLeft_2.place(relx = 0.0, relwidth = 1.0, rely = 0.25, relheight = 0.75)
 
@@ -465,8 +466,7 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		
 		self.BruteScrollbarXDownText.config( command = self.BruteTextDown.xview )
 		self.BruteScrollbarYDownText.config( command = self.BruteTextDown.yview )
-		# end down left frame 2
-
+		## end down left frame 2
 		# end down left Frame
 		
 		# start right frame

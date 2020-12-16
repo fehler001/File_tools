@@ -601,7 +601,7 @@ class CreateFrameRename():
 		self.RenameFrameRight = ttk.LabelFrame(self.RenameRoot, text = "")
 		self.RenameFrameRight.place(relx = 0.7, relwidth = 0.29, rely = 0.01, relheight = 0.98)
 
-		# start RenameFrameRight_00
+		## start RenameFrameRight_00
 		self.RenameFrameRight_00 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_00.pack(fill = X, side = TOP)
 
@@ -610,9 +610,9 @@ class CreateFrameRename():
 
 		self.RenameButtonAddOneFolder = ttk.Button(self.RenameFrameRight_00, text = "Add One Folder", command = self.RenameAddOneFolder) 
 		self.RenameButtonAddOneFolder.pack(fill = X, side = LEFT, expand = True)
-		# end RenameFrameRight_00
+		## end RenameFrameRight_00
 
-		# start RenameFrameRight_01
+		## start RenameFrameRight_01
 		self.RenameFrameRight_01 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_01.pack(fill = X, side = TOP) 
 						
@@ -625,10 +625,10 @@ class CreateFrameRename():
 		#self.RenameButtonSortUp = ttk.Button(self.RenameFrameRight_01, text = "Sort Upbox", command = self.RenameCheckRepeatUp ) 
 		#self.RenameButtonSortUp.pack(fill = X, side = LEFT, expand = True)
 		
-		# end RenameFrameRight_01
+		## end RenameFrameRight_01
 
 
-		# start RenameFrameRight_1
+		## start RenameFrameRight_1
 		self.RenameFrameRight_1 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_1.pack(fill = X, side = TOP)
 
@@ -643,9 +643,9 @@ class CreateFrameRename():
 											variable = self.RenameCheckRecurVar, onvalue = 1, offvalue = 0) 
 		self.RenameCheckRecur.pack(fill = X, side = LEFT)
 		self.RenameCheckRecurVar.set(0)
-		# end RenameFrameRight_1
+		## end RenameFrameRight_1
 
-		# start RenameFrameRight_0
+		## start RenameFrameRight_0
 		self.RenameFrameRight_0 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_0.pack(fill = X, side = TOP)
 
@@ -654,7 +654,7 @@ class CreateFrameRename():
 
 		self.RenameButtonAddDirection = ttk.Button(self.RenameFrameRight_0, text = "Add Direction", command = self.RenameAddDirection) 
 		self.RenameButtonAddDirection.pack(fill = X, side = LEFT, expand = True)
-		# end RenameFrameRight_0
+		## end RenameFrameRight_0
 		
 		values = ('digit: 1', 'digit: 2', 'digit: 3', 'digit: 4', 'digit: 5', 'digit: 6', 'digit: 7', 'digit: 8', 'digit: 9', 'digit: 10', 'digit: 20', 'digit: 99', )
 
@@ -672,7 +672,7 @@ class CreateFrameRename():
 		self.RenameComboOutset.current(1) 
 		self.RenameComboOutset.pack(fill = X, side = TOP, pady = 2)
 
-		# start RenameFrameRight_7
+		## start RenameFrameRight_7
 		self.RenameFrameRight_7 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_7.pack(fill = X, side = TOP)
 
@@ -686,7 +686,7 @@ class CreateFrameRename():
 		
 		self.RenameButtonRenameByOrdinal = ttk.Button(self.RenameFrameRight_7, text = "Rename By Ordinal", command = self.RenameByOrdinal)
 		self.RenameButtonRenameByOrdinal.pack(fill = X, side = LEFT, expand = True)
-		# end RenameFrameRight_7
+		## end RenameFrameRight_7
 		
 		self.RenameLabelInsertString = ttk.Label(self.RenameFrameRight, text = "Insert: String", anchor = W)
 		self.RenameLabelInsertString.pack(side = TOP, fill = X)
@@ -700,7 +700,7 @@ class CreateFrameRename():
 		self.RenameEntryInsertPosition = ttk.Entry(self.RenameFrameRight, font = self.ft)
 		self.RenameEntryInsertPosition.pack(side = TOP, fill = X)
 
-		# start RenameFrameRight_2
+		## start RenameFrameRight_2
 		self.RenameFrameRight_2 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_2.pack(fill = X, side = TOP)
 		
@@ -709,9 +709,9 @@ class CreateFrameRename():
 		
 		self.RenameButtonInsertOrdinal = ttk.Button(self.RenameFrameRight_2, text = "Insert Ordinal", command = self.InsertOrdinal)
 		self.RenameButtonInsertOrdinal.pack(fill = X, side = LEFT, expand = True)
-		# end RenameFrameRight_2
+		## end RenameFrameRight_2
 		
-		# start RenameFrameRight_3
+		## start RenameFrameRight_3
 		self.RenameFrameRight_3 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_3.pack(fill = X, side = TOP)
 
@@ -723,7 +723,7 @@ class CreateFrameRename():
 											variable = self.RenameCheckDeleteOldVar, onvalue = 1, offvalue = 0) 
 		self.RenameCheckDeleteOld.pack(fill = X, side = LEFT, expand = True)
 		self.RenameCheckDeleteOldVar.set(0)
-		# end RenameFrameRight_3
+		## end RenameFrameRight_3
 		
 		self.RenameEntryReplaceOriginal = ttk.Entry(self.RenameFrameRight, font = self.ft, )
 		self.RenameEntryReplaceOriginal.pack(side = TOP, fill = X)
@@ -738,7 +738,7 @@ class CreateFrameRename():
 		self.RenameEntryReplaceSubstitute = ttk.Entry(self.RenameFrameRight, font = self.ft)
 		self.RenameEntryReplaceSubstitute.pack(side = TOP, fill = X)
 
-		# start RenameFrameRight_6
+		## start RenameFrameRight_6
 		self.RenameFrameRight_6 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_6.pack(fill = X, side = TOP)
 
@@ -752,11 +752,11 @@ class CreateFrameRename():
 		
 		self.RenameButtonInsertEnd = ttk.Button(self.RenameFrameRight_6, text = "Replace", command = self.Replace)
 		self.RenameButtonInsertEnd.pack(fill = X, side = LEFT, expand = True)
-		# end RenameFrameRight_6
+		## end RenameFrameRight_6
 
 		
 
-		# start RenameFrameRight_10
+		## start RenameFrameRight_10
 		self.RenameFrameRight_10 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_10.pack(fill = X, side = TOP)
 
@@ -771,7 +771,7 @@ class CreateFrameRename():
 		self.RenameLabelP1 = ttk.Label(self.RenameFrameRight_10, text = "Filename Left Position", anchor = W)
 		self.RenameLabelP1.pack(fill = X, side = LEFT)
 
-		# start RenameFrameRight_11
+		## start RenameFrameRight_11
 		self.RenameFrameRight_11 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_11.pack(fill = X, side = TOP)
 
@@ -785,9 +785,9 @@ class CreateFrameRename():
 
 		self.RenameLabelP2 = ttk.Label(self.RenameFrameRight_11, text = "Filename Right Position", anchor = W)
 		self.RenameLabelP2.pack(fill = X, side = LEFT)
-		# end RenameFrameRight_10
+		## end RenameFrameRight_10
 
-		# start RenameFrameRight_4
+		## start RenameFrameRight_4
 		self.RenameFrameRight_4 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_4.pack(fill = X, side = TOP)
 
@@ -796,7 +796,7 @@ class CreateFrameRename():
 
 		self.RenameButtonDeleteMiddle = ttk.Button(self.RenameFrameRight_4, text = "Delete Middle", command = self.DeleteMiddle)
 		self.RenameButtonDeleteMiddle.pack(fill = X, side = LEFT, expand = True)
-		# end RenameFrameRight_4
+		## end RenameFrameRight_4
 
 		self.RenameButtonRevoke = ttk.Button(self.RenameFrameRight, text = "Revoke", command = self.Revoke)
 		self.RenameButtonRevoke.pack(fill = X, side = BOTTOM)

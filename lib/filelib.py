@@ -272,11 +272,21 @@ class FileLib():
 				continue
 			
 			if match_pos == 'match all':
+				n = 0
+				m_list = []
 				for m in matchs:
+					if n == 0:
+						m_list.append(m)
+					if n > 0:
+						if m in m_list:
+							continue
+						else:
+							m_list.append(m)
 					if substitute != r'\n':
 						pinfo['filename'] = pinfo['filename'].replace(m, substitute)
 					else:
-						pinfo['filename'] = pinfo['filename'].replace(m, '\n')
+						pinfo['filename'] = pinfo['filename'].replace(m, '\n')      # no meaning, just in case
+					n = n + 1
 			else:
 				pos = None
 				if match_pos == 'match first': pos = 0
@@ -376,21 +386,24 @@ class FileLib():
 
 
 	# see 'Refine Enfold' description
-	def refine_enfold(self, folders):
+	def refine_enfold(self, folders, keep_name = 'outside'):
 		for i in range(len(folders)):
-			if len(folders[i]) < 5:
+			if len(folders[i]) < 4:
 				continue
 			r = random.random()
-			r = str(r)
-			f = folders[i]
-			i = f.rfind(r'/')
-			i2 = f[:i].rfind(r'/')
-			f2 = f + r
-			os.rename(f, f2)
-			dst = f[ : i2] 
-			shutil.move(f2, dst)
-			os.rmdir(f[:i])
-			os.rename(dst + f[i: ] + r, dst + f[i: ] )
+			r = str(r)                                # r = 0.31415926
+			f = folders[i]                         # f  = d:/a/b         x.txt, y.mp4 in it
+			i1 = f.rfind(r'/')                     #               i1
+			i2 = f[    : i1 ].rfind(r'/')         #           i2    
+			f2 = f + r	                             # f2 = d:/a/b0.31415926
+			os.rename(f, f2)                    # d:/a/b  ->  d:/a/b0.31415926          x.txt, y.mp4 in it
+			dst = f[    : i2 ]                      # dst = d:/
+			shutil.move(f2, dst)              # now  d:/b0.31415926      x.txt, y.mp4 in it  
+			os.rmdir( f[    : i1 ] )              # delete  d:/a
+			if keep_name == 'inside':
+				os.rename(dst + f[ i1 :    ] + r, dst + f[ i1 :    ] )   #  d:/b0.31415926    ->    d:/b
+			if keep_name == 'outside':
+				os.rename(dst + f[ i1 :    ] + r, f[    : i1 ] )   #  d:/b0.31415926    ->    d:/a
 
 
 
@@ -705,33 +718,56 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 
 
-	def copy_folder(self, path_from, path_to, is_overwrite = 0):
+	def copy_folder(self, path_from, path_to, is_overwrite = 0, is_ask = 0, is_showinfo = 0):
 		#existed = self.find_same_folder_strctrue(src = path_from, dst = path_to, is_subfolder_with_same_name = 0)
 		#print(existed)
 		#self.delete_list(list = existed, including_read_only = 1, skip_error = 0)
-		
+		if is_ask == 1:
+			tmp = messagebox.askquestion("This might completely overwrite your files!",
+			"Still, do you want to do this?\n\n" +
+			'Copy from:\n\n' + \
+			path_from + '\n\n' + \
+		       'To:\n\n' + \
+			path_to)
+			if tmp == 'no':
+				return
+
+		n1=0
+		n2=0
 		items = self.collect_files_and_folders(path = path_from, is_add_file = 1, is_add_folder = 1, is_recur = 1)
+													# get all folders and files, all folders will be got at first
+		for item in items:								# go through files and folders
+			new_item = item.replace(path_from, path_to)		# make a new path as "copy to path"
 		
-		for item in items:
-			new_item = item.replace(path_from, path_to)
-		
-			if os.path.isdir(item):
-				if not os.path.exists(new_item):
-					if os.listdir(item) == []:
-						shutil.copytree(item, new_item)
-				continue
-		
-			parent = new_item[ : new_item.rfind('/')]
+			if os.path.isdir(item):							# if "copy from path" is a folder
+				if not os.path.exists(new_item):					# if "copy to folder" not exist
+					if os.listdir(item) == []:							# if "copy from folder" is empty ( if not empty, will be created then)
+						shutil.copytree(item, new_item)					# create a new folder in name of "copy to path"
+						n1 = n1 + 1
+				continue									# else: go next item
+														# if "copy from path" is a file
+			parent = new_item[ : new_item.rfind('/')]			# get "copy to file" parent path
 			
-			if not os.path.exists(parent):
-				os.makedirs(parent)
-			if os.path.exists(new_item):
-				if is_overwrite == 0:
+			if not os.path.exists(parent):						# if "copy to file" parent path not exist
+				os.makedirs(parent)							# create "copy to file" parent folder recursively
+			if os.path.exists(new_item):						# if "copy to file" parent path exist
+				if is_overwrite == 0:							# if not overwrite
 					messagebox.showerror ("Error", new_item + "\n\nAlready exist")
-					return -1
-				else:
-					os.unlink(new_item)
-			shutil.copy2(item, new_item)
+					return -1										# return
+				else:											# if overwrite
+					os.unlink(new_item)							#delete  original existed "copy to file"
+			shutil.copy2(item, new_item)						# copy "copy from file" to "copy to file"
+			n2 = n2 + 1
+
+		if is_showinfo == 1:
+			messagebox.showinfo("Complete", \
+			'Copy from:\n\n' + \
+			path_from + '\n\n' + \
+		       'To:\n\n' + \
+			path_to + '\n\n\n' + \
+			str(n1) + ' empty folders\n\n' + \
+			str(n2) + ' files\n\n' + \
+			'Totally copied')
 
 
 

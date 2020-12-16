@@ -17,6 +17,7 @@ import time
 import datetime
 import binascii
 import hashlib
+import urllib
 
 # third party
 import chardet
@@ -223,6 +224,8 @@ class BaseLib():
 		if enc == 'ascii-hex':
 			b = bytes(str, 'ascii')
 			return  binascii.hexlify(b)   # binascii.hexlify(b'A') = hex(ord('A'))
+		if enc == 'quote':
+			return urllib.parse.quote(str)
 		if enc == 'html':
 			return html.escape(str)
 		if enc == 'base64':
@@ -251,6 +254,8 @@ class BaseLib():
 			return int(str)
 		if enc == 'ascii-unhex':
 			return  binascii.unhexlify(str)     # binascii.unhexlify(41) = chr(int(0x41))
+		if enc == 'unquote':
+			return urllib.parse.unquote(str)
 		if enc == 'html':
 			return html.unescape(str)
 		if enc == 'base64':

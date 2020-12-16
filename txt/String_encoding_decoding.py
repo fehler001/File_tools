@@ -422,8 +422,8 @@ class CreateFrameStr():
 		values = ('utf-8', 'utf-16', 'utf-32', 'raw_unicode_escape', 'unicode_escape', 'ascii', 
 			'gb2312', 'big5', 'gbk', 'gb18030', 'shift-jis', 'shift_jis_2004', 'shift_jisx0213', 
 			'', "transcode not supported below here", 'base64', 'html')
-		enc = values + ('hex', 'binary', 'ascii-hex', 'ord')
-		dec = values + ('int', 'ascii-unhex', 'chr')
+		enc = values + ('quote', 'hex', 'binary', 'ascii-hex', 'ord')
+		dec = values + ('unquote', 'int', 'ascii-unhex', 'chr')
 
 		self.StrComboFromVar = StringVar()
 		self.StrComboFrom = ttk.Combobox(self.StrFrameRight, textvariable = self.StrComboFromVar)
