@@ -13,6 +13,9 @@ from multiprocessing import cpu_count
 import io
 import zipfile
 
+# third party
+import pyzipper
+
 
 try:
 	import lib.baselib
@@ -74,7 +77,8 @@ class RarLib():
 
 
 
-	def unrar_brute_get_parameter(self, rar, dir = 'd:\\', unrar = 'd:\\u.exe', dict = None, outset = 'a', ii0 = 1, is_custom_dict = 0, is_rar = 'rar'):
+	def unrar_brute_get_parameter(self, rar, dir = 'd:\\', unrar = 'd:\\u.exe', dict = None, prefix = '', suffix = '', outset = 'a', 
+																		ii0 = 1, is_custom_dict = 0, is_rar = 'rar'):
 		self.startupinfo = subprocess.STARTUPINFO()
 		self.startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
@@ -87,14 +91,17 @@ class RarLib():
 		if is_custom_dict == 1:
 			pw = self.unrar_escape_cmd(pa)
 			if is_rar == 'rar':
-				newpara =  '"'+unrar+'"'+ ' e ' +  '-p'+pw + ' ' + '"'+rar+'"' + ' ' + '"'+dir+'"'
+				newpara =  '"'+unrar+'"'+ ' e ' +  '-p'+prefix+pw+suffix + ' ' + '"'+rar+'"' + ' ' + '"'+dir+'"'
 			elif is_rar == '7z':
-				newpara =  '"'+unrar+'"'+ ' x ' + '-o'+'"'+dir+'"' + ' ' + '"'+rar+'"'+ ' ' + '-p'+pw + ' ' + '-aos' 
+				newpara =  '"'+unrar+'"'+ ' x ' + '-o'+'"'+dir+'"' + ' ' + '"'+rar+'"'+ ' ' + '-p'+prefix+pw+suffix + ' ' + '-aos' 
 			elif is_rar == 'zip':
-				zf=zipfile.ZipFile(rar)
-				pw = self.bl.str_encode(pa, enc = 'utf-8')
-				try: zf.extractall(path = dir, pwd = pw)
-				except: pass
+				with pyzipper.AESZipFile(rar, 'r') as zip_file:
+						try:
+							zip_file.pwd = self.bl.str_encode(prefix+pa+suffix, enc = 'utf-8')
+							zip_file.extractall(path = dir)
+							newpara = 0
+						except:
+							pass
 				newpara = ''
 
 			if pa != dict[-1]:
@@ -105,16 +112,18 @@ class RarLib():
 			for i0 in range(ii0):
 				pw = self.unrar_escape_cmd(pa)
 				if is_rar == 'rar':
-					para =  unrar + ' e ' +  '-p'+pw + ' ' + rar + ' ' + dir
+					para =  unrar + ' e ' +  '-p'+prefix+pw+suffix + ' ' + rar + ' ' + dir
 				elif is_rar == '7z':
-					para =  '"'+unrar+'"'+ ' x ' + '-o'+dir + ' ' + rar + ' ' + '-p'+pw
+					para =  '"'+unrar+'"'+ ' x ' + '-o'+dir + ' ' + rar + ' ' + '-p'+prefix+pw+suffix
 				elif is_rar == 'zip':
-					zf=zipfile.ZipFile(rar)
-					pw = self.bl.str_encode(pa, enc = 'utf-8')
-					try: zf.extractall(path = dir, pwd = pw)
-					except: pass
+					with pyzipper.AESZipFile(rar, 'r') as zip_file:
+						try:
+							zip_file.pwd = self.bl.str_encode(prefix+pa+suffix, enc = 'utf-8')
+							zip_file.extractall(path = dir)
+							newpara = 0
+						except:
+							pass
 					para = ''
-
 				newpara = newpara + '&' + para
 				pa = self.bl.increase_one_by_dict(pa, dict)			
 

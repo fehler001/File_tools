@@ -204,7 +204,7 @@ class CreateFrameFind():
 		self.FindFrameUpLeft = ttk.LabelFrame(self.FindRoot, text = "")
 		self.FindFrameUpLeft.place(relx = 0.01, relwidth = 0.69, rely = 0.01, relheight = 0.48)
 
-		# start Frame1
+		## start Frame1
 		self.FindFrame1 = ttk.Frame(self.FindFrameUpLeft)
 		self.FindFrame1.pack(side = TOP, fill = X)
 
@@ -221,9 +221,9 @@ class CreateFrameFind():
 		self.FindEntrySource.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.FindScrollbarXSource.config( command = self.FindEntrySource.xview )
-		# end Frame1
+		## end Frame1
 
-		# start Frame2
+		## start Frame2
 		self.FindFrame2 = ttk.Frame(self.FindFrameUpLeft)
 		self.FindFrame2.pack(side = TOP, fill = X)
 
@@ -240,7 +240,7 @@ class CreateFrameFind():
 		self.FindEntryDestination.dnd_bind('<<Drop>>', self.drop_in_entry)
 
 		self.FindScrollbarXDestination.config( command = self.FindEntryDestination.xview )
-		# end Frame2
+		## end Frame2
 
 		self.FindLabelDescription = ttk.Label(self.FindFrameUpLeft, text = '\
 src  =  folder A { a.txt, b.txt, folder B { c.mp4 } }\n\

@@ -9,6 +9,7 @@ import stat
 import pprint
 import time
 import re
+import copy
 
 try:
 	import lib.baselib
@@ -131,6 +132,8 @@ class FileLib():
 			return -1
 		
 
+
+
 	def collect_files_and_folders(self, path, is_add_file = 1, is_add_folder = 0, is_recur = 0):
 		all = []
 		if path[-1:] == r'/' and len(path) > 4:
@@ -175,6 +178,109 @@ class FileLib():
 
 
 
+	def get_all_pinfo(self, path):
+		all = []
+		files = self.collect_files_and_folders(path = path, is_add_file = 1, is_add_folder = 0, is_recur = 1)
+		for file in files:
+			all.append( self.bl.get_path_info(file, is_size = 1) )
+		return all
+
+
+
+	# check src, filter and return src files existed in dst (see description in Filter2 UI)
+	def filter2(self, src = '', dst = '', check_name = 0, check_size = 1, case_insensitive = 0, is_reverse = 0, is_filter1 = 0):
+		self.bl.clear_python_cache()
+		all = []
+
+		if self.bl.check_path_exist(src) == -1 or self.bl.check_path_exist(src) == -1:
+			return
+		p_src = self.get_all_pinfo(src)
+		p_dst = self.get_all_pinfo(dst)
+		for ps in p_src:
+			s = 0
+			for pd in p_dst:
+				if check_name == 1:
+					if case_insensitive == 1:
+						if ps['filename'].lower() == pd['filename'].lower():
+							s = 1
+							break
+					else:
+						if ps['filename'] == pd['filename']:
+							s = 1
+							break
+				if check_size == 1:
+					if ps['size'] == pd['size']:
+						s = 1
+						break
+			if is_reverse == 0:
+				if s == 1:
+					all.append( ps['parent'] + '/' + ps['filename'] )
+			else:
+				if s == 0:
+					all.append( ps['parent'] + '/' + ps['filename'] )
+		return all
+
+
+	# return repeat files in src
+	def filter2_same_dir(self, src, check_name = 0, check_size = 1, case_insensitive = 0, checksum = 0):
+		self.bl.clear_python_cache()
+		all = []
+
+		if self.bl.check_path_exist(src) == -1:
+			return
+		p_src = self.get_all_pinfo(src)
+		p_dst = copy.deepcopy(p_src)
+
+		for ps in p_src:
+
+			if checksum == 1:
+				tmp1 = ps['parent'] + '/' + ps['filename']
+				f1 = open(tmp1, 'rb')
+				b1 = f1.read()
+				f1.close()
+				csm_ps = self.bl.get_checksum(b1, 'CRC-32')
+
+			n = 0
+			nd = 0
+			repeat_index = []
+			for pd in p_dst:
+				s = 0
+				if check_name == 1:
+					if case_insensitive == 1:
+						if ps['filename'].lower() == pd['filename'].lower():
+							s = 1
+					else:
+						if ps['filename'] == pd['filename']:
+							s = 1
+				if check_size == 1:
+					if ps['size'] == pd['size']:
+						s = 1
+				if s == 1:
+					all.append( pd['parent'] + '/' + pd['filename'] )
+					n = n + 1
+					repeat_index.append(nd)
+				nd = nd + 1
+			if n == 1:
+				del all[-1]
+			if n > 1:
+				repeat_index.reverse()
+				for i in repeat_index:
+
+					if checksum == 1:
+						tmp2 = p_dst[i]['parent'] + '/' + p_dst[i]['filename']
+						f2 = open(tmp2, 'rb')
+						b2 = f2.read()
+						f2.close()
+						csm_pd = self.bl.get_checksum(b2, 'CRC-32')
+						if csm_ps != csm_pd:
+							all.append(p_dst[i]['parent'] + '/' + p_dst[i]['filename'] + ' (checksum not same)')
+
+					del p_dst[ i ]
+				all.append('------------------------------------------------------------------------')
+		return all
+
+
+
 	# 'c:/1.0-_asd.txt'  =>  'c:/asd.txt'
 	def delete_front_ordinal(self, path, is_under = 0):
 		d = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.']
@@ -198,9 +304,9 @@ class FileLib():
 
 
 	# digit = 3, outset = 1, 'c:/foo/bar.txt', 'c:/foo/barbar.txt'  =>  'c:/foo/001.txt', 'c:/foo/002.txt'
-	def rename_by_ordinal(self, files, digit = 1, outset = 0, interval = 1):
+	def rename_by_ordinal(self, files, digit = 1, outset = 0, interval = 1, repeat = 0):
 		all = []
-		ordinal = self.bl.generate_ordinal( len(files), digit = digit, outset = outset, interval = interval)
+		ordinal = self.bl.generate_ordinal( len(files), digit = digit, outset = outset, interval = interval, repeat = repeat)
 
 		n = 0
 		for file in files:
@@ -367,6 +473,7 @@ class FileLib():
 
 	# see 'Refine Enfold' description
 	def find_enfold(self, path, is_samename = 1):
+		self.bl.clear_python_cache()
 		all = []
 		for root, subfolders, files in os.walk(path):
 				for subfolder in subfolders:
@@ -408,6 +515,7 @@ class FileLib():
 
 
 	def find_empty_folder(self, path):
+		self.bl.clear_python_cache()
 		all = []
 		for root, subfolders, files in os.walk(path):
 				for subfolder in subfolders:
@@ -427,6 +535,7 @@ class FileLib():
 
 	def filter(self, path, include = '', excludes = '', max = '', min = '', including_file = 1, including_folder = 0, \
 case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_extension = 0, is_recur = 1, is_custom_list = 0):
+		self.bl.clear_python_cache()
 		all = []
 		if type(excludes) == str:
 			excludes = [excludes]
@@ -512,6 +621,7 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 	# see 'Find' description
 	def find_same_folder_strctrue(self, src, dst, is_subfolder_with_same_name = 0):
+		self.bl.clear_python_cache()
 		all = []
 		source_collected = []
 		source_collected_replaced = []
@@ -642,6 +752,7 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 	# is_list = 1 means src = one list (files or dirs included) -> collect all names in each item, find all same file in dst
 	def find_files_with_same_name_by_list(self, src, dst, including_file = 1, including_folder = 1, \
 		is_recur_src = 1, is_recur_dst = 1, is_list = 0):
+		self.bl.clear_python_cache()
 		all = []
 		files_src = []
 		if is_list == 0:
@@ -773,6 +884,7 @@ case_insensitive = 0, is_exactly_same = 0, name_max = '', name_min = '', is_exte
 
 
 	def clear_windows_cache(self):
+		self.bl.clear_python_cache()
 		if os.name != 'nt':
 			messagebox.showinfo("error", 'Clear Cache" only supports windows')
 			return

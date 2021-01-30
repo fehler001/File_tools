@@ -169,7 +169,7 @@ class CreateFrameFilter():
 		except:pass
 
 
-	def Filter(self):
+	def Filter(self, is_from_outside = 0, outside_path = []):
 		self.ReadFilterPath()
 		self.FilterSaveEntry()
 		self.FilterTextDownFiles.delete("1.0", "end")
@@ -213,9 +213,15 @@ class CreateFrameFilter():
 
 		includes_second = self.FilterEntryIncludingSecond.get()
 		includes_second = includes_second.split('|')
+
+		if is_from_outside == 1:
+			dir = outside_path
+			is_custom_list = 1
+		else:
+			is_custom_list = 0
 		for i in range(len(includes)):
 			files = self.fl.filter(dir, includes[i], excludes, max, min, including_file, including_folder, case, 
-						  is_exactly_same, name_max, name_min, is_extension, is_recur, is_custom_list = 0)
+						  is_exactly_same, name_max, name_min, is_extension, is_recur, is_custom_list = is_custom_list)
 			if includes_second == ['']:
 				n = 0
 				for file in files:

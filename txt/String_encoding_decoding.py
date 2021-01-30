@@ -183,7 +183,7 @@ class CreateFrameStr():
 		enc = self.bl.guess_encoding_binary(str)
 		self.StrTextDown.insert(INSERT, enc)
 		self.StrTextDown.insert(INSERT, '\n\n')
-		self.StrTextDown.insert(INSERT, "If encoding doesn't in \"To\", you can just type in it\n")
+		self.StrTextDown.insert(INSERT, 'If "encoding" doesn\'t in "To", you can just type into it\n')
 
 
 	def StrEncoding(self):

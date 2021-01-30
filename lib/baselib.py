@@ -19,9 +19,11 @@ import binascii
 import hashlib
 import urllib
 
+
 # third party
 import chardet
 import crcmod
+from streamlit import caching
 
 
 class BaseLib():
@@ -38,6 +40,10 @@ class BaseLib():
 				     'com0. com1', 'com2', 'com3', 'com4', 'com5', 'com6', 'com7', 'com8', 'com9', 
 				     'lpt0', 'lpt1', 'lpt2', 'lpt3', 'lpt4', 'lpt5', 'lpt6', 'lpt7', 'lpt8', 'lpt9']
 
+
+
+	def clear_python_cache(self):
+		caching.clear_cache()
 
 
 	def increase_one_by_dict(self, string, dict):   # e.g.  dict = '123456789'
@@ -147,7 +153,7 @@ class BaseLib():
 		return rst
 
 
-
+	# pass in byte  ( f = open(self.CsumPath, 'rb'), b = f.read() )   , ...input = b,...
 	def get_checksum(self, input, mode):
 		if mode == 'MD5':
 			return self.get_md5(input)
@@ -159,8 +165,6 @@ class BaseLib():
 			return self.get_sha384(input)
 		if mode == 'SHA512':
 			return self.get_sha512(input)
-		if mode == 'MD5':
-			return self.get_md5(input)
 		if mode == 'CRC-8':
 			return self.get_crc(input, 'crc-8')
 		if mode == 'CRC-16':
@@ -357,6 +361,17 @@ class BaseLib():
 
 
 
+	def compare_dir(self, dir1, dir2):
+		p1 = self.get_path_info(dir1)
+		p2 = self.get_path_info(dir2)
+		d1 = p1['parent'] + '/' + p1['filename']
+		d2 = p2['parent'] + '/' + p2['filename']
+		if d1.lower() == d2.lower():
+			return 1
+		else:
+			return 0
+
+
 	def check_path_exist(self, list, isfile = 0):
 		if type(list) == str:
 			list = [list]
@@ -389,15 +404,22 @@ class BaseLib():
 
 
 	# length = 5, digit = 3, outset = 1  =>  [001,002,003,004,005]
-	def generate_ordinal(self, length, digit = 1, outset = 0, interval = 1):
+	def generate_ordinal(self, length, digit = 1, outset = 0, interval = 1, repeat = 0):
 		all = []
 		n = 0 + outset
 		for i in range(length):
 			if n >= 0:
-				all.append( '0'*(digit - len(str(n)) ) + str(n) )
+				tmp =  '0'*(digit - len(str(n)) ) + str(n) 
+				all.append(tmp)
+				
 			else:
-				all.append('-' + '0'*(digit - len(str(n)) + 1) + str(abs(n)) )
+				tmp = '-' + '0'*(digit - len(str(n)) + 1) + str(abs(n)) 
+				all.append(tmp)
+			for i2 in range(repeat):
+				all.append(tmp)
 			n = n + interval
+			
+
 		return all
 
 

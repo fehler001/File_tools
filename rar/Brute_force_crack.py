@@ -67,6 +67,10 @@ class CreateFrameBrute():
 			j['file_tools']['rar']['brute']['entry_feedback'] = 1
 		if not 'entry_ii0' in j['file_tools']['rar']['brute']:
 			j['file_tools']['rar']['brute']['entry_ii0'] = 100
+		if not 'entry_prefix' in j['file_tools']['rar']['brute']:
+			j['file_tools']['rar']['brute']['entry_prefix'] = ''
+		if not 'entry_suffix' in j['file_tools']['rar']['brute']:
+			j['file_tools']['rar']['brute']['entry_suffix'] = ''
 		if not 'entry_outset' in j['file_tools']['rar']['brute']:
 			j['file_tools']['rar']['brute']['entry_outset'] = ''
 		if not 'entry_core' in j['file_tools']['rar']['brute']:
@@ -99,11 +103,15 @@ class CreateFrameBrute():
 		self.BruteRadioRarVar.set(  j['file_tools']['rar']['brute']['radio_rar'] )
 		if self.BruteRadioRarVar.get() == 'rar':
 			self.BruteRadioRar.invoke()
+		elif self.BruteRadioRarVar.get() == 'zip':
+			self.BruteRadioZip.invoke()
 		else:
 			self.BruteRadio7z.invoke()
 		self.BruteEntryii.insert(0, j['file_tools']['rar']['brute']['entry_ii'] )
 		self.BruteEntryFeedback.insert(0, j['file_tools']['rar']['brute']['entry_feedback'] )
 		self.BruteEntryii0.insert(0, j['file_tools']['rar']['brute']['entry_ii0'] )
+		self.BruteEntryPrefix.insert(0, j['file_tools']['rar']['brute']['entry_prefix'] )
+		self.BruteEntrySuffix.insert(0, j['file_tools']['rar']['brute']['entry_suffix'] )
 		self.BruteEntryOutset.insert(0, j['file_tools']['rar']['brute']['entry_outset'] )
 		self.BruteEntryCore.insert(0, j['file_tools']['rar']['brute']['entry_core'] )
 		self.BruteCheckCustomDictVar.set( j['file_tools']['rar']['brute']['check_custom_dict'] )
@@ -137,6 +145,8 @@ class CreateFrameBrute():
 			j['file_tools']['rar']['brute']['entry_ii'] = self.BruteEntryii.get()
 			j['file_tools']['rar']['brute']['entry_feedback'] = self.BruteEntryFeedback.get()
 			j['file_tools']['rar']['brute']['entry_ii0'] = self.BruteEntryii0.get()
+			j['file_tools']['rar']['brute']['entry_prefix'] = self.BruteEntryPrefix.get()
+			j['file_tools']['rar']['brute']['entry_suffix'] = self.BruteEntrySuffix.get()
 			j['file_tools']['rar']['brute']['entry_outset'] = self.BruteEntryOutset.get()
 			j['file_tools']['rar']['brute']['entry_core'] = self.BruteEntryCore.get()
 			j['file_tools']['rar']['brute']['check_custom_dict'] = self.BruteCheckCustomDictVar.get()
@@ -243,6 +253,8 @@ class CreateFrameBrute():
 		if self.bl.check_legit_int(fi) == -1:
 			return
 		fi = int(fi)
+		prefix = self.BruteEntryPrefix.get()
+		suffix = self.BruteEntrySuffix.get()
 		outset = self.BruteEntryOutset.get()
 		core = self.BruteEntryCore.get()
 		if self.bl.check_legit_int(core) == -1:
@@ -320,9 +332,15 @@ class CreateFrameBrute():
 			for i2 in range(core):
 				password = pa
 				pa, newpara = self.rl.unrar_brute_get_parameter(rar = rar, 
-							dir = dir, unrar = unrar, dict = d, outset = pa, ii0 = ii0, is_custom_dict = is_custom, is_rar = is_rar)
-				if is_rar == 'zip':
-					continue
+							dir = dir, unrar = unrar, dict = d, prefix = prefix, suffix = suffix, outset = pa, 
+							ii0 = ii0, is_custom_dict = is_custom, is_rar = is_rar)
+				if is_custom == 1 and is_rar == 'zip':  # in custom password mode, zip file use python internal api, so no multi-threading
+					if newpara != 0:
+						continue
+					else:
+						self.BruteTextDown.insert('1.0', '\n')
+						self.BruteTextDown.insert('1.0', 'Extracting...\nPassword: ' + prefix + password + suffix)
+						return
 				if is_show_info == 0:
 					p.apply_async( self.rl.unrar_brute_run, args = (newpara,) )
 					pass
@@ -330,7 +348,7 @@ class CreateFrameBrute():
 					r, output = self.rl.unrar_brute_run_show_info(newpara)
 					if r == 0:
 						self.BruteTextDown.insert('1.0', '\n')
-						self.BruteTextDown.insert('1.0', 'Extracting...\nPassword: ' + password)
+						self.BruteTextDown.insert('1.0', 'Extracting...\nPassword: ' + prefix + password + suffix)
 						return
 					if output == -1:
 						return
@@ -343,13 +361,13 @@ class CreateFrameBrute():
 			p.join()
 			if (i+1) % fi == 0:
 				self.BruteTextDown.insert('1.0', '\n')
-				self.BruteTextDown.insert('1.0', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S ') + 'big loop' + str(i+1) + ':' + pa)
+				self.BruteTextDown.insert('1.0', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S ') + 'big loop' + str(i+1) + ':' + prefix + pa + suffix)
 			self.root.update()
 			if self.brute_stop == 1:
 				self.brute_stop = 0
 				return
 		self.BruteTextDown.insert('1.0', '\n')
-		self.BruteTextDown.insert('1.0', 'big loop: ' + str(i+1) + '\n' + 'You can fill this in "Crack Start From":' + pa)
+		self.BruteTextDown.insert('1.0', 'big loop: ' + str(i+1) + '\n' + 'You can fill this in "Crack Start From":' + prefix + pa + suffix)
 
 
 
@@ -499,33 +517,77 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 									  command = self.BruteRadioRarToggle)
 		self.BruteRadio7z.pack(fill = X, side = TOP)
 
-		self.BruteLabelii = ttk.Label(self.BruteFrameRight, text = "Big Loop", anchor = W)
-		self.BruteLabelii.pack(side = TOP, fill = X)
+
+		## start right frame 01
+		self.BruteFrameRight_01 = ttk.Frame(self.BruteFrameRight)
+		self.BruteFrameRight_01.pack(fill = X, side = TOP, pady = 1)
+
+		self.BruteEntryii = ttk.Entry(self.BruteFrameRight_01, font = self.ft, width = 8)
+		self.BruteEntryii.pack(side = LEFT, fill = X)
+
+		self.BruteLabelii = ttk.Label(self.BruteFrameRight_01, text = "Big Loop", anchor = W)
+		self.BruteLabelii.pack(side = LEFT, fill = X)
+		## end right frame 01
+
+
+		## start right frame 02
+		self.BruteFrameRight_02 = ttk.Frame(self.BruteFrameRight)
+		self.BruteFrameRight_02.pack(fill = X, side = TOP, pady = 1)
+
+		self.BruteEntryFeedback = ttk.Entry(self.BruteFrameRight_02, font = self.ft, width = 8)
+		self.BruteEntryFeedback.pack(side = LEFT, fill = X)
+
+		self.BruteLabelFeedback = ttk.Label(self.BruteFrameRight_02, text = "Feedback Interval ( number of big loops )", anchor = W)
+		self.BruteLabelFeedback.pack(side = LEFT, fill = X)
+		## end right frame 02
+
+
+		## start right frame 05
+		self.BruteFrameRight_05 = ttk.Frame(self.BruteFrameRight)
+		self.BruteFrameRight_05.pack(fill = X, side = TOP, pady = 1)
+
+		self.BruteEntryii0 = ttk.Entry(self.BruteFrameRight_05, font = self.ft, width = 8)
+		self.BruteEntryii0.pack(side = LEFT, fill = X)
+
+		self.BruteLabelii0 = ttk.Label(self.BruteFrameRight_05, text = "Inside Loop ( loop inside big loop, set 1 - 250 )", anchor = W)
+		self.BruteLabelii0.pack(side = LEFT, fill = X)
+		## end right frame 05
+
+		self.BruteLabelii0 = ttk.Label(self.BruteFrameRight, text = '( ↑ use "Show Info" to see how much you could set )', anchor = W)
+		self.BruteLabelii0.pack(side = TOP, fill = X)	
 		
-		self.BruteEntryii = ttk.Entry(self.BruteFrameRight, font = self.ft)
-		self.BruteEntryii.pack(fill = X)
-
-		self.BruteLabelFeedback = ttk.Label(self.BruteFrameRight, text = "Feedback Interval ( number of big loops )", anchor = W)
-		self.BruteLabelFeedback.pack(side = TOP, fill = X)
-		
-		self.BruteEntryFeedback = ttk.Entry(self.BruteFrameRight, font = self.ft)
-		self.BruteEntryFeedback.pack(fill = X)
 
 
-		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight)
+		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight, anchor = W)
 		self.BruteLabelBlank.pack(side = TOP, fill = X)
 
-		self.BruteLabelii0 = ttk.Label(self.BruteFrameRight, text = "Inside Loop ( loop inside big loop, set 1 - 250 )", anchor = W)
-		self.BruteLabelii0.pack(side = TOP, fill = X)
-
-		self.BruteLabelii0 = ttk.Label(self.BruteFrameRight, text = '( use "Show Info" to see how much you could set )', anchor = W)
-		self.BruteLabelii0.pack(side = TOP, fill = X)
-
-		self.BruteEntryii0 = ttk.Entry(self.BruteFrameRight, font = self.ft)
-		self.BruteEntryii0.pack(fill = X)	
-
-		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight)
+		self.BruteLabelBlank = ttk.Label(self.BruteFrameRight, text = "If you don't want to use prefix or suffix, please leave blank", anchor = W)
 		self.BruteLabelBlank.pack(side = TOP, fill = X)
+
+
+		## start right frame 03
+		self.BruteFrameRight_03 = ttk.Frame(self.BruteFrameRight)
+		self.BruteFrameRight_03.pack(fill = X, side = TOP, pady = 1)
+
+		self.BruteEntryPrefix = ttk.Entry(self.BruteFrameRight_03, font = self.ft, width = 15)
+		self.BruteEntryPrefix.pack(side = LEFT, fill = X)
+
+		self.BruteLabelPrefix = ttk.Label(self.BruteFrameRight_03, text = 'Prefix(pass will be like "pre001")', anchor = W)
+		self.BruteLabelPrefix.pack(side = LEFT, fill = X)
+		## end right frame 03
+
+
+		## start right frame 04
+		self.BruteFrameRight_04 = ttk.Frame(self.BruteFrameRight)
+		self.BruteFrameRight_04.pack(fill = X, side = TOP, pady = 1)
+
+		self.BruteEntrySuffix = ttk.Entry(self.BruteFrameRight_04, font = self.ft, width = 15)
+		self.BruteEntrySuffix.pack(side = LEFT, fill = X)
+
+		self.BruteLabelSuffix = ttk.Label(self.BruteFrameRight_04, text = 'Suffix(pass will be like "001suffix")', anchor = W)
+		self.BruteLabelSuffix.pack(side = LEFT, fill = X)
+		## end right frame 03
+							   
 
 		self.BruteLabelOutset = ttk.Label(self.BruteFrameRight, text = "Crack Start From ( if ascii, 'a' or '1000a' or other )", anchor = W)
 		self.BruteLabelOutset.pack(side = TOP, fill = X)
@@ -536,11 +598,18 @@ To get "UnRAR.exe", go to "https://www.rarlab.com/rar_add.htm", download "UnRAR 
 		self.BruteButtonRestoreDefault = ttk.Button(self.BruteFrameRight, text = "Restore Default dict", command = self.BruteRestoreDefaultDict)
 		self.BruteButtonRestoreDefault.pack(side = TOP, fill = X)
 
-		self.BruteLabelCore = ttk.Label(self.BruteFrameRight, text = "Number of Cores ( set max could be harm for cpu )", anchor = W)
-		self.BruteLabelCore.pack(side = TOP, fill = X)
-							   
-		self.BruteEntryCore = ttk.Entry(self.BruteFrameRight, font = self.ft)
-		self.BruteEntryCore.pack(fill = X)
+
+		## start right frame 06
+		self.BruteFrameRight_06 = ttk.Frame(self.BruteFrameRight)
+		self.BruteFrameRight_06.pack(fill = X, side = TOP, pady = 1)
+
+		self.BruteEntryCore = ttk.Entry(self.BruteFrameRight_06, font = self.ft, width = 4)
+		self.BruteEntryCore.pack(side = LEFT, fill = X)
+
+		self.BruteLabelCore = ttk.Label(self.BruteFrameRight_06, text = "Number of Cores ( set max could be harm for cpu )", anchor = W)
+		self.BruteLabelCore.pack(side = LEFT, fill = X)
+		## end right frame 06
+
 
 		self.BruteCheckCustomDictVar = IntVar()
 		self.BruteCheckCustomDict = ttk.Checkbutton(self.BruteFrameRight, text = 'Using Custom dict ( set dict path first )', \

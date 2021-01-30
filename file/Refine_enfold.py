@@ -232,9 +232,6 @@ Walk through the root direction recursively, detect the folloing conditions and 
 				
 		self.RefineButtonDetect = ttk.Button(self.RefineFrameRight, text = "Detect", command = self.RefineDetect) 
 		self.RefineButtonDetect.pack(fill = X, side = TOP)
-
-		self.RefineLabelCache = ttk.Label(self.RefineFrameRight, text = '"Detect" not functioned?  Try "Clear Cache"')
-		self.RefineLabelCache.pack(fill = X, side = TOP)
 		
 		self.RefineLabelBlank = ttk.Label(self.RefineFrameRight)
 		self.RefineLabelBlank.pack(side = TOP, fill = X)

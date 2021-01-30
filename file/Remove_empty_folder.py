@@ -218,9 +218,6 @@ xscrollcommand = self.RemoveScrollbarXDownFolders.set, yscrollcommand = self.Rem
 		self.RemoveButtonDetect = ttk.Button(self.RemoveFrameRight, text = "Detect", command = self.RemoveDetect) 
 		self.RemoveButtonDetect.pack(fill = X, side = TOP)
 
-		self.RemoveLabelCache = ttk.Label(self.RemoveFrameRight, text = '"Detect" not functioned?  Try "Clear Cache"')
-		self.RemoveLabelCache.pack(fill = X, side = TOP)
-
 		self.RemoveLabelBlank = ttk.Label(self.RemoveFrameRight)
 		self.RemoveLabelBlank.pack(side = TOP, fill = X)
 

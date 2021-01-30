@@ -43,6 +43,10 @@ import chardet
 import natsort
 from natsort import natsort_keygen, ns
 import crcmod
+import pyzipper
+import streamlit
+from streamlit import caching
+
 
 #project_dir=os.path.dirname(__file__)
 #sys.path.append(project_dir)  
@@ -61,7 +65,7 @@ class Share():
 		super().__init__()
 
 		self.RootWidth = 1000
-		self.RootHeight = 615
+		self.RootHeight = 625
 		if os.name == 'nt':
 			self.LogPath = r"C:\temp\File_tools.json"
 			self.LogPathBackup = r'C:\Windows\Temp\File_tools_backup.json'
@@ -287,11 +291,12 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 	def help(self):
 		#print(StockText.TextUpTemp)
 		self.help = Toplevel(self.root)
-		self.help.geometry('860x240')
+		self.help.geometry('860x260')
 		self.help.title("")
 		self.LabelHelp = ttk.Label(self.help, text = 
 #'\n' +
 'log path: ' + self.LogPath + '\n\n' + 
+'Due to python or windows cache mechanism, first button clicking might not work properly' + '\n\n\n' + 
 'Advanced Mode: Dealing with full path ( only works with "Replace" ) \n\n' +
 'Check Path Exist: When ON, every "Rename" proccess will check whether every line is a real file or folder \n\n' + 
 'You can not name file or folder with these words, e.g. "con", "CON", "Con", "con.txt"\n' + str(self.bl.filename_forbidden_windows)[1:-1] + '\n\n'
@@ -311,7 +316,7 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 #'\n' +
 'Github: https://github.com/fehler001/File_tools\n\n' +
 'GPL-3.0 Lisence\n\n' + 
-"File tools Ver 0.34        Author  tgbxs\n\n"
+"File tools Ver 0.35        Author  tgbxs\n\n"
 		, anchor = 'w')
 		self.LabelAbout.place(relx = 0, relwidth = 1, rely = 0, relheight = 1)
 
@@ -400,7 +405,8 @@ class FileTools(Share, file.File, txt.Txt, firewall.Firewall, rar.Rar, zz.Zz):
 		self.menubar.add_cascade( label = "Rename", menu = self.renamemenu)
 
 		self.cachemenu = Menu(self.menubar, tearoff = 0)
-		self.cachemenu.add_command ( label = "Clear Cache", command = self.fl.clear_windows_cache )
+		self.cachemenu.add_command ( label = "Clear Python Cache", command = self.bl.clear_python_cache )
+		self.cachemenu.add_command ( label = "Clear Windows Cache", command = self.fl.clear_windows_cache )
 		self.menubar.add_cascade(label = "Cache", menu = self.cachemenu)
 		
 		self.helpmenu = Menu(self.menubar, tearoff = 0)

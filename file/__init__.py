@@ -15,6 +15,7 @@ import file.Date
 import file.Refine_enfold
 import file.Remove_empty_folder
 import file.Filter
+import file.Filter2
 import file.Find
 import file.Move_copy_delete
 import file.Checksum
@@ -27,6 +28,7 @@ class File( file.Rename.CreateFrameRename,
 			file.Refine_enfold.CreateFrameRefine,
 			file.Remove_empty_folder.CreateFrameRemove,
 			file.Filter.CreateFrameFilter,
+			file.Filter2.CreateFrameFilter2,
 			file.Find.CreateFrameFind,
 			file.Move_copy_delete.CreateFrameMove,
 			file.Checksum.CreateFrameCsum
@@ -53,6 +55,8 @@ class File( file.Rename.CreateFrameRename,
 		self.RemoveDefault()
 		self.FilterRoot = self.FrameFilter
 		self.FilterDefault()
+		self.Filter2Root = self.FrameFilter2
+		self.Filter2Default()
 		self.FindRoot = self.FrameFind
 		self.FindDefault()
 		self.MoveRoot = self.FrameMove
@@ -85,6 +89,10 @@ class File( file.Rename.CreateFrameRename,
 		self.FrameFilter = Frame(self.FileRoot)
 		self.FrameFilter.pack(fill = BOTH)
 		self.FileRoot.add(self.FrameFilter, text='Filter ')
+
+		self.FrameFilter2 = Frame(self.FileRoot)
+		self.FrameFilter2.pack(fill = BOTH)
+		self.FileRoot.add(self.FrameFilter2, text='Filter2 ')
 		
 		self.FrameFind = Frame(self.FileRoot)
 		self.FrameFind.pack(fill = BOTH)

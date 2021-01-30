@@ -30,6 +30,7 @@ class CreateFrameRename():
 		self.RenameOutset = 1
 		self.RenamePosition = 0
 		self.RenameInterval = 'interval: 1'
+		self.RenameRepeat = 'repeat: 0'
 		self.RenameP1 = 'Left Position: 0'
 		self.RenameP2 = 'Right Position: -1'
 
@@ -68,6 +69,8 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['combo_outset'] = 'outset: 1'
 		if not 'combo_interval' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['combo_interval'] = 'interval: 1'
+		if not 'combo_repeat' in j['file_tools']['file']['rename']:
+			j['file_tools']['file']['rename']['combo_repeat'] = 'repeat: 0'
 		if not 'insert_string' in j['file_tools']['file']['rename']:
 			j['file_tools']['file']['rename']['insert_string'] = ''
 		if not 'insert_position' in j['file_tools']['file']['rename']:
@@ -106,6 +109,7 @@ class CreateFrameRename():
 		self.RenameComboDigit.set( j['file_tools']['file']['rename']['combo_digit'])
 		self.RenameComboOutset.set( j['file_tools']['file']['rename']['combo_outset'])
 		self.RenameComboIntervalVar.set( j['file_tools']['file']['rename']['combo_interval'])
+		self.RenameComboRepeatVar.set( j['file_tools']['file']['rename']['combo_repeat'])
 		self.RenameEntryInsertPosition.insert(0, j['file_tools']['file']['rename']['insert_position'])
 		self.RenameEntryInsertString.insert(0, j['file_tools']['file']['rename']['insert_string'])
 		self.RenameCheckDeleteOldVar.set( j['file_tools']['file']['rename']['check_old'] )
@@ -143,6 +147,7 @@ class CreateFrameRename():
 			j['file_tools']['file']['rename']['combo_digit'] = self.RenameComboDigit.get()
 			j['file_tools']['file']['rename']['combo_outset'] = self.RenameComboOutset.get()
 			j['file_tools']['file']['rename']['combo_interval'] = self.RenameComboIntervalVar.get()
+			j['file_tools']['file']['rename']['combo_repeat'] = self.RenameComboRepeatVar.get()
 			j['file_tools']['file']['rename']['insert_position'] = self.RenameEntryInsertPosition.get()
 			j['file_tools']['file']['rename']['insert_string'] = self.RenameEntryInsertString.get()
 			j['file_tools']['file']['rename']['check_old'] = self.RenameCheckDeleteOldVar.get()
@@ -279,6 +284,14 @@ class CreateFrameRename():
 			return -1
 		self.RenameInterval = int(interval)
 
+		if self.RenameComboRepeatVar.get() == '':
+			self.RenameComboRepeatVar.set('repeat: 0')
+		repeat = self.RenameComboRepeatVar.get()
+		repeat = repeat[7:]
+		if self.bl.check_legit_int(repeat) == -1:
+			return -1
+		self.RenameRepeat = int(repeat)
+
 		if self.RenameComboP1.get() == '':
 			self.RenameComboP1.set('Left Positon: 0')
 		left = self.RenameComboP1Var.get()
@@ -312,7 +325,7 @@ class CreateFrameRename():
 			if self.bl.check_path_exist(files) == -1:
 				return
 		
-		files = self.fl.rename_by_ordinal(files, self.RenameDigit, self.RenameOutset, self.RenameInterval)
+		files = self.fl.rename_by_ordinal(files, self.RenameDigit, self.RenameOutset, self.RenameInterval, self.RenameRepeat)
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in files:
 			self.RenameTextDownFiles.insert(INSERT, file)
@@ -365,7 +378,7 @@ class CreateFrameRename():
 		else:
 			new_files = files
 		ordinal = self.bl.generate_ordinal(length = len(new_files), 
-								digit = self.RenameDigit, outset = self.RenameOutset, interval = self.RenameInterval)
+								digit = self.RenameDigit, outset = self.RenameOutset, interval = self.RenameInterval, repeat = self.RenameRepeat)
 		rst = self.fl.insert(new_files, pos = self.RenamePosition, cont = '', ordinal = ordinal)
 		self.RenameTextDownFiles.delete("1.0", "end")
 		for file in rst:
@@ -676,17 +689,26 @@ class CreateFrameRename():
 		self.RenameFrameRight_7 = ttk.Frame(self.RenameFrameRight)
 		self.RenameFrameRight_7.pack(fill = X, side = TOP)
 
-		values = ('inteval: 1', 'inteval: 2', 'inteval: 3', 'inteval: 5', 'inteval: 10', 'inteval: 20', 'inteval: 50', 'inteval: 100')
+		values = ('interval: 1', 'interval: 2', 'interval: 3', 'interval: 5', 'interval: 10', 'interval: 20', 'interval: 50', 'interval: 100')
 
 		self.RenameComboIntervalVar = StringVar()
 		self.RenameComboInterval = ttk.Combobox(self.RenameFrameRight_7, textvariable = self.RenameComboIntervalVar)
 		self.RenameComboInterval["values"] = values
 		self.RenameComboInterval.current(0) 
 		self.RenameComboInterval.pack(fill = X, side = LEFT)
-		
-		self.RenameButtonRenameByOrdinal = ttk.Button(self.RenameFrameRight_7, text = "Rename By Ordinal", command = self.RenameByOrdinal)
-		self.RenameButtonRenameByOrdinal.pack(fill = X, side = LEFT, expand = True)
+
+		values = ('repeat: 0', 'repeat: 1', 'repeat: 2', 'repeat: 3', 'repeat: 4', 'repeat: 5', 'repeat: 10')
+
+		self.RenameComboRepeatVar = StringVar()
+		self.RenameComboRepeat = ttk.Combobox(self.RenameFrameRight_7, textvariable = self.RenameComboRepeatVar)
+		self.RenameComboRepeat["values"] = values
+		self.RenameComboRepeat.current(0) 
+		self.RenameComboRepeat.pack(fill = X, side = LEFT, expand = True)
 		## end RenameFrameRight_7
+		
+		self.RenameButtonRenameByOrdinal = ttk.Button(self.RenameFrameRight, text = "Rename By Ordinal", command = self.RenameByOrdinal)
+		self.RenameButtonRenameByOrdinal.pack(side = TOP, fill = X)
+		
 		
 		self.RenameLabelInsertString = ttk.Label(self.RenameFrameRight, text = "Insert: String", anchor = W)
 		self.RenameLabelInsertString.pack(side = TOP, fill = X)
